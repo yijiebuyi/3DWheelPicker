@@ -1,3 +1,3 @@
 # 3DWheelPicker
 3D滚轮效果
-![](https://github.com/yijiebuyi/3DWheelPicker/device-2016-06-14-111921.png)
+![](https://raw.githubusercontent.com/yijiebuyi/3DWheelPicker/master/device-2016-06-14-111921.png)
