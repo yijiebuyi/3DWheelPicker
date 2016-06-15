@@ -18,7 +18,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 	public final static int TYPE_YEAR = 1 << 1;
 	public final static int TYPE_MONTH = 1 << 2;
 	public final static int TYPE_DAY = 1 << 3;
-	
+
 	private static String mYearStr = "年";
 	private static String mMontyStr = "月";
 	private static String mDayStr = "日";
@@ -38,7 +38,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 	private int mCurrMonth;
 	private int mCurrDay;
 	private int mMode = MODE_BIRTHDAY;
-	
+
 	private int mSelectedYear;
 	private int mSelectedMonth;
 	private int mSelectedDay;
@@ -50,7 +50,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 	private TextWheelPickerAdapter mYearPickerAdapter;
 	private TextWheelPickerAdapter mMonthPickerAdapter;
 	private TextWheelPickerAdapter mDayPickerAdapter;
-	
+
 	public DateWheelPicker(Context context) {
 		super(context);
 		init();
@@ -76,7 +76,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 		mYearWheelPicker = new TextWheelPicker(getContext(), TYPE_YEAR);
 		mMonthWheelPicker = new TextWheelPicker(getContext(), TYPE_MONTH);
 		mDayWheelPicker = new TextWheelPicker(getContext(), TYPE_DAY);
-		
+
 		mYearWheelPicker.setOnWheelPickedListener(this);
 		mMonthWheelPicker.setOnWheelPickedListener(this);
 		mDayWheelPicker.setOnWheelPickedListener(this);
@@ -146,22 +146,22 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 		setCurrentDate(mSelectedYear, mSelectedMonth, mSelectedDay);
 		mYearPickerAdapter.setDatas(mYears);
 	}
-	
+
 	public void setCurrentDate(int year, int month, int day) {
 		if (mYears.isEmpty() || mMonths.isEmpty() || mDays.isEmpty()) {
 			return;
 		}
-		
+
 		mSelectedYear = year;
 		mSelectedMonth = month;
 		mSelectedDay = day;
-		
+
 		int yearIndex = Math.max(0, mYears.indexOf(year+"年"));
 		int monthIndex = Math.max(0, mMonths.indexOf(month+"月"));
 		int dayIndex = Math.max(0, mDays.indexOf(day+"日"));
-		
+
 		setItemIndex(yearIndex, monthIndex, dayIndex);
-		
+
 		if (mSelectedMonth == 2) {
             if (isLeapYear(mSelectedYear)) {
                 updateDays(29);
@@ -185,7 +185,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
             }
         }
     }
-	
+
 	private void setItemIndex(int yearIndex, int monthIndex, int dayIndex) {
 		mYearWheelPicker.setCurrentItem(yearIndex);
 		mMonthWheelPicker.setCurrentItem(monthIndex);
@@ -231,17 +231,17 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 		mMonthWheelPicker.setVisibleItemCount(itemCount);
 		mDayWheelPicker.setVisibleItemCount(itemCount);
 	}
-	
+
 	public void setItemSize(int itemWidth, int itemHeight) {
 		mYearWheelPicker.setItemSize(itemWidth, itemHeight);
 		mMonthWheelPicker.setItemSize(itemWidth, itemHeight);
 		mDayWheelPicker.setItemSize(itemWidth, itemHeight);
 	}
-	
+
 	public int getDateMode() {
 		return mMode;
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, Object data) {
@@ -251,8 +251,8 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
             if (year > 0) {
                 mSelectedYear = year;
             }
-            
-            
+
+
             boolean changed = false;
 			if (index == mYears.size() - 1 && mSelectedYear == mCurrYear) {
 				//current year
@@ -264,11 +264,11 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 					updateMonths(12);
 				}
 			}
-			
+
 			if (changed) {
 				mMonthPickerAdapter.setDatas(mMonths);
 			}
-			
+
 			break;
 		case TYPE_MONTH:
 		    int month = getCurrentDate(data, mMontyStr);
@@ -305,54 +305,54 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 			mDayPickerAdapter.setDatas(mDays);
 			break;
 		case TYPE_DAY:
-			
+
 			break;
 		default:
 			break;
 		}
 	}
-	
-	
+
+
 	private void updateYears(int from, int to) {
 		mYears.clear();
-		
+
 		int size = to - from;
 		for (int i = from; i <= from + size; i++) {
 			mYears.add(i + mYearStr);
 		}
 	}
-	
+
 	private void updateMonths(int maxMonth) {
 		mMonths.clear();
-		
+
 		for (int i = 1; i <= maxMonth; i++) {
 			mMonths.add(i + mMontyStr);
 		}
 	}
-	
+
 	private void updateDays(int maxDay) {
 		mDays.clear();
-		
+
 		for (int i = 1; i <= maxDay; i++) {
 			mDays.add(i + mDayStr);
 		}
 	}
-	
+
 	private int getCurrentDate(Object data, String suffix) {
 	    if (data instanceof String) {
 	    	int suffixLeg = suffix == null ? 0 : suffix.length();
 	        String temp = (String)data;
 	        return Integer.parseInt(temp.substring(0, temp.length() - suffixLeg));
 	    }
-	    
+
 	    return -1;
 	}
-	
+
 	private boolean isLeapYear(int year) {
 	    if(year % 4 == 0 && year % 100 != 0 || year % 400 == 0){
 	       return true;
 	    }
-	    
+
 	    return false;
 	}
 }

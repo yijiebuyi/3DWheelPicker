@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.SystemClock;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.DecelerateInterpolator;
 /**
@@ -46,7 +47,7 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
 	private static final int CORRECT_ANIMATION_DURATION = 250;
 	private static final float MOVE_FACTOR = 0.4F;
 	
-	protected int mOrientation = VETTAICL;
+	protected static int mOrientation = VETTAICL;
 	protected int mOverOffset;
 	
 	protected WheelPickerImpl mWheelPickerImpl;
@@ -71,11 +72,11 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
 	public ScrollWheelPicker(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 	}
-	
+
 	@Override
 	protected void instantiation() {
 		super.instantiation();
-		
+
 		mWheelPickerImpl = new WheelPickerImpl(mOrientation);
 		init();
 	}

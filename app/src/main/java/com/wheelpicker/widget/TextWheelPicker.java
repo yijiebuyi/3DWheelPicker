@@ -6,6 +6,7 @@ import com.wheelpicker.core.OnWheelPickedListener;
 import android.content.Context;
 import android.graphics.Camera;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.AttributeSet;
@@ -57,21 +58,18 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
 	public TextWheelPicker(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 	}
-	
+
 	@Override
 	protected void computeWheelSize() {
-		mRadius = mWheelPickerImpl.computeRadius(mVisibleItemCount, mItemSpace,
-				mItemMaxWidth, mItemMaxHeight);
+		mRadius = mWheelPickerImpl.computeRadius(mVisibleItemCount, mItemSpace, mItemMaxWidth, mItemMaxHeight);
 		mUnitDegree = (int) (180 * 1.0F / mVisibleItemCount);
 
-		mWheelContentWidth = mWheelPickerImpl.getWheelWidth(mRadius,
-				mItemMaxWidth, mItemMaxHeight);
-		mWheelContentHeight = mWheelPickerImpl.getWheelHeight(mRadius,
-				mItemMaxWidth, mItemMaxHeight);
-		
-		mShadowOffset = mShadowFactor * mItemMaxWidth;
+		mWheelContentWidth = mWheelPickerImpl.getWheelWidth(mRadius, mItemMaxWidth);
+		mWheelContentHeight = mWheelPickerImpl.getWheelHeight(mRadius, mItemMaxHeight);
+
 		mLineOffset = mItemMaxHeight / 2 + mItemSpace * 0.8f;
-				
+
+		mShadowOffset = SHADOW_MAX * mShadowFactor;
 		mOverOffset = 90;
         mRelRadius = mRadius * DEPTH_FACTOR;
         

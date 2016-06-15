@@ -43,20 +43,18 @@ public interface IWheelPicker {
      * 
      * @param radius The radius of WheelPicker view
      * @param width The item width
-     * @param height The item height
      * @return
      */
-    int getWheelWidth(int radius, int width, int height);
+    int getWheelWidth(int radius, int width);
 
     /**
      * Compute the WheelPicker content view height 
      * 
      * @param radius The radius of WheelPicker view
-     * @param width The item width
      * @param height The item height
      * @return
      */
-    int getWheelHeight(int radius, int width, int height);
+    int getWheelHeight(int radius, int height);
 
     int getDisplay(int count, int space, int width, int height);
 

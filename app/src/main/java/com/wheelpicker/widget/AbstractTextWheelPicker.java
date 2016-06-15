@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
@@ -91,46 +92,19 @@ public abstract class AbstractTextWheelPicker extends ScrollWheelPicker<TextBase
 		}
 		
 		//TODO to be optimized
-		//若设置的数据太大，会导致测量item的宽度耗时太长，待优化
-		if (mIsDatePicker) {
-			int charLen = 0;
-			int index = 0;
-			for (int i = 0; i < mAdapter.getCount(); i++) {
-				CharSequence cs = mAdapter.getItemText(i);
-				if (cs.length() > charLen) {
-					index = i;
-					charLen = cs.length();
-				}
-			}
-			
-			int count = 0;
-			for (int i = index; i < mAdapter.getCount(); i++) {
-				CharSequence cs = mAdapter.getItemText(i);
-				String text = cs == null ? "" : cs.toString();
-				Point p = computeItemSize(text);
-				
-				if (mIsDatePicker && count++ > 100) {
-					//只测量100年以内最大值
-					break;
-				}
-				
-				if (mAutoMeasureItemWidth) {
-					mItemMaxWidth = Math.max(mItemMaxWidth, p.x);
-				}
-			}
-		} else {
+		if (mOrientation == HORIZENTAL && mAutoMeasureItemWidth) {
 			for (int i = 0; i < mAdapter.getCount(); i++) {
 				CharSequence cs = mAdapter.getItemText(i);
 				String text = cs == null ? "" : cs.toString();
 				Point p = computeItemSize(text);
-				
+
 				if (mAutoMeasureItemWidth) {
 					mItemMaxWidth = Math.max(mItemMaxWidth, p.x);
 				}
 			}
 		}
 		
-		if (mAutoMeasureItemHeight) {
+		if (mOrientation == VETTAICL && mAutoMeasureItemHeight) {
 			FontMetrics ftms = mPaint.getFontMetrics();
 			mItemMaxHeight = (int)Math.abs(ftms.bottom - ftms.top);
 		}

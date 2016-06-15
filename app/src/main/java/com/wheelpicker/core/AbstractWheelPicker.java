@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -39,6 +40,7 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
 	public static final int SHADOW_LEFT = 0;
 	public static final int SHADOW_MIDDLE = 1;
 	public static final int SHADOW_RIGHT = 2;
+	protected static final int SHADOW_MAX = 100;
 	
 	// 滚轮是偏右还是左
 	protected int mShadowGravity = SHADOW_RIGHT;
@@ -154,7 +156,6 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
 
 		resultWidth += (getPaddingLeft() + getPaddingRight());
 		resultHeight += (getPaddingTop() + getPaddingBottom());
-
 		resultWidth = measureSize(modeWidth, sizeWidth, resultWidth);
 		resultHeight = measureSize(modeHeight, sizeHeight, resultHeight);
 
@@ -164,7 +165,7 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
 		setMeasuredDimension(resultWidth, resultHeight);
 	}
 
-	private int measureSize(int mode, int sizeExpect, int sizeActual) {
+	protected int measureSize(int mode, int sizeExpect, int sizeActual) {
 		int realSize;
 		if (mode == MeasureSpec.EXACTLY) {
 			realSize = sizeExpect;

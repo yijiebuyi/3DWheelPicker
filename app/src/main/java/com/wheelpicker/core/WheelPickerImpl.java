@@ -2,6 +2,7 @@ package com.wheelpicker.core;
 
 import android.graphics.Camera;
 import android.graphics.Matrix;
+import android.util.Log;
 import android.widget.Scroller;
 
 /**
@@ -49,13 +50,13 @@ public class WheelPickerImpl implements IWheelPicker {
 	}
 
 	@Override
-	public int getWheelWidth(int radius, int width, int height) {
-		return width;
+	public int getWheelWidth(int radius, int width) {
+		return mOrientation == ScrollWheelPicker.VETTAICL ? width : 2 * radius;
 	}
 
 	@Override
-	public int getWheelHeight(int radius, int width, int height) {
-		return 2 * radius;
+	public int getWheelHeight(int radius, int height) {
+		return mOrientation == ScrollWheelPicker.VETTAICL ? 2 * radius : height;
 	}
 
 	@Override
