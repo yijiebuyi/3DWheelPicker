@@ -5,14 +5,7 @@ import android.graphics.Matrix;
 import android.widget.Scroller;
 
 /**
- * 
- * @功能描述： 
- * @作者 
- * @创建日期：
- * 
- * @修改人： 
- * @修改描述：
- * @修改日期
+ *
  */
 public interface IWheelPicker {
     int getUnitDeltaTotal(Scroller scroller);

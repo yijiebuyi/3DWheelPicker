@@ -1,7 +1,5 @@
 package com.wheelpicker.core;
 
-import com.wheelpicker.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
@@ -11,22 +9,12 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 
-/**
- * 
- * @功能描述：
- * 
- * @作者
- * @创建日期:
- * 
- * @修改人：
- * @修改描述：
- * @修改日期
- */
+import com.wheelpicker.R;
+
 public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends View {
 	private static final int VELOCITY_TRACKER_UNITS_DEFAULT = 600;
 
@@ -259,11 +247,16 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
 	
 	public void setItemSpace(int space) {
 		mItemSpace = space;
+		if (mAdapter != null && !mAdapter.isEmpty()) {
+			requestComputeLayout();
+		}
 	}
 
 	public void setVisibleItemCount(int count) {
 		mVisibleItemCount = count;
-		requestComputeLayout();
+		if (mAdapter != null && !mAdapter.isEmpty()) {
+			requestComputeLayout();
+		}
 	}
 	
 	public void setShadowGravity(int gravity) {
@@ -345,11 +338,23 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
 
 	protected abstract void onTouchCancel(MotionEvent event);
 	/** ==============abstract method============== */
+
+	protected void onWheelSelected(int index) {
+
+	}
 	
     class AdapterDataSetObserver extends DataSetObserver {
 
         @Override
         public void onChanged() {
+			int count = 0;
+			if (mAdapter != null) {
+				count = mAdapter.getCount();
+			}
+			if (mCurrItemIndex > count - 1) {
+				mCurrItemIndex = count - 1;
+			}
+			onWheelSelected(mCurrItemIndex);
         	requestComputeLayout();
         }
 

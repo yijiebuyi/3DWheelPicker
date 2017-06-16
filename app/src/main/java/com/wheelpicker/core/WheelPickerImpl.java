@@ -2,19 +2,8 @@ package com.wheelpicker.core;
 
 import android.graphics.Camera;
 import android.graphics.Matrix;
-import android.util.Log;
 import android.widget.Scroller;
 
-/**
- * 
- * @功能描述： 
- * @作者 
- * @创建日期：
- * 
- * @修改人： 
- * @修改描述：
- * @修改日期
- */
 public class WheelPickerImpl implements IWheelPicker {
 	private int mOrientation = ScrollWheelPicker.VETTAICL;
 

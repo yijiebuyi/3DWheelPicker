@@ -1,26 +1,19 @@
 package com.wheelpicker.widget;
 
 
-import com.wheelpicker.core.OnWheelPickedListener;
-
 import android.content.Context;
 import android.graphics.Camera;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import com.wheelpicker.core.OnWheelPickedListener;
+import com.wheelpicker.view.AbstractTextWheelPicker;
+
 /**
- * 
- * @功能描述： 
- * @作者 
- * @创建日期：
- * 
- * @修改人： 
- * @修改描述：
- * @修改日期
+ * The wheel picker for text
  */
 public class TextWheelPicker extends AbstractTextWheelPicker {
 	private final static String TAG = "TextWheelPicker";
@@ -90,7 +83,7 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
 
 	@Override
 	protected void drawBackground(Canvas canvas) {
-		if (mAdapter != null ||mAdapter.isEmpty()) {
+		if (mAdapter != null && !mAdapter.isEmpty()) {
 			canvas.drawLine(0, mWheelCenterY - mLineOffset , mViewWidth, 
 					mWheelCenterY - mLineOffset, mLinePaint);
 			canvas.drawLine(0, mWheelCenterY + mLineOffset, mViewWidth, 
@@ -154,7 +147,7 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
 			mRotateMatrix.postConcat(mDepthMatrix);
 			canvas.concat(mRotateMatrix);
 
-			if (i == getHightLightItem(mCurrItemIndex)) {
+			if (i == getHighLightItem(mCurrItemIndex)) {
 				mPaint.setAlpha(255);
 			} else {
 				mPaint.setAlpha(128 - (int)(128 * relDegree));
@@ -174,7 +167,8 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
 		mOnWheelPickedListener = listener;
 	}
 
-	private void onWheelSelected(int index) {
+	@Override
+	protected void onWheelSelected(int index) {
 		if (mAdapter != null && index > -1 && index < mAdapter.getCount()) {
 			if (mOnWheelPickedListener != null) {
 				mOnWheelPickedListener.onWheelSelected(this, index, mAdapter.getItemText(index));
@@ -232,7 +226,7 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
 	 * @param item
 	 * @return
 	 */
-	private int getHightLightItem (int item) {
+	private int getHighLightItem (int item) {
 		if (mOffsetItemDelta > 0) {
 			if (mOffsetItemDelta > mUnitDegree / 2) {
 				return item - 1;

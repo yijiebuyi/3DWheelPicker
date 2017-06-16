@@ -1,8 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="_year">年</string>
+    <string name="_month">月</string>
+    <string name="_day">日</string>
+    <string name="_hour">点</string>
+    <string name="_minute">分</string>
+    <string name="_second">秒</string>
+    <string name="_today">今天</string>
+    <string name="_tomorrow">明天</string>
+    <string name="_after_tomorrow">后天</string>
+    <string name="_this_year">今年</string>
+    <string name="_next_year">明年</string>
 
-    <string name="app_name">3DWheelPicker</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
 
+    <string name="cancel">取消</string>
+    <string name="finish">完成</string>
 </resources>

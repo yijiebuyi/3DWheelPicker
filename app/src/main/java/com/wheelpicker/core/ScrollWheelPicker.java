@@ -1,26 +1,16 @@
 package com.wheelpicker.core;
 
 
-import com.wheelpicker.anim.Animation;
-
 import android.content.Context;
 import android.os.Build;
 import android.os.SystemClock;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.DecelerateInterpolator;
-/**
- * 
- * @功能描述： 
- * @作者 
- * @创建日期:
- * 
- * @修改人： 
- * @修改描述：
- * @修改日期
- */
+
+import com.wheelpicker.anim.Animation;
+
 public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends AbstractWheelPicker<T> {
 	/**
 	 * Idle
