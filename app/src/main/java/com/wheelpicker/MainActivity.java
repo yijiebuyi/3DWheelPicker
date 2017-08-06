@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
                 DataPicker.pickBirthday(MainActivity.this, new Date(System.currentTimeMillis()), new DataPicker.OnBirthdayPickListener() {
                     @Override
                     public void onBirthPicked(int year, int month, int day) {
-                        Toast.makeText(MainActivity.this, year + "-" + month + "-" + day, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
                 DataPicker.pickFutureDate(MainActivity.this, new Date(System.currentTimeMillis() + 30 * 60 * 1000), new DataPicker.OnDatePickListener() {
                     @Override
                     public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
-                        Toast.makeText(MainActivity.this, year + "-" + month + "-" + day + " " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day + " " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
                     }
                 });
             }

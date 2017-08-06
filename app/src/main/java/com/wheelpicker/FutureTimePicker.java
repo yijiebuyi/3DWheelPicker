@@ -55,6 +55,9 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
     private int mSelectedMinute;
     private int mSelectedSecond;
 
+    //Is selected today
+    private boolean mOldSelectionIsToday = false;
+
     private String mTodayStr = "今天";
     private String mTomorrowStr = "明天";
     //private String mAfterTomorrowStr = "后天";
@@ -225,9 +228,9 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
         }
     }
 
-    public void setPickedTime(long currentTime) {
+    public void setPickedTime(long pickedTime) {
         Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(currentTime);
+        c.setTimeInMillis(pickedTime);
 
         int y = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH) + 1;
@@ -242,6 +245,8 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
         mSelectedHour = h;
         mSelectedMinute = m;
         mSelectedSecond = s;
+        //Is today
+        mOldSelectionIsToday = mCurrYear == mSelectedYear && mCurrMonth == mSelectedMonth && mCurrDay == mSelectedDay;
 
         c.set(y, month - 1, d, 0, 0, 0);
         long pickedDay = c.getTimeInMillis();
@@ -354,16 +359,18 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
                 mSelectedMonth = calendar.get(Calendar.MONTH) + 1;
                 mSelectedDay = calendar.get(Calendar.DATE);
 
-                if (mSelectedDay == mCurrDay) {
+                if (mSelectedYear == mCurrYear && mSelectedMonth == mCurrMonth && mSelectedDay == mCurrDay) {
                     hourIndex = 0;
                     minuteIndex = 0;
                     updateMinHour(mCurrHour);
                     updateMinMinute(mCurrMinute);
+                    mOldSelectionIsToday = true;
                 } else {
-                    hourIndex = mHourWheelPicker.getCurrentItem();
-                    minuteIndex = mMinuteWheelPicker.getCurrentItem();
+                    hourIndex = mOldSelectionIsToday ? 0 : mHourWheelPicker.getCurrentItem();
+                    minuteIndex = mOldSelectionIsToday ? 0 : mMinuteWheelPicker.getCurrentItem();
                     updateMinHour(0);
                     updateMinMinute(0);
+                    mOldSelectionIsToday = false;
                 }
 
                 mSelectedHour = getCurrentDate(mHourPickerAdapter.getItem(hourIndex), mHourStr);
