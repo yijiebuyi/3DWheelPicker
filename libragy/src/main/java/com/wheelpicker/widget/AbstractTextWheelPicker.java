@@ -10,7 +10,6 @@ import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 

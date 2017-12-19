@@ -133,19 +133,16 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.left_btn:
-                dismiss();
-                if (mLeftBtnClickListener != null) {
-                    mLeftBtnClickListener.onClick(v);
-                }
-                break;
-            case R.id.right_btn:
-                dismiss();
-                if (mRightBtnClickListener != null) {
-                    mRightBtnClickListener.onClick(v);
-                }
-                break;
+        if (v.getId() == R.id.left_btn) {
+            dismiss();
+            if (mLeftBtnClickListener != null) {
+                mLeftBtnClickListener.onClick(v);
+            }
+        } else if (v.getId() == R.id.right_btn) {
+            dismiss();
+            if (mRightBtnClickListener != null) {
+                mRightBtnClickListener.onClick(v);
+            }
         }
     }
 

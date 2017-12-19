@@ -6,6 +6,7 @@
       <module fileurl="file://E:\samples\3DWheelPicker\3DWheelPicker.iml" filepath="E:\samples\3DWheelPicker\3DWheelPicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://E:\samples\3DWheelPicker\app\app.iml" filepath="E:\samples\3DWheelPicker\app\app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libragy/libragy.iml" filepath="$PROJECT_DIR$/libragy/libragy.iml" />
       <module fileurl="file://E:\samples\3DWheelPicker\sample.iml" filepath="E:\samples\3DWheelPicker\sample.iml" />
     </modules>
   </component>

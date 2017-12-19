@@ -4,7 +4,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion "26.0.0"
     defaultConfig {
-        applicationId "com.wheelpicker"
+        applicationId "com.wp.demo"
         minSdkVersion 19
         targetSdkVersion 24
         versionCode 1
@@ -27,4 +27,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
+
+    compile project(':libragy')
 }
