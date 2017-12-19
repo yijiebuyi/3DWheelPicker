@@ -2,8 +2,6 @@ package com.wheelpicker.widget;
 
 import android.content.Context;
 
-import com.wheelpicker.view.TextBaseAdapter;
-
 /**
  * Numeric Wheel adapter.
  */

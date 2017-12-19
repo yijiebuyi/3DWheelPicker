@@ -1,7 +1,5 @@
 package com.wheelpicker.widget;
 
-import com.wheelpicker.view.TextBaseAdapter;
-
 import java.util.List;
 
 public class TextWheelPickerAdapter extends TextBaseAdapter {
