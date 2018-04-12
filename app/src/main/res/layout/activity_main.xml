@@ -11,6 +11,12 @@
             android:layout_marginTop="10dp"
             android:text="选择生日日期"/>
 
+    <Button android:id="@+id/picker_future_date"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:text="选择未来日期"/>
+
     <Button android:id="@+id/picker_future"
             android:layout_width="150dp"
             android:layout_height="50dp"

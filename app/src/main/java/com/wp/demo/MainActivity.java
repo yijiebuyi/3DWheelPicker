@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.wheelpicker.DataPicker;
+import com.wheelpicker.DateWheelPicker;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,15 +34,29 @@ public class MainActivity extends Activity {
             }
         });
 
+        findViewById(R.id.picker_future_date).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DataPicker.pickFutureDate(MainActivity.this, new Date(System.currentTimeMillis()),
+                        DateWheelPicker.TYPE_ALL, View.VISIBLE, new DataPicker.OnDatePickListener() {
+                            @Override
+                            public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
+                                Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day + " " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+        });
+
         findViewById(R.id.picker_future).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataPicker.pickFutureDate(MainActivity.this, new Date(System.currentTimeMillis() + 30 * 60 * 1000), new DataPicker.OnDatePickListener() {
-                    @Override
-                    public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
-                        Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day + " " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
-                    }
-                });
+                DataPicker.pickFutureDate(MainActivity.this, new Date(System.currentTimeMillis() + 30 * 60 * 1000),
+                        365, new DataPicker.OnDatePickListener() {
+                            @Override
+                            public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
+                                Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day + " " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
         });
 

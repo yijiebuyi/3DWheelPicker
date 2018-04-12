@@ -240,6 +240,10 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
 		mCurrItemIndex = index;
 		requestComputeLayout();
 	}
+
+	public void setCurrentItemWithoutReLayout(int index) {
+		mCurrItemIndex = index;
+	}
 	
 	public int getCurrentItem() {
 		return mCurrItemIndex;
