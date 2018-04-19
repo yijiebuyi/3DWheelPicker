@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 
-
 import com.wheelpicker.core.AbstractWheelPicker;
 import com.wheelpicker.core.OnWheelPickedListener;
 import com.wheelpicker.widget.TextWheelPicker;
@@ -40,7 +39,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
     public final static int TYPE_ALL = TYPE_YEAR | TYPE_MONTH | TYPE_DAY |
             TYPE_HOUR | TYPE_MINUTE | TYPE_SECOND;
     //年月日
-    public final static int TYPE_YY_MM_DD = TYPE_HOUR | TYPE_SECOND | TYPE_MINUTE;
+    public final static int TYPE_YY_MM_DD = TYPE_YEAR | TYPE_MONTH | TYPE_DAY;
     //时分秒
     public final static int TYPE_HH_MM_SS = TYPE_HOUR | TYPE_SECOND | TYPE_MINUTE;
 
@@ -279,6 +278,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
         mSelectedMonth = month;
         mSelectedDay = day;
 
+        //更新月份和天数
         if (mCurrYear == mSelectedYear) {
             if (mMode == MODE_BIRTHDAY) {
                 updateMaxMonths(mCurrMonth);
@@ -298,15 +298,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
         int monthIndex = Math.max(0, mMonths.indexOf((month + 1) + mMonthStr));
         int dayIndex = Math.max(0, mDays.indexOf(day + mDayStr));
 
-        setDateItemIndex(yearIndex, monthIndex, dayIndex);
-
-        mMonthPickerAdapter.setData(mMonths);
-        mDayPickerAdapter.setData(mDays);
-
-        if (mOnDatePickListener != null) {
-            mOnDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth, mSelectedDay,
-                    mSelectedHour, mSelectedMinute, mSelectedSecond);
-        }
+        setDateItemIndexWithoutReLayout(yearIndex, monthIndex, dayIndex);
     }
 
     public void setCurrentTime(int hour, int minute, int second) {
@@ -320,10 +312,9 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 
         if (mMode == MODE_PENDING) {
             updateMinHour(mCurrHour);
-            //updateMinMinute(mCurrMinute);
-            //updateMinSecond(mCurrSecond);
+            updateMinMinute(mCurrMinute);
             //TODO
-            updateMaxMinute(mCurrMinute);
+            //updateMinSecond(mCurrSecond);
             updateMaxSecond(mCurrSecond);
         } else {
             updateMaxHour(mCurrHour);
@@ -333,7 +324,12 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
         int hourIndex = Math.max(0, mHours.indexOf(hour + mHourStr));
         int minuteIndex = Math.max(0, mMinutes.indexOf(minute + mMinuteStr));
         int secondIndex = Math.max(0, mSeconds.indexOf(second + mSecondStr));
-        setTimeItemIndex(hourIndex, minuteIndex, secondIndex);
+        setTimeItemIndexWithoutReLayout(hourIndex, minuteIndex, secondIndex);
+    }
+
+    public void notifyDataSetChanged() {
+        //年月日市时分秒是联动的，所以只需要通知年的数据变化
+        mYearPickerAdapter.notifyDataSetChanged();
     }
 
     private void setDateItemIndex(int yearIndex, int monthIndex, int dayIndex) {
@@ -346,6 +342,18 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
         mHourWheelPicker.setCurrentItem(hourIndex);
         mMinuteWheelPicker.setCurrentItem(minuteIndex);
         mSecondWheelPicker.setCurrentItem(secondIndex);
+    }
+
+    private void setDateItemIndexWithoutReLayout(int yearIndex, int monthIndex, int dayIndex) {
+        mYearWheelPicker.setCurrentItem(yearIndex);
+        mMonthWheelPicker.setCurrentItem(monthIndex);
+        mDayWheelPicker.setCurrentItem(dayIndex);
+    }
+
+    private void setTimeItemIndexWithoutReLayout(int hourIndex, int minuteIndex, int secondIndex) {
+        mHourWheelPicker.setCurrentItemWithoutReLayout(hourIndex);
+        mMinuteWheelPicker.setCurrentItemWithoutReLayout(minuteIndex);
+        mSecondWheelPicker.setCurrentItemWithoutReLayout(secondIndex);
     }
 
     public void setTextSize(int textSize) {
@@ -431,7 +439,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 
                 boolean changed = false;
                 if (mMode == MODE_PENDING) {
-                    if (index == 0) {
+                    if (mSelectedYear == mCurrYear) {
                         //current year
                         updateMinMonths(mCurrMonth);
                     } else {
@@ -444,7 +452,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
                     int monthIndex = Math.max(0, mMonths.indexOf((mSelectedMonth + 1) + mMonthStr));
                     mMonthWheelPicker.setCurrentItemWithoutReLayout(monthIndex);
                 } else {
-                    if (index == mYears.size() - 1) {
+                    if (mSelectedYear == mCurrYear && mMode == MODE_BIRTHDAY) {
                         //current year
                         updateMaxMonths(mCurrMonth);
                     } else {
@@ -463,7 +471,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
                     mSelectedMonth = month;
                 }
                 if (mMode == MODE_PENDING) {
-                    if (index == 0 && mSelectedYear == mCurrYear) {
+                    if (mSelectedYear == mCurrYear && mSelectedMonth == mCurrMonth) {
                         //current month
                         correctMinDays(mCurrDay);
                     } else {
@@ -473,7 +481,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
                     int dayIndex = Math.max(0, mDays.indexOf(mSelectedDay + mDayStr));
                     mDayWheelPicker.setCurrentItemWithoutReLayout(dayIndex);
                 } else {
-                    if (index == mMonths.size() - 1 && mSelectedYear == mCurrYear) {
+                    if (mSelectedYear == mCurrYear && mSelectedMonth == mCurrMonth && mMode == MODE_BIRTHDAY) {
                         //current month
                         updateMaxDays(mCurrDay);
                     } else {
@@ -485,7 +493,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
             case TYPE_DAY:
                 mSelectedDay = getCurrentDate(data, mDayStr);
                 if (mMode == MODE_PENDING) {
-                    if (index == 0 && mSelectedYear == mCurrYear && mSelectedMonth == mCurrMonth) {
+                    if (mSelectedYear == mCurrYear && mSelectedMonth == mCurrMonth && mSelectedDay == mCurrDay) {
                         //current day
                         updateMinHour(mCurrHour);
                     } else {
@@ -495,7 +503,8 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
                     int hourIndex = Math.max(0, mHours.indexOf(mSelectedHour + mHourStr));
                     mHourWheelPicker.setCurrentItemWithoutReLayout(hourIndex);
                 } else {
-                    if (index == mMonths.size() - 1 && mSelectedYear == mCurrYear && mSelectedMonth == mCurrMonth) {
+                    if (mSelectedYear == mCurrYear && mSelectedMonth == mCurrMonth && mSelectedDay == mCurrDay
+                            && mMode == MODE_BIRTHDAY) {
                         //current month
                         updateMaxHour(mCurrHour);
                     } else {
@@ -505,13 +514,55 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
                 mHourPickerAdapter.setData(mHours);
                 break;
             case TYPE_HOUR:
-                mSelectedHour = getCurrentDate(data, mDayStr);
+                mSelectedHour = getCurrentDate(data, mHourStr);
+                if (mMode == MODE_PENDING) {
+                    if (mSelectedYear == mCurrYear && mSelectedMonth == mCurrMonth && mSelectedDay == mCurrDay
+                            && mSelectedHour == mCurrHour) {
+                        //current hour
+                        updateMinMinute(mCurrMinute);
+                    } else {
+                        updateMaxMinute(60);
+                    }
+
+                    int minuteIndex = Math.max(0, mMinutes.indexOf(mSelectedMinute + mMinuteStr));
+                    mMinuteWheelPicker.setCurrentItemWithoutReLayout(minuteIndex);
+                } else {
+                    if (mSelectedYear == mCurrYear && mSelectedMonth == mCurrMonth && mSelectedDay == mCurrDay
+                            && mSelectedHour == mCurrHour && mMode == MODE_BIRTHDAY) {
+                        //current month
+                        updateMaxMinute(mCurrMinute);
+                    } else {
+                        updateMaxMinute(60);
+                    }
+                }
+                mMinutePickerAdapter.setData(mMinutes);
                 break;
             case TYPE_MINUTE:
-                mSelectedMinute = getCurrentDate(data, mDayStr);
+                mSelectedMinute = getCurrentDate(data, mMinuteStr);
+                if (mMode == MODE_PENDING) {
+                    if (mSelectedYear == mCurrYear && mSelectedMonth == mCurrMonth && mSelectedDay == mCurrDay
+                            && mSelectedHour == mCurrHour && mSelectedMinute == mCurrMinute) {
+                        //current minute
+                        updateMinSecond(mCurrSecond);
+                    } else {
+                        updateMaxSecond(60);
+                    }
+
+                    int secondIndex = Math.max(0, mSeconds.indexOf(mSelectedSecond + mSecondStr));
+                    mSecondWheelPicker.setCurrentItemWithoutReLayout(secondIndex);
+                } else {
+                    if (mSelectedYear == mCurrYear && mSelectedMonth == mCurrMonth && mSelectedDay == mCurrDay
+                            && mSelectedHour == mCurrHour && mSelectedMinute == mCurrMinute && mMode == MODE_BIRTHDAY) {
+                        //current month
+                        updateMaxSecond(mCurrSecond);
+                    } else {
+                        updateMaxSecond(60);
+                    }
+                }
+                mSecondPickerAdapter.setData(mSeconds);
                 break;
             case TYPE_SECOND:
-                mSelectedSecond = getCurrentDate(data, mDayStr);
+                mSelectedSecond = getCurrentDate(data, mSecondStr);
                 break;
             default:
                 break;

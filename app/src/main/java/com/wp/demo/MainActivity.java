@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 DataPicker.pickFutureDate(MainActivity.this, new Date(System.currentTimeMillis()),
-                        DateWheelPicker.TYPE_ALL, View.VISIBLE, new DataPicker.OnDatePickListener() {
+                        DateWheelPicker.TYPE_ALL, View.VISIBLE, 100, new DataPicker.OnDatePickListener() {
                             @Override
                             public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
                                 Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day + " " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
@@ -88,6 +88,30 @@ public class MainActivity extends Activity {
         data.add("黄蓉");
         data.add("阿朱");
         data.add("王菇凉");
+
+        data.add("杨过2");
+        data.add("张无忌2");
+        data.add("郭靖2");
+        data.add("乔峰2");
+        data.add("令狐冲2");
+        data.add("赵敏2");
+        data.add("东方不败2");
+        data.add("小龙女2");
+        data.add("黄蓉2");
+        data.add("阿朱2");
+        data.add("王菇凉2");
+
+        data.add("杨过3");
+        data.add("张无忌3");
+        data.add("郭靖3");
+        data.add("乔峰3");
+        data.add("令狐冲3");
+        data.add("赵敏3");
+        data.add("东方不败3");
+        data.add("小龙女3");
+        data.add("黄蓉3");
+        data.add("阿朱3");
+        data.add("王菇凉3");
 
         return data;
     }

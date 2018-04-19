@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 
+
 import com.wheelpicker.core.AbstractWheelPicker;
 import com.wheelpicker.core.OnWheelPickedListener;
 import com.wheelpicker.widget.TextWheelPicker;
@@ -84,6 +85,7 @@ public class DataPicker {
             mDay = dd;
         }
         picker.setCurrentDate(mYear, mMonth, mDay);
+        picker.notifyDataSetChanged();
 
         int padding = context.getResources().getDimensionPixelOffset(R.dimen.px20);
         picker.setPadding(0, padding, 0, padding);
@@ -181,6 +183,7 @@ public class DataPicker {
 
         picker.setCurrentTime(mHour, mMinute, mSecond);
         picker.setCurrentDate(mYear, mMonth, mDay);
+        picker.notifyDataSetChanged();
 
         int padding = context.getResources().getDimensionPixelOffset(R.dimen.px20);
         picker.setPadding(0, padding, 0, padding);
@@ -199,14 +202,15 @@ public class DataPicker {
     }
 
     /**
-     * 选择未来时间，默认当前时间到100年后
+     * 选择未来时间，默认100年后
      *
      * @param context
      * @param currentDate
+     * @param year         往后推多少年
      * @param pickListener
      */
-    public static void pickFutureDate(Context context, Date currentDate, int whichWheelPick,
-                                      int visibility, final OnDatePickListener pickListener) {
+    public static void pickFutureDate(Context context, Date currentDate, int whichWheelPick, int visibility,
+                                      int year, final OnDatePickListener pickListener) {
         BottomSheet bottomSheet = new BottomSheet(context);
         final DateWheelPicker picker = new DateWheelPicker(context);
         picker.setWheelPickerVisibility(whichWheelPick, visibility);
@@ -232,10 +236,16 @@ public class DataPicker {
                 mYear = year;
                 mMonth = month;
                 mDay = day;
+                mHour = hour;
+                mMinute = minute;
+                mSecond = second;
             }
         });
 
-        picker.setDateRange(dy, dy + 100);
+        if (year <= 0) {
+            year = 100;
+        }
+        picker.setDateRange(dy, dy + year);
         //after set onDatePickerLister
         if (currentDate != null) {
             calendar.setTime(currentDate);
@@ -253,9 +263,9 @@ public class DataPicker {
             mMinute = mm;
             mSecond = ss;
         }
-
         picker.setCurrentTime(mHour, mMinute, mSecond);
         picker.setCurrentDate(mYear, mMonth, mDay);
+        picker.notifyDataSetChanged();
 
         int padding = context.getResources().getDimensionPixelOffset(R.dimen.px20);
         picker.setPadding(0, padding, 0, padding);
@@ -286,7 +296,7 @@ public class DataPicker {
         BottomSheet bottomSheet = new BottomSheet(context);
         FutureTimePicker picker = new FutureTimePicker(context);
 
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
         picker.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
