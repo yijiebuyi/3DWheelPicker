@@ -4,20 +4,21 @@ package com.wheelpicker.core;
 import android.content.Context;
 import android.os.Build;
 import android.os.SystemClock;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.animation.DecelerateInterpolator;
 
+import androidx.core.view.ViewCompat;
+
 import com.wheelpicker.anim.Animation;
 
 /*
- * Copyright (C) 2017 重庆呼我出行网络科技有限公司
+ * Copyright (C) 2017
  * 版权所有
  *
  * 功能描述：
  *
- * 作者：huangyong
+ * 作者：yijiebuyi
  * 创建时间：2017/11/26
  *
  * 修改人：

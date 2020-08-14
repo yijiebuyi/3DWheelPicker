@@ -12,12 +12,12 @@ import android.util.Log;
 import com.wheelpicker.core.OnWheelPickedListener;
 
 /*
- * Copyright (C) 2017 重庆呼我出行网络科技有限公司
+ * Copyright (C) 2017
  * 版权所有
  *
  * 功能描述：The wheel picker for text
  *
- * 作者：huangyong
+ * 作者：yijiebuyi
  * 创建时间：2017/11/26
  *
  * 修改人：
@@ -41,6 +41,9 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
     private float mLineOffset = 0;
 
     private float mRelRadius;
+
+    private String mPickedData;
+    private int mPickedIndex;
 
     private OnWheelPickedListener mOnWheelPickedListener;
 
@@ -179,8 +182,11 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
     @Override
     protected void onWheelSelected(int index) {
         if (mAdapter != null && index > -1 && index < mAdapter.getCount()) {
+            setPickedItemIndex(index);
+            mPickedData = mAdapter.getItemText(index);
+            mPickedIndex = index;
             if (mOnWheelPickedListener != null) {
-                mOnWheelPickedListener.onWheelSelected(this, index, mAdapter.getItemText(index));
+                mOnWheelPickedListener.onWheelSelected(this, index, mPickedData);
             }
         } else {
             Log.i(TAG, "error index:" + index);
@@ -267,4 +273,21 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
         return data.substring(0, len);
     }
 
+    /**
+     * 获取选择的数据
+     *
+     * @return
+     */
+    public String getPickedData() {
+        return mPickedData;
+    }
+
+    /**
+     * 获取选择的索引
+     *
+     * @return
+     */
+    public int getPickedIndex() {
+        return mPickedIndex;
+    }
 }

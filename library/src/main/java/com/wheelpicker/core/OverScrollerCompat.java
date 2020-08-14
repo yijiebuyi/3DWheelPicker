@@ -6,6 +6,19 @@ import android.os.Build;
 import android.view.animation.Interpolator;
 import android.widget.OverScroller;
 
+/*
+ * Copyright (C) 2017
+ * 版权所有
+ *
+ * 功能描述：
+ *
+ * 作者：yijiebuyi
+ * 创建时间：2017/11/26
+ *
+ * 修改人：
+ * 修改描述：
+ * 修改日期
+ */
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 class OverScrollerCompat implements WheelScroller {
     private OverScroller mOverScroller;

@@ -2,15 +2,14 @@ package com.wheelpicker.core;
 
 import android.text.TextUtils;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 
 /*
- * Copyright (C) 2017 重庆呼我出行网络科技有限公司
+ * Copyright (C) 2017
  * 版权所有
  *
  * 功能描述：
- * 作者：huangyong
+ * 作者：yijiebuyi
  * 创建时间：2018/4/19
  *
  * 修改人：

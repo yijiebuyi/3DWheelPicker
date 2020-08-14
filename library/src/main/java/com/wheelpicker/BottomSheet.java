@@ -3,7 +3,6 @@ package com.wheelpicker;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.ColorRes;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -12,21 +11,21 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-/*  =======================================================================================
- *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
- *
- *  This computer program source code file is protected by copyright law and international
- *  treaties. Unauthorized distribution of source code files, programs, or portion of the
- *  package, may result in severe civil and criminal penalties, and will be prosecuted to
- *  the maximum extent under the law.
- *
- *  ---------------------------------------------------------------------------------------
- * Author:
- * Date:2016/10/28
- * Desc:
- *
- * ======================================================================================== */
+import androidx.annotation.ColorRes;
 
+/*
+ * Copyright (C) 2017
+ * 版权所有
+ *
+ * 功能描述：
+ *
+ * 作者：yijiebuyi
+ * 创建时间：2017/11/26
+ *
+ * 修改人：
+ * 修改描述：
+ * 修改日期
+ */
 public class BottomSheet extends Dialog implements DialogInterface.OnCancelListener,
         DialogInterface.OnDismissListener, View.OnClickListener {
 

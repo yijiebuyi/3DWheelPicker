@@ -16,21 +16,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/*  =======================================================================================
- *  Copyright (C) 2016 Xiaojs.cn. All rights reserved.
+/*
+ * Copyright (C) 2017
+ * 版权所有
  *
- *  This computer program source code file is protected by copyright law and international
- *  treaties. Unauthorized distribution of source code files, programs, or portion of the
- *  package, may result in severe civil and criminal penalties, and will be prosecuted to
- *  the maximum extent under the law.
+ * 功能描述：未来时间
  *
- *  ---------------------------------------------------------------------------------------
- * Author:
- * Date:2016/11/7
- * Desc:
+ * 作者：yijiebuyi
+ * 创建时间：2017/11/26
  *
- * ======================================================================================== */
-
+ * 修改人：
+ * 修改描述：
+ * 修改日期
+ */
 public class FutureTimePicker extends LinearLayout implements OnWheelPickedListener {
     public final static int TYPE_DAY = 1 << 1;
     public final static int TYPE_HOUR = 1 << 2;

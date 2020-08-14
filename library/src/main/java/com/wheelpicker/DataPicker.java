@@ -16,12 +16,12 @@ import java.util.Date;
 import java.util.List;
 
 /*
- * Copyright (C) 2017 重庆呼我出行网络科技有限公司
+ * Copyright (C) 2017
  * 版权所有
  *
  * 功能描述：
  *
- * 作者：huangyong
+ * 作者：yijiebuyi
  * 创建时间：2017/11/26
  *
  * 修改人：

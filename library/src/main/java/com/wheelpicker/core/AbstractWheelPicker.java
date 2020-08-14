@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
@@ -17,12 +16,12 @@ import com.wheelpicker.R;
 
 
 /*
- * Copyright (C) 2017 重庆呼我出行网络科技有限公司
+ * Copyright (C) 2017
  * 版权所有
  *
  * 功能描述：
  *
- * 作者：huangyong
+ * 作者：yijiebuyi
  * 创建时间：2017/11/26
  *
  * 修改人：
@@ -36,6 +35,10 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
     private static final int DEFAULT_COUNT = 5;
     private static final int DEFAULT_SPACE = 20;
     private static final int DEFAULT_COLOR = 0xFF000000;
+    /**
+     * 默认分割线颜色
+     */
+    private static final int DEFAULT_LINE_COLOR = 0XFFDDDDDD;
 
     protected VelocityTracker mTracker;
 
@@ -68,6 +71,7 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
     protected int mVisibleItemCount;
     protected int mItemSpace;
     protected int mCurrItemIndex;
+    protected int mPickedItemIndex;
     protected int mColor;
     protected int mLineColor;
     protected int mLineStrokeWidth;
@@ -88,6 +92,9 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
     protected float mCurrentY;
     protected float mDeltaX;
     protected float mDeltaY;
+
+    //是否可以响应滑动事件
+    private boolean mTouchable = true;
 
     public AbstractWheelPicker(Context context) {
         super(context);
@@ -113,7 +120,7 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
     protected void obtainAttrs(AttributeSet attrs) {
         if (attrs == null) {
             mColor = DEFAULT_COLOR;
-            mLineColor = Color.LTGRAY;
+            mLineColor = DEFAULT_LINE_COLOR;
             mCurrItemIndex = DEFAULT_INDEX;
             mVisibleItemCount = DEFAULT_COUNT;
             mItemSpace = DEFAULT_SPACE;
@@ -125,7 +132,7 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
             mVisibleItemCount = a.getInt(R.styleable.WheelPicker_wheel_visible_item_count, DEFAULT_COUNT);
             mItemSpace = a.getDimensionPixelSize(R.styleable.WheelPicker_wheel_item_space, DEFAULT_SPACE);
             mColor = a.getColor(R.styleable.WheelPicker_wheel_text_color, DEFAULT_COLOR);
-            mLineColor = a.getColor(R.styleable.WheelPicker_wheel_line_color, Color.LTGRAY);
+            mLineColor = a.getColor(R.styleable.WheelPicker_wheel_line_color, DEFAULT_LINE_COLOR);
             mLineStrokeWidth = a.getDimensionPixelSize(R.styleable.WheelPicker_wheel_line_width, 1);
             a.recycle();
         }
@@ -214,6 +221,10 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (!mTouchable) {
+            return true;
+        }
+
         if (null == mTracker) {
             mTracker = VelocityTracker.obtain();
         }
@@ -254,15 +265,25 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
 
     public void setCurrentItem(int index) {
         mCurrItemIndex = index;
+        mPickedItemIndex = index;
         requestComputeLayout();
     }
 
     public void setCurrentItemWithoutReLayout(int index) {
         mCurrItemIndex = index;
+        mPickedItemIndex = index;
     }
 
     public int getCurrentItem() {
         return mCurrItemIndex;
+    }
+
+    public void setPickedItemIndex(int index) {
+        mPickedItemIndex = index;
+    }
+
+    public int getPickedItemIndex() {
+        return mPickedItemIndex;
     }
 
     public void setItemSpace(int space) {
@@ -313,9 +334,18 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
         if (mDataSetObserver == null) {
             mDataSetObserver = new AdapterDataSetObserver();
             mAdapter.registerDataSetObserver(mDataSetObserver);
+            mDataSetObserver.onChanged();
         }
 
         requestComputeLayout();
+    }
+
+    public T getAdapter() {
+        return mAdapter;
+    }
+
+    public void setTouchable(boolean touchable) {
+        mTouchable = touchable;
     }
 
     protected void updateItemIndexRange() {
