@@ -6,6 +6,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
+        android:label="3d数据选择"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>

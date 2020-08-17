@@ -109,7 +109,7 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
             return;
         }
 
-        for (int i = mItemSartIndex; i <= mItemEndIndex; i++) {
+        for (int i = mItemStartIndex; i <= mItemEndIndex; i++) {
             float rotateDegree = mUnitDegree * (i - mCurrItemIndex) + mOffsetItemDelta;
             if (rotateDegree > 90 || rotateDegree < -90) {
                 continue;

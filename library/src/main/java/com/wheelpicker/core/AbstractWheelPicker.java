@@ -76,7 +76,7 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
     protected int mLineColor;
     protected int mLineStrokeWidth;
 
-    protected int mItemSartIndex;
+    protected int mItemStartIndex;
     protected int mItemEndIndex;
 
     protected int mItemMaxWidth;
@@ -350,7 +350,7 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
 
     protected void updateItemIndexRange() {
         if (mAdapter != null && !mAdapter.isEmpty()) {
-            mItemSartIndex = Math.max(0, mCurrItemIndex - mVisibleItemCount / 2 - 1);
+            mItemStartIndex = Math.max(0, mCurrItemIndex - mVisibleItemCount / 2 - 1);
             mItemEndIndex = Math.min(mCurrItemIndex + mVisibleItemCount / 2 + 1, mAdapter.getCount() - 1);
         }
     }

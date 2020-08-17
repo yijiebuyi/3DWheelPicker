@@ -1,4 +1,4 @@
-package com.wheelpicker.widget;
+package com.wheelpicker;
 
 import java.util.List;
 

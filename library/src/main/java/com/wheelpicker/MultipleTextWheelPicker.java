@@ -1,12 +1,14 @@
-package com.wheelpicker.widget;
+package com.wheelpicker;
 
 import android.content.Context;
 import android.view.Gravity;
 import android.widget.LinearLayout;
 
-import com.wheelpicker.R;
 import com.wheelpicker.core.AbstractWheelPicker;
+import com.wheelpicker.widget.IPickerView;
 import com.wheelpicker.core.OnWheelPickedListener;
+import com.wheelpicker.widget.TextWheelPicker;
+import com.wheelpicker.widget.TextWheelPickerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,7 @@ import java.util.List;
  * 修改日期
  */
 public class MultipleTextWheelPicker<T extends MultiplePickerData> extends LinearLayout
-        implements OnWheelPickedListener {
+        implements OnWheelPickedListener, IPickerView {
     protected List<T> mData;
     protected List<TextWheelPicker> mWheelPickers;
     protected List<TextWheelPickerAdapter> mTextWheelPickerAdapters;
@@ -133,12 +135,6 @@ public class MultipleTextWheelPicker<T extends MultiplePickerData> extends Linea
         }
     }
 
-    public interface OnMultiPickListener {
-        public void onDataPicked(List<String> pickedData);
-
-        public void onCancel();
-    }
-
     public void setTextSize(int textSize) {
         if (textSize < 0) {
             return;
@@ -205,6 +201,17 @@ public class MultipleTextWheelPicker<T extends MultiplePickerData> extends Linea
         }
     }
 
+    @Override
+    public void setItemSize(int itemWidth, int itemHeight) {
+        if (mWheelPickers == null) {
+            return;
+        }
+
+        for (TextWheelPicker picker : mWheelPickers) {
+            picker.setItemSize(itemWidth, itemHeight);
+        }
+    }
+
     public void setFakeBoldText(boolean fakeBoldText) {
         if (mWheelPickers == null) {
             return;
@@ -217,5 +224,12 @@ public class MultipleTextWheelPicker<T extends MultiplePickerData> extends Linea
 
     public List<String> getPickedData() {
         return mPickedData;
+    }
+
+
+    public interface OnMultiPickListener {
+        public void onDataPicked(List<String> pickedData);
+
+        public void onCancel();
     }
 }

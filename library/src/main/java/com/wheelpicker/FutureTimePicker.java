@@ -5,6 +5,7 @@ import android.view.Gravity;
 import android.widget.LinearLayout;
 
 import com.wheelpicker.core.AbstractWheelPicker;
+import com.wheelpicker.widget.IPickerView;
 import com.wheelpicker.core.OnWheelPickedListener;
 import com.wheelpicker.widget.TextWheelPicker;
 import com.wheelpicker.widget.TextWheelPickerAdapter;
@@ -30,7 +31,7 @@ import java.util.Map;
  * 修改描述：
  * 修改日期
  */
-public class FutureTimePicker extends LinearLayout implements OnWheelPickedListener {
+public class FutureTimePicker extends LinearLayout implements OnWheelPickedListener, IPickerView {
     public final static int TYPE_DAY = 1 << 1;
     public final static int TYPE_HOUR = 1 << 2;
     public final static int TYPE_MINUTE = 1 << 3;
@@ -336,8 +337,8 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
 
     public void setLineWidth(int width) {
         mDayWheelPicker.setLineStorkeWidth(width);
-        mHourWheelPicker.setLineColor(width);
-        mMinuteWheelPicker.setLineColor(width);
+        mHourWheelPicker.setLineStorkeWidth(width);
+        mMinuteWheelPicker.setLineStorkeWidth(width);
     }
 
     public void setItemSpace(int space) {
@@ -429,6 +430,30 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
         return -1;
     }
 
+
+    public int getSelectedYear() {
+        return mSelectedYear;
+    }
+
+    public int getSelectedMonth() {
+        return mSelectedMonth;
+    }
+
+    public int getSelectedDay() {
+        return mSelectedDay;
+    }
+
+    public int getSelectedHour() {
+        return mSelectedHour;
+    }
+
+    public int getSelectedMinute() {
+        return mSelectedMinute;
+    }
+
+    public int getSelectedSecond() {
+        return mSelectedSecond;
+    }
 
     public interface OnFutureDatePickListener {
         public void onDatePicked(int year, int month, int day, int hour, int minute, int second);

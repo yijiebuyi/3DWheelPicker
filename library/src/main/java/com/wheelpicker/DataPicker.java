@@ -294,7 +294,7 @@ public class DataPicker {
     public static void pickFutureDate(Context context, Date currentDate, int days,
                                       final OnDatePickListener pickListener) {
         BottomSheet bottomSheet = new BottomSheet(context);
-        FutureTimePicker picker = new FutureTimePicker(context);
+        final FutureTimePicker picker = new FutureTimePicker(context);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
@@ -391,10 +391,6 @@ public class DataPicker {
 
     public interface OnDatePickListener {
         public void onDatePicked(int year, int month, int day, int hour, int minute, int second);
-    }
-
-    public interface OnDatePickListener1 {
-        public void onDatePicked(Date date);
     }
 
     public interface OnDataPickListener {
