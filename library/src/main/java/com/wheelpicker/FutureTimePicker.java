@@ -21,6 +21,7 @@ import java.util.Map;
  * 版权所有
  *
  * 功能描述：未来时间
+ * 显示（天、小时、分钟）的组合
  *
  * 作者：yijiebuyi
  * 创建时间：2017/11/26
@@ -60,8 +61,9 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
     private String mTomorrowStr = "明天";
     //private String mAfterTomorrowStr = "后天";
     private String mNextYear = "明年";
-    private String mMonthStr;
-    private String mDayStr;
+    private String mYearStr = "年";
+    private String mMonthStr = "月";
+    private String mDayStr = "日";
     private String mHourStr;
     private String mMinuteStr;
     private long mStartDay;
@@ -91,6 +93,7 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
         //mAfterTomorrowStr = getResources().getString(com.wheelpicker.R.string._after_tomorrow);
         mNextYear = getResources().getString(com.wheelpicker.R.string._next_year);
 
+        mYearStr = getResources().getString(com.wheelpicker.R.string._year);
         mMonthStr = getResources().getString(com.wheelpicker.R.string._month);
         mDayStr = getResources().getString(com.wheelpicker.R.string._day);
         mHourStr = getResources().getString(com.wheelpicker.R.string._hour);
@@ -172,8 +175,10 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
         calendar.set(year, month, day, 0, 0, 0);
         mStartDay = calendar.getTimeInMillis();
 
+        StringBuilder sb = new StringBuilder();
+        String str = "";
         for (int i = 0; i < durationDays; i++) {
-            String str = "";
+            sb.delete(0, sb.length());
             switch (i) {
                 case 0:
                     //today
@@ -197,21 +202,30 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
                     month = calendar.get(Calendar.MONTH) + 1;
                     day = calendar.get(Calendar.DATE);
 
-                    String m = String.valueOf(month);
-                    if (month < 10) {
-                        m = "0" + m;
-                    }
-
-                    String d = String.valueOf(day);
-                    if (day < 10) {
-                        d = "0" + d;
-                    }
-
                     if (year == mCurrYear) {
-                        str = m + mMonthStr + d + mDayStr;
+                        //do nothing, 当年只含月份
+                    } else if (year == mCurrYear + 1){
+                        sb.append(mNextYear);
                     } else {
-                        str = mNextYear + m + mMonthStr + d + mDayStr;
+                        sb.append(year);
+                        sb.append(mYearStr);
                     }
+
+                    //month
+                    if (month < 10) {
+                        sb.append("0");
+                    }
+                    sb.append(month);
+                    sb.append(mMonthStr);
+
+                    //day
+                    if (day < 10) {
+                        sb.append("0");
+                    }
+                    sb.append(day);
+                    sb.append(mDayStr);
+
+                    str = sb.toString();
                     mDayMap.put(str, today + i * oneDay);
                     break;
             }

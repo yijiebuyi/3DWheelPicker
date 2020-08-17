@@ -355,7 +355,7 @@ public class DataPicker {
 
         BottomSheet bottomSheet = new BottomSheet(context);
 
-        TextWheelPicker picker = new TextWheelPicker(context);
+        final TextWheelPicker picker = new TextWheelPicker(context);
         TextWheelPickerAdapter adapter = new TextWheelPickerAdapter(data);
         picker.setAdapter(adapter);
 
@@ -373,18 +373,12 @@ public class DataPicker {
 
         bottomSheet.setContent(picker);
         bottomSheet.show();
-        picker.setOnWheelPickedListener(new OnWheelPickedListener() {
-            @Override
-            public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, Object data) {
-                mPickedData = data;
-            }
-        });
 
         bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (pickedListener != null) {
-                    pickedListener.onDataPicked(mPickedData);
+                    pickedListener.onDataPicked(picker.getPickedData());
                 }
             }
         });
