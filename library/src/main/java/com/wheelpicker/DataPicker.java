@@ -2,6 +2,7 @@ package com.wheelpicker;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -82,8 +83,8 @@ public class DataPicker {
                 .setAfterYears(afterYears)
                 .build();
         final DateWheelPicker picker = (DateWheelPicker) buildDateWheelPicker(context, option, PickMode.MODE_DATE);
-        picker.setCurrentTime(Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND);
-        picker.setCurrentDate(Calendar.YEAR, Calendar.MONTH, Calendar.DATE);
+        picker.setCurrentTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
+        picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
         picker.notifyDataSetChanged();
 
         BottomSheet bottomSheet = buildBottomSheet(context, picker);
