@@ -32,6 +32,7 @@ dependencies {
 
 ### 基本用法：
 - 使用Datapick
+-1.时间选择
 ```java
    /**
    * 选择生日
@@ -61,7 +62,35 @@ dependencies {
      */
      public static void pickFutureDate(Context context, @Nullable Date initDate, int durationDays, 
                           final OnDatePickListener listener)
-     
+  
+ ```    
+  -2.数据选择 
+  为了保证picker控件显示的数据是期望的字符串，需要对数组中的类（String数组除外）实现PickString，或者重写toString
+  ```java
+  /**
+  * 功能描述：当没有实现PickString，picker控件上显示是toString()的内容
+  */
+  class Student implements PickString {
+    public String name;
+    public int age;
+
+    public Student(String n, int a) {
+        name = n;
+        age = a;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return age + "岁";
+    }
+
+    @Override
+    public String pickDisplayName() {
+        return name;
+    }
+}
+
      /**
      * 获取单行数据
      * @param context
