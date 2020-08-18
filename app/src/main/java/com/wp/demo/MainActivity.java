@@ -70,10 +70,10 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                DataPicker.pickData(MainActivity.this, null, getStudents(1), new OnDataPickListener() {
+                DataPicker.pickData(MainActivity.this, null, getStudents(1), new OnDataPickListener<Student>() {
                     @Override
-                    public void onDataPicked(int index, String val, Object data) {
-                        Toast.makeText(MainActivity.this, data.toString(), Toast.LENGTH_SHORT).show();
+                    public void onDataPicked(int index, String val, Student data) {
+                        Toast.makeText(MainActivity.this, val, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -88,10 +88,10 @@ public class MainActivity extends Activity {
                 stu.add(getStudents(1));
                 stu.add(getStudents(2));
 
-                DataPicker.pickData(MainActivity.this, null, stu, new OnMultiDataPickListener() {
+                DataPicker.pickData(MainActivity.this, null, stu, new OnMultiDataPickListener<Student>() {
 
                     @Override
-                    public void onDataPicked(List indexArr, List val, List data) {
+                    public void onDataPicked(List<Integer> indexArr, List<String> val, List<Student> data) {
                         String s = indexArr.toString() + ":" + val.toString();
                         Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
                     }
@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
             }
         });
     }
-    
+
     private List<String> getTextList() {
         List<String> data = new ArrayList<>();
         data.add("杨过");
