@@ -151,7 +151,7 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
         calendar.setTime(new Date());
 
         mCurrYear = calendar.get(Calendar.YEAR);
-        mCurrMonth = calendar.get(Calendar.MONTH) + 1;
+        mCurrMonth = calendar.get(Calendar.MONTH);
         mCurrDay = calendar.get(Calendar.DATE);
         mCurrHour = calendar.get(Calendar.HOUR_OF_DAY);
         mCurrMinute = calendar.get(Calendar.MINUTE);
@@ -247,7 +247,7 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
         c.setTimeInMillis(pickedTime);
 
         int y = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH) + 1;
+        int month = c.get(Calendar.MONTH);
         int d = c.get(Calendar.DATE);
         int h = c.get(Calendar.HOUR_OF_DAY);
         int m = c.get(Calendar.MINUTE);
@@ -262,7 +262,7 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
         //Is today
         mOldSelectionIsToday = mCurrYear == mSelectedYear && mCurrMonth == mSelectedMonth && mCurrDay == mSelectedDay;
 
-        c.set(y, month - 1, d, 0, 0, 0);
+        c.set(y, month, d, 0, 0, 0);
         long pickedDay = c.getTimeInMillis();
         int dayIndex = Math.max(0, (int)((pickedDay - mStartDay) / ONE_DAY));
         dayIndex = Math.min(dayIndex, DURATION);
@@ -287,7 +287,7 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
         mSelectedMinute = getCurrentDate(mMinutePickerAdapter.getItemText(mIndex), mMinuteStr);
 
         if (mOnFutureDatePickListener != null) {
-            mOnFutureDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth - 1, mSelectedDay,
+            mOnFutureDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth, mSelectedDay,
                     mSelectedHour, mSelectedMinute, 0);
         }
     }
@@ -295,7 +295,7 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
     public void setOnFutureDatePickListener(OnFutureDatePickListener listener) {
         mOnFutureDatePickListener = listener;
         if (mOnFutureDatePickListener != null) {
-            mOnFutureDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth - 1, mSelectedDay,
+            mOnFutureDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth, mSelectedDay,
                     mSelectedHour, mSelectedMinute, mSelectedSecond);
         }
     }
@@ -375,7 +375,7 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
                 long day = mDayMap.get(data.toString());
                 calendar.setTimeInMillis(day);
                 mSelectedYear = calendar.get(Calendar.YEAR);
-                mSelectedMonth = calendar.get(Calendar.MONTH) + 1;
+                mSelectedMonth = calendar.get(Calendar.MONTH);
                 mSelectedDay = calendar.get(Calendar.DATE);
 
                 if (mSelectedYear == mCurrYear && mSelectedMonth == mCurrMonth && mSelectedDay == mCurrDay) {
@@ -421,7 +421,7 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
         }
 
         if (mOnFutureDatePickListener != null) {
-            mOnFutureDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth - 1, mSelectedDay,
+            mOnFutureDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth, mSelectedDay,
                     mSelectedHour, mSelectedMinute, 0);
         }
     }
