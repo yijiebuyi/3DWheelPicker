@@ -5,9 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 
-
-import com.wheelpicker.core.AbstractWheelPicker;
-import com.wheelpicker.core.OnWheelPickedListener;
 import com.wheelpicker.widget.TextWheelPicker;
 import com.wheelpicker.widget.TextWheelPickerAdapter;
 
@@ -28,6 +25,7 @@ import java.util.List;
  * 修改描述：
  * 修改日期
  */
+@Deprecated
 public class DataPicker {
     private static int mYear;
     private static int mMonth;

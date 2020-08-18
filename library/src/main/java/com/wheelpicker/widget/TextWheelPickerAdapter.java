@@ -1,5 +1,7 @@
 package com.wheelpicker.widget;
 
+import com.wheelpicker.PickDataWrapper;
+
 import java.util.List;
 
 /*
@@ -15,18 +17,18 @@ import java.util.List;
  * 修改描述：
  * 修改日期
  */
-public class TextWheelPickerAdapter extends TextBaseAdapter {
-	private List<String> mData;
+public class TextWheelPickerAdapter<T> extends TextBaseAdapter {
+	private List<T> mData;
 	
 	public TextWheelPickerAdapter() {
 		//empty constructor
 	}
 	
-	public TextWheelPickerAdapter(List<String> data) {
+	public TextWheelPickerAdapter(List<T> data) {
 		mData = data;
 	}
 	
-	public void setData(List<String> data) {
+	public void setData(List<T> data) {
 		mData = data;
 		notifyDataSetChanged();
 	}
@@ -38,7 +40,14 @@ public class TextWheelPickerAdapter extends TextBaseAdapter {
 
 	@Override
 	public String getItemText(int position) {
-		return  mData == null ? null : mData.get(position);
+		T d = mData == null ? null : mData.get(position);
+		if (d instanceof String) {
+			return (String)d;
+		} else if (d instanceof PickString) {
+			return ((PickString)d).pickDisplayName();
+		} else {
+			return d.toString();
+		}
 	}
 
 	@Override

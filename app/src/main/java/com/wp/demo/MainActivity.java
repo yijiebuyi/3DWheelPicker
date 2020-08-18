@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.wheelpicker.DataPicker;
 import com.wheelpicker.DateWheelPicker;
+import com.wheelpicker.OnDataPickListener;
+import com.wheelpicker.OnDatePickListener;
+import com.wheelpicker.Picker;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,22 +27,23 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                DataPicker.pickBirthday(MainActivity.this, new Date(System.currentTimeMillis()), new DataPicker.OnBirthdayPickListener() {
-                    @Override
-                    public void onBirthPicked(int year, int month, int day) {
-                        Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day, Toast.LENGTH_SHORT).show();
-                    }
-                });
+                Picker.pickBirthday(MainActivity.this, new Date(System.currentTimeMillis()),
+                        new OnDatePickListener() {
+                            @Override
+                            public void onDatePicked(long time, int year, int month, int day, int hour, int minute, int second) {
+                                Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day, Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
         });
 
         findViewById(R.id.picker_future_date).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataPicker.pickFutureDate(MainActivity.this, new Date(System.currentTimeMillis()),
-                        DateWheelPicker.TYPE_ALL, View.VISIBLE, 100, new DataPicker.OnDatePickListener() {
+                Picker.pickDate(MainActivity.this, new Date(System.currentTimeMillis()),
+                        DateWheelPicker.TYPE_ALL, 0, 100, new OnDatePickListener() {
                             @Override
-                            public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
+                            public void onDatePicked(long time, int year, int month, int day, int hour, int minute, int second) {
                                 Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day + " " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -50,10 +53,10 @@ public class MainActivity extends Activity {
         findViewById(R.id.picker_future).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataPicker.pickFutureDate(MainActivity.this, new Date(System.currentTimeMillis() + 30 * 60 * 1000),
-                        365, new DataPicker.OnDatePickListener() {
+                Picker.pickFutureDate(MainActivity.this, new Date(System.currentTimeMillis() + 30 * 60 * 1000),
+                        365, new OnDatePickListener() {
                             @Override
-                            public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
+                            public void onDatePicked(long time, int year, int month, int day, int hour, int minute, int second) {
                                 Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day + " " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -64,9 +67,9 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                DataPicker.pickData(MainActivity.this, getTextList(), new DataPicker.OnDataPickListener() {
+                Picker.pickData(MainActivity.this, "", getTextList(), new OnDataPickListener() {
                     @Override
-                    public void onDataPicked(Object data) {
+                    public void onDataPicked(int index, String val, Object data) {
                         Toast.makeText(MainActivity.this, data.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });

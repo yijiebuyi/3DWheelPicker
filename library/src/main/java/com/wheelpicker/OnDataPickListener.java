@@ -14,7 +14,7 @@ package com.wheelpicker;
  * 修改日期
  */
 
-interface OnDataPickListener<T> {
+public interface OnDataPickListener<T> {
     /**
      * @param index 选中项的index
      * @param val   选中项的显示字符串

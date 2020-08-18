@@ -1,5 +1,7 @@
 package com.wheelpicker.widget;
 
+import android.view.View;
+
 /**
  * Copyright (C) 2017
  * 版权所有
@@ -57,4 +59,6 @@ public interface IPickerView {
      * @param itemHeight
      */
     public void setItemSize(int itemWidth, int itemHeight);
+
+    public View asView();
 }

@@ -2,6 +2,7 @@ package com.wheelpicker;
 
 import android.content.Context;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.wheelpicker.core.AbstractWheelPicker;
@@ -360,6 +361,11 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
     }
 
     @Override
+    public View asView() {
+        return this;
+    }
+
+    @Override
     public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, Object data) {
         Calendar calendar = Calendar.getInstance();
         int hourIndex = 0;
@@ -418,6 +424,11 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
             mOnFutureDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth - 1, mSelectedDay,
                     mSelectedHour, mSelectedMinute, 0);
         }
+    }
+
+    public void notifyDataSetChanged() {
+        //年月日，时分秒是联动的，所以只需要通知day的数据变化
+        mDayPickerAdapter.notifyDataSetChanged();
     }
 
     private int getCurrentDate(Object data, String suffix) {

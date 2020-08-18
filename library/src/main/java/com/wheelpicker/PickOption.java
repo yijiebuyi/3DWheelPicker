@@ -148,6 +148,7 @@ public class PickOption {
         visibleItemCount = builder.visibleItemCount;
         itemTextColor = builder.itemTextColor;
         itemTextSize = builder.itemTextSize;
+        itemSpace = builder.itemSpace;
         itemLineColor = builder.itemLineColor;
         itemLineWidth = builder.itemLineWidth;
         backgroundColor = builder.backgroundColor;

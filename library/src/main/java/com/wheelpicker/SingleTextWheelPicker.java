@@ -2,6 +2,7 @@ package com.wheelpicker;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.wheelpicker.widget.IPickerView;
 import com.wheelpicker.widget.TextWheelPicker;
@@ -66,6 +67,11 @@ public class SingleTextWheelPicker extends TextWheelPicker implements IPickerVie
 
     public void setItemSize(int itemWidth, int itemHeight) {
         super.setItemSize(itemWidth, itemHeight);
+    }
+
+    @Override
+    public View asView() {
+        return this;
     }
 
 }

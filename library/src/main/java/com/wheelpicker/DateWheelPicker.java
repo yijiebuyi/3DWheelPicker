@@ -3,6 +3,7 @@ package com.wheelpicker;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.wheelpicker.core.AbstractWheelPicker;
@@ -423,6 +424,11 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
         mHourWheelPicker.setItemSize(itemWidth, itemHeight);
         mMinuteWheelPicker.setItemSize(itemWidth, itemHeight);
         mSecondWheelPicker.setItemSize(itemWidth, itemHeight);
+    }
+
+    @Override
+    public View asView() {
+        return this;
     }
 
     public int getDateMode() {

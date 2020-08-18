@@ -2,6 +2,7 @@ package com.wheelpicker;
 
 import android.content.Context;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.wheelpicker.core.AbstractWheelPicker;
@@ -210,6 +211,11 @@ public class MultipleTextWheelPicker<T extends MultiplePickerData> extends Linea
         for (TextWheelPicker picker : mWheelPickers) {
             picker.setItemSize(itemWidth, itemHeight);
         }
+    }
+
+    @Override
+    public View asView() {
+        return this;
     }
 
     public void setFakeBoldText(boolean fakeBoldText) {
