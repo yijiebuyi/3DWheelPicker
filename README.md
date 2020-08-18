@@ -21,7 +21,7 @@ allprojects {
 }
 ```
 
- - 2.依赖androidx
+ - 2.引用
 ```gradle
 
 dependencies {
@@ -59,7 +59,8 @@ dependencies {
      * @param initDate 初始化选中的日期
      * @param durationDays 距离当前时间往后显示的天数
      */
-     public static void pickFutureDate(Context context, @Nullable Date initDate, int durationDays, final OnDatePickListener listener)
+     public static void pickFutureDate(Context context, @Nullable Date initDate, int durationDays, 
+                          final OnDatePickListener listener)
      
      /**
      * 获取单行数据
@@ -67,7 +68,8 @@ dependencies {
      * @param initData 初始化选中的数据
      * @param srcData 数据源
      */
-    public static <T> void pickData(Context context, @Nullable T initData, @NonNull final List<T> srcData, final OnDataPickListener listener)
+    public static <T> void pickData(Context context, @Nullable T initData, @NonNull final List<T> srcData, 
+                             final OnDataPickListener listener)
     
     /**
      * 多行数据选择
@@ -75,7 +77,8 @@ dependencies {
      * @param initData 初始化选中的数据
      * @param srcData 数据源
      */
-    public static <T> void pickData(Context context, @Nullable List<T> initData, @NonNull List<List<T>> srcData, final OnMultiDataPickListener listener) 
+    public static <T> void pickData(Context context, @Nullable List<T> initData, @NonNull List<List<T>> srcData,
+                             final OnMultiDataPickListener listener) 
     
       /**
      * 设置滚轮样式
