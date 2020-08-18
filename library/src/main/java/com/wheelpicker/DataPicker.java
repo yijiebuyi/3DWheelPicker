@@ -2,398 +2,243 @@ package com.wheelpicker;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 
-import com.wheelpicker.widget.TextWheelPicker;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.wheelpicker.widget.IPickerView;
 import com.wheelpicker.widget.TextWheelPickerAdapter;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/*
+/**
  * Copyright (C) 2017
  * 版权所有
- *
- * 功能描述：
- *
+ * <p>
+ * 功能描述：数据选择器（包括日期，时间，未来时间，数据等）
+ * <p>
  * 作者：yijiebuyi
- * 创建时间：2017/11/26
- *
+ * 创建时间：2020/8/17
+ * <p>
  * 修改人：
  * 修改描述：
  * 修改日期
  */
-@Deprecated
+
 public class DataPicker {
-    private static int mYear;
-    private static int mMonth;
-    private static int mDay;
-
-    private static int mHour;
-    private static int mMinute;
-    private static int mSecond;
-
-    private static Object mPickedData;
 
     /**
-     * 选择生日
+     * 获取生日日期
      *
      * @param context
-     * @param birthday
-     * @param pickListener
+     * @param initDate
+     * @param listener
      */
-    public static void pickBirthday(Context context, Date birthday, final OnBirthdayPickListener pickListener) {
-        BottomSheet bottomSheet = new BottomSheet(context);
-        final DateWheelPicker picker = new DateWheelPicker(context);
-        picker.setWheelPickerVisibility(DateWheelPicker.TYPE_HH_MM_SS, View.GONE);
+    public static void pickBirthday(Context context, @Nullable Date initDate, final OnDatePickListener listener) {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(initDate != null ? initDate : new Date());
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        int dy = calendar.get(Calendar.YEAR);
-        int dm = calendar.get(Calendar.MONTH);
-        int dd = calendar.get(Calendar.DATE);
-
-        picker.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        picker.setTextColor(context.getResources().getColor(R.color.font_black));
-        picker.setVisibleItemCount(7);
-        picker.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_32px));
-        picker.setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px25));
-
-        picker.setOnDatePickListener(new DateWheelPicker.OnDatePickListener() {
-            @Override
-            public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
-                mYear = year;
-                mMonth = month;
-                mDay = day;
-            }
-        });
-
-        picker.setDateRange(dy - 100, dy);
-        //after set onDatePickerLister
-        if (birthday != null) {
-            calendar.setTime(birthday);
-            mYear = calendar.get(Calendar.YEAR);
-            mMonth = calendar.get(Calendar.MONTH);
-            mDay = calendar.get(Calendar.DATE);
-        } else {
-            mYear = dy;
-            mMonth = dm;
-            mDay = dd;
-        }
-        picker.setCurrentDate(mYear, mMonth, mDay);
+        PickOption option = getPickDefaultOptionBuilder(context).build();
+        final DateWheelPicker picker = (DateWheelPicker) buildDateWheelPicker(context, option, PickMode.MODE_BIRTHDAY);
+        picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
         picker.notifyDataSetChanged();
 
-        int padding = context.getResources().getDimensionPixelOffset(R.dimen.px20);
-        picker.setPadding(0, padding, 0, padding);
-
-        bottomSheet.setContent(picker);
+        BottomSheet bottomSheet = buildBottomSheet(context, picker);
         bottomSheet.show();
-
         bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pickListener != null) {
-                    pickListener.onBirthPicked(mYear, mMonth, mDay);
+                if (listener != null) {
+                    calendar.set(picker.getSelectedYear(), picker.getSelectedMonth(), picker.getSelectedDay(), 0, 0, 0);
+                    listener.onDatePicked(calendar.getTimeInMillis(),
+                            picker.getSelectedYear(), picker.getSelectedMonth(), picker.getSelectedDay(), 0, 0, 0);
                 }
             }
         });
+
     }
 
     /**
-     * 选择时间，默认是显示的“年月日时分秒"组合的时间选择器
-     * 时间范围为当前时间100年前后100年后
+     * 获取时间
      *
      * @param context
-     * @param selectedDate
-     * @param pickListener
+     * @param initDate
+     * @param witchPickVisible
+     * @param aheadYears
+     * @param afterYears
+     * @param listener
      */
-    public static void pickDate(Context context, Date selectedDate, final OnDatePickListener pickListener) {
-        pickDate(context, selectedDate, DateWheelPicker.TYPE_ALL, View.VISIBLE,
-                100, 100, pickListener);
-    }
+    public static void pickDate(Context context, @Nullable Date initDate, int witchPickVisible,
+                         int aheadYears, int afterYears, final OnDatePickListener listener) {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(initDate != null ? initDate : new Date());
 
-    /**
-     * 选择时间，默认是显示的“年月日时分秒"组合的时间选择器
-     * 通过@param whichWheelPick和@param可以设置哪些些时间控件显示或隐藏
-     *
-     * @param context
-     * @param selectedDate   选择的日期
-     * @param whichWheelPick 哪些控件
-     * @param visibility     设置的哪些控件需要显示或隐藏
-     * @param aheadYear      当前时间多少年前
-     * @param afterYear      当前时间多少年后
-     * @param pickListener
-     */
-    public static void pickDate(Context context, Date selectedDate, int whichWheelPick, int visibility,
-                                int aheadYear, int afterYear, final OnDatePickListener pickListener) {
-        BottomSheet bottomSheet = new BottomSheet(context);
-        final DateWheelPicker picker = new DateWheelPicker(context);
-        picker.setWheelPickerVisibility(whichWheelPick, visibility);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        int dy = calendar.get(Calendar.YEAR);
-        int dm = calendar.get(Calendar.MONTH);
-        int dd = calendar.get(Calendar.DATE);
-        int hh = calendar.get(Calendar.HOUR_OF_DAY);
-        int mm = calendar.get(Calendar.MINUTE);
-        int ss = calendar.get(Calendar.SECOND);
-
-        picker.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        picker.setTextColor(context.getResources().getColor(R.color.font_black));
-        picker.setVisibleItemCount(7);
-        picker.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_32px));
-        picker.setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px25));
-
-        picker.setOnDatePickListener(new DateWheelPicker.OnDatePickListener() {
-            @Override
-            public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
-                mYear = year;
-                mMonth = month;
-                mDay = day;
-                mHour = hour;
-                mMinute = minute;
-                mSecond = second;
-            }
-        });
-
-
-        //当前时间向前推aheadYear年，向后推afterYear年
-        picker.setDateRange(dy - aheadYear, dy + afterYear);
-        if (selectedDate != null) {
-            calendar.setTime(selectedDate);
-            mYear = calendar.get(Calendar.YEAR);
-            mMonth = calendar.get(Calendar.MONTH);
-            mDay = calendar.get(Calendar.DATE);
-            mHour = calendar.get(Calendar.HOUR_OF_DAY);
-            mMinute = calendar.get(Calendar.MINUTE);
-            mSecond = calendar.get(Calendar.SECOND);
-        } else {
-            mYear = dy;
-            mMonth = dm;
-            mDay = dd;
-            mHour = hh;
-            mMinute = mm;
-            mSecond = ss;
-        }
-
-        picker.setCurrentTime(mHour, mMinute, mSecond);
-        picker.setCurrentDate(mYear, mMonth, mDay);
+        PickOption option = getPickDefaultOptionBuilder(context)
+                .setDateWitchVisible(witchPickVisible)
+                .setAheadYears(aheadYears)
+                .setAfterYears(afterYears)
+                .build();
+        final DateWheelPicker picker = (DateWheelPicker) buildDateWheelPicker(context, option, PickMode.MODE_DATE);
+        picker.setCurrentTime(Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND);
+        picker.setCurrentDate(Calendar.YEAR, Calendar.MONTH, Calendar.DATE);
         picker.notifyDataSetChanged();
 
-        int padding = context.getResources().getDimensionPixelOffset(R.dimen.px20);
-        picker.setPadding(0, padding, 0, padding);
-
-        bottomSheet.setContent(picker);
+        BottomSheet bottomSheet = buildBottomSheet(context, picker);
         bottomSheet.show();
-
         bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pickListener != null) {
-                    pickListener.onDatePicked(mYear, mMonth, mDay, mHour, mMinute, mSecond);
+                if (listener != null) {
+                    calendar.set(picker.getSelectedYear(), picker.getSelectedMonth(), picker.getSelectedDay(),
+                            picker.getSelectedHour(), picker.getSelectedMinute(), picker.getSelectedSecond());
+                    listener.onDatePicked(calendar.getTimeInMillis(),
+                            picker.getSelectedYear(), picker.getSelectedMonth(), picker.getSelectedDay(),
+                            picker.getSelectedHour(), picker.getSelectedMinute(), picker.getSelectedSecond());
                 }
             }
         });
     }
 
     /**
-     * 选择未来时间，默认100年后
+     * 获取未来日期
      *
      * @param context
-     * @param currentDate
-     * @param year         往后推多少年
-     * @param pickListener
+     * @param initDate
+     * @param durationDays
+     * @param listener
      */
-    public static void pickFutureDate(Context context, Date currentDate, int whichWheelPick, int visibility,
-                                      int year, final OnDatePickListener pickListener) {
-        BottomSheet bottomSheet = new BottomSheet(context);
-        final DateWheelPicker picker = new DateWheelPicker(context);
-        picker.setWheelPickerVisibility(whichWheelPick, visibility);
+    public static void pickFutureDate(Context context, @Nullable Date initDate, int durationDays, final OnDatePickListener listener) {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(initDate != null ? initDate : new Date());
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        int dy = calendar.get(Calendar.YEAR);
-        int dm = calendar.get(Calendar.MONTH);
-        int dd = calendar.get(Calendar.DATE);
-        int hh = calendar.get(Calendar.HOUR_OF_DAY);
-        int mm = calendar.get(Calendar.MINUTE);
-        int ss = calendar.get(Calendar.SECOND);
-
-        picker.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        picker.setTextColor(context.getResources().getColor(R.color.font_black));
-        picker.setVisibleItemCount(7);
-        picker.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_32px));
-        picker.setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px25));
-
-        picker.setOnDatePickListener(new DateWheelPicker.OnDatePickListener() {
-            @Override
-            public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
-                mYear = year;
-                mMonth = month;
-                mDay = day;
-                mHour = hour;
-                mMinute = minute;
-                mSecond = second;
-            }
-        });
-
-        if (year <= 0) {
-            year = 100;
-        }
-        picker.setDateRange(dy, dy + year);
-        //after set onDatePickerLister
-        if (currentDate != null) {
-            calendar.setTime(currentDate);
-            mYear = calendar.get(Calendar.YEAR);
-            mMonth = calendar.get(Calendar.MONTH);
-            mDay = calendar.get(Calendar.DATE);
-            mHour = calendar.get(Calendar.HOUR_OF_DAY);
-            mMinute = calendar.get(Calendar.MINUTE);
-            mSecond = calendar.get(Calendar.SECOND);
-        } else {
-            mYear = dy;
-            mMonth = dm;
-            mDay = dd;
-            mHour = hh;
-            mMinute = mm;
-            mSecond = ss;
-        }
-        picker.setCurrentTime(mHour, mMinute, mSecond);
-        picker.setCurrentDate(mYear, mMonth, mDay);
+        PickOption option = getPickDefaultOptionBuilder(context)
+                .setDurationDays(durationDays)
+                .build();
+        final FutureTimePicker picker = (FutureTimePicker) buildDateWheelPicker(context, option, PickMode.MODE_FUTURE_DATE);
+        picker.setPickedTime(calendar.getTimeInMillis());
         picker.notifyDataSetChanged();
 
-        int padding = context.getResources().getDimensionPixelOffset(R.dimen.px20);
-        picker.setPadding(0, padding, 0, padding);
-
-        bottomSheet.setContent(picker);
+        BottomSheet bottomSheet = buildBottomSheet(context, picker);
         bottomSheet.show();
-
         bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pickListener != null) {
-                    pickListener.onDatePicked(mYear, mMonth, mDay, mHour, mMinute, mSecond);
+                if (listener != null) {
+                    calendar.set(picker.getSelectedYear(), picker.getSelectedMonth(), picker.getSelectedDay(),
+                            picker.getSelectedHour(), picker.getSelectedMinute(), picker.getSelectedSecond());
+                    listener.onDatePicked(calendar.getTimeInMillis(),
+                            picker.getSelectedYear(), picker.getSelectedMonth(), picker.getSelectedDay(),
+                            picker.getSelectedHour(), picker.getSelectedMinute(), picker.getSelectedSecond());
                 }
             }
         });
     }
 
     /**
-     * 选择未来时间
-     *
+     * 获取单行数据
      * @param context
-     * @param currentDate
-     * @param days         多少天后(如果传的时间小于等于0，默认是365天)
-     * @param pickListener
+     * @param initData
+     * @param srcData
+     * @param listener
+     * @param <T>
      */
-    public static void pickFutureDate(Context context, Date currentDate, int days,
-                                      final OnDatePickListener pickListener) {
-        BottomSheet bottomSheet = new BottomSheet(context);
-        final FutureTimePicker picker = new FutureTimePicker(context);
+    public static <T> void pickData(Context context, @Nullable T initData, @NonNull final List<T> srcData, final OnDataPickListener listener) {
+        PickOption option = getPickDefaultOptionBuilder(context).build();
+        final SingleTextWheelPicker picker = new SingleTextWheelPicker(context);
+        setPickViewStyle(picker, option);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-
-        picker.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        picker.setTextColor(context.getResources().getColor(R.color.font_black));
-        picker.setVisibleItemCount(7);
-        picker.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_32px));
-        picker.setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px25));
-        if (days < 0) {
-            days = 365;
-        }
-        picker.setFutureDuration(days);
-
-        picker.setOnFutureDatePickListener(new FutureTimePicker.OnFutureDatePickListener() {
-            @Override
-            public void onDatePicked(int year, int month, int day, int hour, int minute, int second) {
-                mYear = year;
-                mMonth = month;
-                mDay = day;
-                mHour = hour;
-                mMinute = minute;
-                mSecond = second;
-            }
-        });
-
-        if (currentDate != null) {
-            picker.setPickedTime(currentDate.getTime());
-        }
-
-        bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (pickListener != null) {
-                    pickListener.onDatePicked(mYear, mMonth, mDay, mHour, mMinute, mSecond);
-                }
-            }
-        });
-
-        int padding = context.getResources().getDimensionPixelOffset(R.dimen.px20);
-        picker.setPadding(0, padding, 0, padding);
-
-        bottomSheet.setContent(picker);
-        bottomSheet.show();
-    }
-
-    /**
-     * 选择数据
-     *
-     * @param context
-     * @param data           字符串数组
-     * @param pickedListener
-     */
-    public static void pickData(Context context, List<String> data, final OnDataPickListener pickedListener) {
-        if (data == null || data.isEmpty()) {
-            return;
-        }
-
-        BottomSheet bottomSheet = new BottomSheet(context);
-
-        final TextWheelPicker picker = new TextWheelPicker(context);
-        TextWheelPickerAdapter adapter = new TextWheelPickerAdapter(data);
+        TextWheelPickerAdapter adapter = new TextWheelPickerAdapter(srcData);
         picker.setAdapter(adapter);
 
-        picker.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        picker.setTextColor(context.getResources().getColor(R.color.font_black));
-        picker.setVisibleItemCount(7);
-        picker.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_32px));
-        picker.setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px25));
-
-        picker.setCurrentItem(0);
-        mPickedData = data.get(0);
-
-        int padding = context.getResources().getDimensionPixelOffset(R.dimen.px20);
-        picker.setPadding(0, padding, 0, padding);
-
-        bottomSheet.setContent(picker);
+        BottomSheet bottomSheet = buildBottomSheet(context, picker);
         bottomSheet.show();
-
         bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pickedListener != null) {
-                    pickedListener.onDataPicked(picker.getPickedData());
+                if (listener != null) {
+                    int index = picker.getPickedIndex();
+                    listener.onDataPicked(index, picker.getPickedData(), srcData.get(index));
                 }
             }
         });
-
     }
 
-    public interface OnBirthdayPickListener {
-        public void onBirthPicked(int year, int month, int day);
+    public <T> void pickData(Context context, @Nullable List<T> initData, @NonNull List<List<T>> srcData, final OnMultiDataPickListener listener) {
+        PickOption option = getPickDefaultOptionBuilder(context).build();
+        final MultipleTextWheelPicker picker = new MultipleTextWheelPicker(context);
+        setPickViewStyle(picker, option);
     }
 
-    public interface OnDatePickListener {
-        public void onDatePicked(int year, int month, int day, int hour, int minute, int second);
+
+
+    /**
+     * @param context
+     * @param option
+     * @param mode
+     * @return
+     */
+    private static IPickerView buildDateWheelPicker(Context context, PickOption option, @PickMode.Mode int mode) {
+        IPickerView pickerView = null;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        int dy = calendar.get(Calendar.YEAR);
+
+        switch (mode) {
+            case PickMode.MODE_BIRTHDAY:
+                pickerView = new DateWheelPicker(context);
+                ((DateWheelPicker) pickerView).setWheelPickerVisibility(DateWheelPicker.TYPE_HH_MM_SS, View.GONE);
+                ((DateWheelPicker) pickerView).setDateRange(dy - 100, dy);
+                break;
+            case PickMode.MODE_FUTURE_DATE:
+                pickerView = new FutureTimePicker(context);
+                ((FutureTimePicker) pickerView).setFutureDuration(option.getDurationDays());
+                break;
+            default:
+                pickerView = new DateWheelPicker(context);
+                ((DateWheelPicker) pickerView).setWheelPickerVisibility(option.getDateWitchVisible(), View.VISIBLE);
+                ((DateWheelPicker) pickerView).setDateRange(dy - option.getAheadYears(), dy + option.getAfterYears());
+                break;
+        }
+
+        setPickViewStyle(pickerView, option);
+
+        return pickerView;
     }
 
-    public interface OnDataPickListener {
-        public void onDataPicked(Object data);
+    private static void setPickViewStyle(IPickerView pickerView, PickOption option) {
+        ((View) pickerView).setBackgroundColor(option.getBackgroundColor());
+        ((View) pickerView).setPadding(0, option.getVerPadding(), 0, option.getVerPadding());
+
+        pickerView.setTextColor(option.getItemTextColor());
+        pickerView.setVisibleItemCount(option.getVisibleItemCount());
+        pickerView.setTextSize(option.getItemTextSize());
+        pickerView.setItemSpace(option.getItemSpace());
+    }
+
+    private static BottomSheet buildBottomSheet(Context context, IPickerView pickerView) {
+        BottomSheet bottomSheet = new BottomSheet(context);
+        bottomSheet.setContent(pickerView.asView());
+        return bottomSheet;
+    }
+
+    /**
+     * 获取Pick默认的设置
+     * @param context
+     * @return
+     */
+    public static PickOption.Builder getPickDefaultOptionBuilder(Context context) {
+        PickOption.Builder builder = new PickOption.Builder()
+                .setVisibleItemCount(9)
+                .setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px20))
+                .setItemTextColor(context.getResources().getColor(R.color.font_black))
+                .setItemTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_32px))
+                .setVerPadding(context.getResources().getDimensionPixelSize(R.dimen.px20))
+                .setBackgroundColor(Color.WHITE);
+
+        return builder;
     }
 
 }
-

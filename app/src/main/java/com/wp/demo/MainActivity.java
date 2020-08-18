@@ -8,7 +8,7 @@ import android.widget.Toast;
 import com.wheelpicker.DateWheelPicker;
 import com.wheelpicker.OnDataPickListener;
 import com.wheelpicker.OnDatePickListener;
-import com.wheelpicker.Picker;
+import com.wheelpicker.DataPicker;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,7 +27,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                Picker.pickBirthday(MainActivity.this, new Date(System.currentTimeMillis()),
+                DataPicker.pickBirthday(MainActivity.this, new Date(System.currentTimeMillis()),
                         new OnDatePickListener() {
                             @Override
                             public void onDatePicked(long time, int year, int month, int day, int hour, int minute, int second) {
@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
         findViewById(R.id.picker_future_date).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Picker.pickDate(MainActivity.this, new Date(System.currentTimeMillis()),
+                DataPicker.pickDate(MainActivity.this, new Date(System.currentTimeMillis()),
                         DateWheelPicker.TYPE_ALL, 0, 100, new OnDatePickListener() {
                             @Override
                             public void onDatePicked(long time, int year, int month, int day, int hour, int minute, int second) {
@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
         findViewById(R.id.picker_future).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Picker.pickFutureDate(MainActivity.this, new Date(System.currentTimeMillis() + 30 * 60 * 1000),
+                DataPicker.pickFutureDate(MainActivity.this, new Date(System.currentTimeMillis() + 30 * 60 * 1000),
                         365, new OnDatePickListener() {
                             @Override
                             public void onDatePicked(long time, int year, int month, int day, int hour, int minute, int second) {
@@ -69,7 +69,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                Picker.pickData(MainActivity.this, "", getTextList(), new OnDataPickListener() {
+                DataPicker.pickData(MainActivity.this, null, getStudents(), new OnDataPickListener() {
                     @Override
                     public void onDataPicked(int index, String val, Object data) {
                         Toast.makeText(MainActivity.this, data.toString(), Toast.LENGTH_SHORT).show();
@@ -117,6 +117,19 @@ public class MainActivity extends Activity {
         data.add("黄蓉3");
         data.add("阿朱3");
         data.add("王菇凉3");
+
+        return data;
+    }
+
+    private List<Student> getStudents() {
+        List<Student> data = new ArrayList<Student>();
+        data.add(new Student("杨过", 22));
+        data.add(new Student("张无忌", 24));
+        data.add(new Student("小龙女", 16));
+        data.add(new Student("猪儿", 18));
+        data.add(new Student("周芷若", 16));
+        data.add(new Student("令狐冲", 40));
+        data.add(new Student("王姑娘", 20));
 
         return data;
     }
