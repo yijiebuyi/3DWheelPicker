@@ -1,6 +1,7 @@
 package com.wheelpicker.widget;
 
 import com.wheelpicker.PickDataWrapper;
+import com.wheelpicker.core.WheelPickerUtil;
 
 import java.util.List;
 
@@ -41,13 +42,7 @@ public class TextWheelPickerAdapter<T> extends TextBaseAdapter {
 	@Override
 	public String getItemText(int position) {
 		T d = mData == null ? null : mData.get(position);
-		if (d instanceof String) {
-			return (String)d;
-		} else if (d instanceof PickString) {
-			return ((PickString)d).pickDisplayName();
-		} else {
-			return d.toString();
-		}
+		return WheelPickerUtil.formString(d);
 	}
 
 	@Override

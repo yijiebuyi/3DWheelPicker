@@ -1,5 +1,8 @@
 package com.wheelpicker;
 
+import android.content.Context;
+import android.graphics.Color;
+
 /**
  * Copyright (C) 2017
  * 版权所有
@@ -271,5 +274,22 @@ public class PickOption {
         public PickOption build() {
             return new PickOption(this);
         }
+    }
+
+    /**
+     * 获取Pick默认的设置
+     * @param context
+     * @return
+     */
+    public static PickOption.Builder getPickDefaultOptionBuilder(Context context) {
+        PickOption.Builder builder = new PickOption.Builder()
+                .setVisibleItemCount(9)
+                .setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px20))
+                .setItemTextColor(context.getResources().getColor(R.color.font_black))
+                .setItemTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_32px))
+                .setVerPadding(context.getResources().getDimensionPixelSize(R.dimen.px20))
+                .setBackgroundColor(Color.WHITE);
+
+        return builder;
     }
 }

@@ -9,6 +9,7 @@ import com.wheelpicker.DateWheelPicker;
 import com.wheelpicker.OnDataPickListener;
 import com.wheelpicker.OnDatePickListener;
 import com.wheelpicker.DataPicker;
+import com.wheelpicker.OnMultiDataPickListener;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,7 +70,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                DataPicker.pickData(MainActivity.this, null, getStudents(), new OnDataPickListener() {
+                DataPicker.pickData(MainActivity.this, null, getStudents(1), new OnDataPickListener() {
                     @Override
                     public void onDataPicked(int index, String val, Object data) {
                         Toast.makeText(MainActivity.this, data.toString(), Toast.LENGTH_SHORT).show();
@@ -77,9 +78,28 @@ public class MainActivity extends Activity {
                 });
             }
         });
+
+        findViewById(R.id.muliti_picker_txt).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                List<List<Student>> stu = new ArrayList<List<Student>>();
+                stu.add(getStudents(0));
+                stu.add(getStudents(1));
+                stu.add(getStudents(2));
+
+                DataPicker.pickData(MainActivity.this, null, stu, new OnMultiDataPickListener() {
+
+                    @Override
+                    public void onDataPicked(List indexArr, List val, List data) {
+                        String s = indexArr.toString() + ":" + val.toString();
+                        Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
-
-
+    
     private List<String> getTextList() {
         List<String> data = new ArrayList<>();
         data.add("杨过");
@@ -121,15 +141,15 @@ public class MainActivity extends Activity {
         return data;
     }
 
-    private List<Student> getStudents() {
+    private List<Student> getStudents(int c) {
         List<Student> data = new ArrayList<Student>();
-        data.add(new Student("杨过", 22));
-        data.add(new Student("张无忌", 24));
-        data.add(new Student("小龙女", 16));
-        data.add(new Student("猪儿", 18));
-        data.add(new Student("周芷若", 16));
-        data.add(new Student("令狐冲", 40));
-        data.add(new Student("王姑娘", 20));
+        data.add(new Student("杨过" + c, 22));
+        data.add(new Student("张无忌" + c, 24));
+        data.add(new Student("小龙女" + c, 16));
+        data.add(new Student("猪儿" + c, 18));
+        data.add(new Student("周芷若" + c, 16));
+        data.add(new Student("令狐冲" + c, 40));
+        data.add(new Student("王姑娘" + c, 20));
 
         return data;
     }

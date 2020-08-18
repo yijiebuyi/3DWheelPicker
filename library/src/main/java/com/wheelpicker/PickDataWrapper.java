@@ -20,7 +20,7 @@ import java.util.List;
  * 修改描述：
  * 修改日期
  */
-
+@Deprecated
 public class PickDataWrapper<T> {
     /**
      * 选择器显示的文本

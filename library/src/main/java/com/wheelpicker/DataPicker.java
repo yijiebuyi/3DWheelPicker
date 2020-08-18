@@ -1,8 +1,6 @@
 package com.wheelpicker;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -42,7 +40,7 @@ public class DataPicker {
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(initDate != null ? initDate : new Date());
 
-        PickOption option = getPickDefaultOptionBuilder(context).build();
+        PickOption option = PickOption.getPickDefaultOptionBuilder(context).build();
         final DateWheelPicker picker = (DateWheelPicker) buildDateWheelPicker(context, option, PickMode.MODE_BIRTHDAY);
         picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
         picker.notifyDataSetChanged();
@@ -77,7 +75,7 @@ public class DataPicker {
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(initDate != null ? initDate : new Date());
 
-        PickOption option = getPickDefaultOptionBuilder(context)
+        PickOption option = PickOption.getPickDefaultOptionBuilder(context)
                 .setDateWitchVisible(witchPickVisible)
                 .setAheadYears(aheadYears)
                 .setAfterYears(afterYears)
@@ -115,7 +113,7 @@ public class DataPicker {
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(initDate != null ? initDate : new Date());
 
-        PickOption option = getPickDefaultOptionBuilder(context)
+        PickOption option = PickOption.getPickDefaultOptionBuilder(context)
                 .setDurationDays(durationDays)
                 .build();
         final FutureTimePicker picker = (FutureTimePicker) buildDateWheelPicker(context, option, PickMode.MODE_FUTURE_DATE);
@@ -147,7 +145,7 @@ public class DataPicker {
      * @param <T>
      */
     public static <T> void pickData(Context context, @Nullable T initData, @NonNull final List<T> srcData, final OnDataPickListener listener) {
-        PickOption option = getPickDefaultOptionBuilder(context).build();
+        PickOption option = PickOption.getPickDefaultOptionBuilder(context).build();
         final SingleTextWheelPicker picker = new SingleTextWheelPicker(context);
         setPickViewStyle(picker, option);
 
@@ -167,10 +165,32 @@ public class DataPicker {
         });
     }
 
-    public <T> void pickData(Context context, @Nullable List<T> initData, @NonNull List<List<T>> srcData, final OnMultiDataPickListener listener) {
-        PickOption option = getPickDefaultOptionBuilder(context).build();
-        final MultipleTextWheelPicker picker = new MultipleTextWheelPicker(context);
+    /**
+     * 多行数据选择
+     * @param context
+     * @param initData
+     * @param srcData
+     * @param listener
+     * @param <T>
+     */
+    public static <T> void pickData(Context context, @Nullable List<T> initData, @NonNull List<List<T>> srcData, final OnMultiDataPickListener listener) {
+        PickOption option = PickOption.getPickDefaultOptionBuilder(context).build();
+        final MultipleTextWheelPicker picker = new MultipleTextWheelPicker(context, WheelPickerData.wrapper(initData, srcData));
         setPickViewStyle(picker, option);
+
+        BottomSheet bottomSheet = buildBottomSheet(context, picker);
+        bottomSheet.show();
+        bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    List<String> pickedVal = picker.getPickedVal();
+                    List<Integer> pickedIndex = picker.getPickedIndex();
+                    List<T> pickedData = picker.getPickedData();
+                    listener.onDataPicked(pickedIndex, pickedVal, pickedData);
+                }
+            }
+        });
     }
 
 
@@ -209,6 +229,11 @@ public class DataPicker {
         return pickerView;
     }
 
+    /**
+     * 设置滚轮样式
+     * @param pickerView
+     * @param option
+     */
     private static void setPickViewStyle(IPickerView pickerView, PickOption option) {
         ((View) pickerView).setBackgroundColor(option.getBackgroundColor());
         ((View) pickerView).setPadding(0, option.getVerPadding(), 0, option.getVerPadding());
@@ -219,27 +244,16 @@ public class DataPicker {
         pickerView.setItemSpace(option.getItemSpace());
     }
 
+    /**
+     * 获取底部弹出框
+     * @param context
+     * @param pickerView
+     * @return
+     */
     private static BottomSheet buildBottomSheet(Context context, IPickerView pickerView) {
         BottomSheet bottomSheet = new BottomSheet(context);
         bottomSheet.setContent(pickerView.asView());
         return bottomSheet;
-    }
-
-    /**
-     * 获取Pick默认的设置
-     * @param context
-     * @return
-     */
-    public static PickOption.Builder getPickDefaultOptionBuilder(Context context) {
-        PickOption.Builder builder = new PickOption.Builder()
-                .setVisibleItemCount(9)
-                .setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px20))
-                .setItemTextColor(context.getResources().getColor(R.color.font_black))
-                .setItemTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_32px))
-                .setVerPadding(context.getResources().getDimensionPixelSize(R.dimen.px20))
-                .setBackgroundColor(Color.WHITE);
-
-        return builder;
     }
 
 }

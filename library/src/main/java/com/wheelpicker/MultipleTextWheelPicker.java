@@ -14,11 +14,11 @@ import com.wheelpicker.widget.TextWheelPickerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
+/**
  * Copyright (C) 2017
  * 版权所有
  *
- * 功能描述：多个wheelpicker
+ * 功能描述：多个WheelPicker
  * 作者：yijiebuyi
  * 创建时间：2018/4/20
  *
@@ -26,29 +26,34 @@ import java.util.List;
  * 修改描述：
  * 修改日期
  */
-public class MultipleTextWheelPicker<T extends MultiplePickerData> extends LinearLayout
+public class MultipleTextWheelPicker extends LinearLayout
         implements OnWheelPickedListener<String>, IPickerView {
-    protected List<T> mData;
+    protected List<WheelPickerData> mSrcDataList;
     protected List<TextWheelPicker> mWheelPickers;
     protected List<TextWheelPickerAdapter> mTextWheelPickerAdapters;
-    protected List<String> mPickedData;
+
     protected OnMultiPickListener mOnMultiPickListener;
-    private Integer mLineColor;
-    private int mTextColor;
-    private int mTextSize;
-    private boolean mFakeBoldText;
+
+    protected List<String> mPickedVal;
+    protected List<Integer> mPickedIndex;
+    protected List mPickedData;
 
     public MultipleTextWheelPicker(Context context) {
         super(context);
     }
 
-    public MultipleTextWheelPicker(Context context, List<T> data, OnMultiPickListener listener) {
+    public MultipleTextWheelPicker(Context context, List<WheelPickerData> data) {
+        super(context);
+        init(data);
+    }
+
+    public MultipleTextWheelPicker(Context context, List<WheelPickerData> data, OnMultiPickListener listener) {
         super(context);
         init(data);
         setOnMultiPickListener(listener);
     }
 
-    public void setData(List<T> data) {
+    public void setData(List<WheelPickerData> data) {
         init(data);
     }
 
@@ -56,8 +61,8 @@ public class MultipleTextWheelPicker<T extends MultiplePickerData> extends Linea
         mOnMultiPickListener = listener;
     }
 
-    private void init(List<T> data) {
-        mData = data;
+    private void init(List<WheelPickerData> data) {
+        mSrcDataList = data;
 
         //set style
         setGravity(Gravity.CENTER);
@@ -69,7 +74,7 @@ public class MultipleTextWheelPicker<T extends MultiplePickerData> extends Linea
 
             int count = 0;
             for (int i = 0; i < size; i++) {
-                MultiplePickerData mp = data.get(i);
+                WheelPickerData mp = data.get(i);
                 if (!mp.placeHoldView) {
                     count++;
                 }
@@ -77,7 +82,9 @@ public class MultipleTextWheelPicker<T extends MultiplePickerData> extends Linea
 
             mWheelPickers = new ArrayList<TextWheelPicker>(count);
             mTextWheelPickerAdapters = new ArrayList<TextWheelPickerAdapter>(count);
-            mPickedData = new ArrayList<String>(count);
+            mPickedVal = new ArrayList<String>(count);
+            mPickedIndex = new ArrayList<Integer>(count);
+            mPickedData = new ArrayList<>();
 
             LayoutParams llParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             llParams.weight = 1;
@@ -86,7 +93,7 @@ public class MultipleTextWheelPicker<T extends MultiplePickerData> extends Linea
             int j = 0;
             int k = size;
             for (int i = 0; i < size; i++) {
-                MultiplePickerData mp = data.get(i);
+                WheelPickerData mp = data.get(i);
                 if (mp.placeHoldView) {
                     //占位view
                     TextWheelPicker holdView = new TextWheelPicker(context, k++);
@@ -94,31 +101,25 @@ public class MultipleTextWheelPicker<T extends MultiplePickerData> extends Linea
                     holdView.setLineStorkeWidth(0);
 
                     addView(holdView, llParams);
-                } else if (mp.texts != null && !mp.texts.isEmpty()) {
+                } else if (mp.data != null && !mp.data.isEmpty()) {
                     int id = j++;
                     TextWheelPicker twp = new TextWheelPicker(context, id);
-                    twp.setTouchable(mp.texts.size() != 1);
+                    twp.setTouchable(mp.scrollable);
                     twp.setOnWheelPickedListener(this);
 
-                    twp.setTextColor(mTextColor > 0 ? mTextColor : context.getResources().getColor(R.color.font_black));
-                    twp.setVisibleItemCount(7);
-                    twp.setTextSize(mTextSize > 0 ? mTextSize : context.getResources().getDimensionPixelSize(R.dimen.font_32px));
-                    twp.setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px25));
-                    if (mLineColor != null) {
-                        twp.setLineColor(mLineColor);
-                    }
-                    twp.getPaint().setFakeBoldText(mFakeBoldText);
                     addView(twp, llParams);
                     mWheelPickers.add(twp);
 
                     TextWheelPickerAdapter adapter = new TextWheelPickerAdapter();
-                    adapter.setData(mp.texts);
+                    adapter.setData(mp.data);
                     mTextWheelPickerAdapters.add(adapter);
 
                     //set current
-                    int index = Math.max(0, mp.texts.indexOf(mp.currentText));
+                    int index = Math.max(0, mp.indexOf(mp.currentText));
                     twp.setCurrentItemWithoutReLayout(index);
-                    mPickedData.add(mp.texts.get(index));
+                    mPickedVal.add(mp.getStringVal(index));
+                    mPickedIndex.add(index);
+                    mPickedData.add(mp.get(index));
 
                     twp.setAdapter(adapter);
                 }
@@ -129,10 +130,12 @@ public class MultipleTextWheelPicker<T extends MultiplePickerData> extends Linea
     @Override
     public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, String data) {
         //默认不联动
-        mPickedData.set(wheelPicker.getId(), data);
+        mPickedVal.set(wheelPicker.getId(), data);
+        mPickedIndex.set(wheelPicker.getId(), index);
+        mPickedData.set(wheelPicker.getId(), mSrcDataList.get(wheelPicker.getId()).get(index));
 
         if (mOnMultiPickListener != null) {
-            mOnMultiPickListener.onDataPicked(mPickedData);
+            mOnMultiPickListener.onDataPicked(mPickedVal);
         }
     }
 
@@ -140,7 +143,6 @@ public class MultipleTextWheelPicker<T extends MultiplePickerData> extends Linea
         if (textSize < 0) {
             return;
         }
-        mTextSize = textSize;
         if (mWheelPickers == null) {
             return;
         }
@@ -151,7 +153,6 @@ public class MultipleTextWheelPicker<T extends MultiplePickerData> extends Linea
     }
 
     public void setTextColor(int textColor) {
-        mTextColor = textColor;
         if (mWheelPickers == null) {
             return;
         }
@@ -162,7 +163,6 @@ public class MultipleTextWheelPicker<T extends MultiplePickerData> extends Linea
     }
 
     public void setLineColor(int lineColor) {
-        mLineColor = lineColor;
         if (mWheelPickers == null) {
             return;
         }
@@ -222,16 +222,23 @@ public class MultipleTextWheelPicker<T extends MultiplePickerData> extends Linea
         if (mWheelPickers == null) {
             return;
         }
-        mFakeBoldText = fakeBoldText;
+
         for (TextWheelPicker picker : mWheelPickers) {
             picker.getPaint().setFakeBoldText(fakeBoldText);
         }
     }
 
-    public List<String> getPickedData() {
-        return mPickedData;
+    public List<String> getPickedVal() {
+        return mPickedVal;
     }
 
+    public List<Integer> getPickedIndex() {
+        return mPickedIndex;
+    }
+
+    public <T> List<T> getPickedData() {
+        return mPickedData;
+    }
 
     public interface OnMultiPickListener {
         public void onDataPicked(List<String> pickedData);

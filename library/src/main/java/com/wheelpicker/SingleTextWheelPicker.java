@@ -7,8 +7,6 @@ import android.view.View;
 import com.wheelpicker.widget.IPickerView;
 import com.wheelpicker.widget.TextWheelPicker;
 
-import org.w3c.dom.Text;
-
 /**
  * Copyright (C) 2017
  * 版权所有
