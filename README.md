@@ -11,7 +11,7 @@ https://www.pgyer.com/wheelpicker
  - 城市选择（待开发。。。）
 
 ## 使用
- - 1.在project的build.gradle添加如下代码
+ - 在project的build.gradle添加如下代码
 ```gradle
 allprojects {
     repositories {
@@ -21,7 +21,7 @@ allprojects {
 }
 ```
 
- - 2.引用
+ - 引用
 ```gradle
 
 dependencies {
@@ -129,7 +129,9 @@ dependencies {
 
 
 ### 也可以使用Textwheelpicker
+
 ```java
    参照 DateWheelPicker
+   
 ```
 
