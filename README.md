@@ -31,8 +31,8 @@ dependencies {
 ```
 
 ### 基本用法：
-- 使用Datapick
--1.时间选择
+#### 使用 DataPicker
+- 1.时间选择
 ```java
    /**
    * 选择生日
@@ -64,7 +64,7 @@ dependencies {
                           final OnDatePickListener listener)
   
  ```    
-  -2.数据选择 
+  - 2.数据选择: 
   为了保证picker控件显示的数据是期望的字符串，需要对数组中的类（String数组除外）实现PickString，或者重写toString
   ```java
   /**
@@ -128,8 +128,8 @@ dependencies {
 
 
 
-- 也可以使用Textwheelpicker
+### 也可以使用Textwheelpicker
 ```java
-   参照DateWheelPicker，
+   参照 DateWheelPicker
 ```
 
