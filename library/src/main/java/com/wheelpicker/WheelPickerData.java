@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.wheelpicker.core.WheelPickerUtil;
-import com.wheelpicker.widget.PickString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +64,7 @@ public class WheelPickerData<T> {
         return data.get(index);
     }
 
+
     public static <D>  List<WheelPickerData> wrapper(@Nullable List<D> initData, @NonNull List<List<D>> srcData) {
         List<WheelPickerData> wrappers = new ArrayList<WheelPickerData>();
         int size = initData != null ? initData.size() : 0;
@@ -77,5 +77,39 @@ public class WheelPickerData<T> {
         }
 
         return wrappers;
+    }
+
+    /**
+     * 设置scrollable不可滚动
+     * @param index
+     * @param wheelPickerData
+     */
+    public static void disScrollable(int index, List<WheelPickerData> wheelPickerData) {
+        if (wheelPickerData == null) {
+            return;
+        }
+
+        if (index < 0 || index >= wheelPickerData.size()) {
+            return;
+        }
+
+        wheelPickerData.get(index).scrollable = false;
+    }
+
+    /**
+     * 设置占位
+     * @param index
+     * @param wheelPickerData
+     */
+    public static void placeHold(int index, List<WheelPickerData> wheelPickerData) {
+        if (wheelPickerData == null) {
+            return;
+        }
+
+        if (index < 0 || index >= wheelPickerData.size()) {
+            return;
+        }
+
+        wheelPickerData.get(index).placeHoldView = true;
     }
 }

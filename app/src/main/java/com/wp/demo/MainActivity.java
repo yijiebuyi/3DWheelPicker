@@ -38,6 +38,21 @@ public class MainActivity extends Activity {
             }
         });
 
+        findViewById(R.id.picker_date).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DataPicker.pickDate(MainActivity.this, new Date(System.currentTimeMillis()),
+                        DateWheelPicker.TYPE_ALL, 100, 100, new OnDatePickListener() {
+                            @Override
+                            public void onDatePicked(long time, int year, int month, int day, int hour, int minute, int second) {
+                                Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day + " " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
+            }
+        });
+
         findViewById(R.id.picker_future_date).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

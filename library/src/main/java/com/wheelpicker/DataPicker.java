@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.wheelpicker.widget.IPickerView;
+import com.wheelpicker.widget.PickString;
 import com.wheelpicker.widget.TextWheelPickerAdapter;
 
 import java.util.Calendar;
@@ -175,7 +176,10 @@ public class DataPicker {
      */
     public static <T> void pickData(Context context, @Nullable List<T> initData, @NonNull List<List<T>> srcData, final OnMultiDataPickListener listener) {
         PickOption option = PickOption.getPickDefaultOptionBuilder(context).build();
-        final MultipleTextWheelPicker picker = new MultipleTextWheelPicker(context, WheelPickerData.wrapper(initData, srcData));
+        List<WheelPickerData> pickerData = WheelPickerData.wrapper(initData, srcData);
+        //WheelPickerData.disScrollable(0, pickerData);
+        //WheelPickerData.placeHold(1, pickerData);
+        final MultipleTextWheelPicker picker = new MultipleTextWheelPicker(context, pickerData);
         setPickViewStyle(picker, option);
 
         BottomSheet bottomSheet = buildBottomSheet(context, picker);
@@ -192,8 +196,6 @@ public class DataPicker {
             }
         });
     }
-
-
 
     /**
      * @param context
