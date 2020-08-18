@@ -31,7 +31,7 @@ import java.util.List;
  * 修改描述：
  * 修改日期
  */
-public class DateWheelPicker extends LinearLayout implements OnWheelPickedListener, IPickerView {
+public class DateWheelPicker extends LinearLayout implements OnWheelPickedListener<String>, IPickerView {
     public final static int TYPE_YEAR = 1 << 1;
     public final static int TYPE_MONTH = 1 << 2;
     public final static int TYPE_DAY = 1 << 3;
@@ -437,7 +437,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 
     @SuppressWarnings("rawtypes")
     @Override
-    public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, Object data) {
+    public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, String data) {
         switch (wheelPicker.getId()) {
             case TYPE_YEAR:
                 int year = getCurrentDate(data, mYearStr);
@@ -720,24 +720,17 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
         }
     }
 
-    private int getCurrentDate(Object data, String suffix) {
-        if (data instanceof String) {
-            int suffixLeg = suffix == null ? 0 : suffix.length();
-            String temp = (String) data;
-            return Integer.parseInt(temp.substring(0, temp.length() - suffixLeg));
-        }
+    private int getCurrentDate(String data, String suffix) {
+        int suffixLeg = suffix == null ? 0 : suffix.length();
+        String temp = data;
+        return Integer.parseInt(temp.substring(0, temp.length() - suffixLeg));
 
-        return -1;
     }
 
-    private int getCurrentMonth(Object data, String suffix) {
-        if (data instanceof String) {
-            int suffixLeg = suffix == null ? 0 : suffix.length();
-            String temp = (String) data;
-            return Integer.parseInt(temp.substring(0, temp.length() - suffixLeg)) - 1;
-        }
-
-        return -1;
+    private int getCurrentMonth(String data, String suffix) {
+        int suffixLeg = suffix == null ? 0 : suffix.length();
+        String temp = data;
+        return Integer.parseInt(temp.substring(0, temp.length() - suffixLeg)) - 1;
     }
 
     private boolean isLeapYear(int year) {

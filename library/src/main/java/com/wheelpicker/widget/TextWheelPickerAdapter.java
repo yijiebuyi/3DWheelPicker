@@ -51,7 +51,7 @@ public class TextWheelPickerAdapter<T> extends TextBaseAdapter {
 	}
 
 	@Override
-	public Object getItem(int position) {
+	public String getItem(int position) {
 		return getItemText(position);
 	}
 }

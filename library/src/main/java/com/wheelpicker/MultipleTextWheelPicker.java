@@ -27,7 +27,7 @@ import java.util.List;
  * 修改日期
  */
 public class MultipleTextWheelPicker<T extends MultiplePickerData> extends LinearLayout
-        implements OnWheelPickedListener, IPickerView {
+        implements OnWheelPickedListener<String>, IPickerView {
     protected List<T> mData;
     protected List<TextWheelPicker> mWheelPickers;
     protected List<TextWheelPickerAdapter> mTextWheelPickerAdapters;
@@ -127,9 +127,9 @@ public class MultipleTextWheelPicker<T extends MultiplePickerData> extends Linea
     }
 
     @Override
-    public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, Object data) {
+    public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, String data) {
         //默认不联动
-        mPickedData.set(wheelPicker.getId(), (String) data);
+        mPickedData.set(wheelPicker.getId(), data);
 
         if (mOnMultiPickListener != null) {
             mOnMultiPickListener.onDataPicked(mPickedData);

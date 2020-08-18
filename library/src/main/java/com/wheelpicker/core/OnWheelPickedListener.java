@@ -13,8 +13,7 @@ package com.wheelpicker.core;
  * 修改描述：
  * 修改日期
  */
-public interface OnWheelPickedListener {
-	
-	@SuppressWarnings("rawtypes")
-	public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, Object data);
+public interface OnWheelPickedListener<T> {
+
+	public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, T data);
 }
