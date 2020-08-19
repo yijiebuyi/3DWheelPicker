@@ -31,7 +31,7 @@ dependencies {
 ```
 
 ### 基本用法：
-#### 使用 DataPicker
+#### 使用 DataPicker (可参照demo的用法)
 - 时间选择
 ```java
    /**
@@ -142,4 +142,3 @@ dependencies {
    参照 DateWheelPicker，SingleTextWheelPicker
    
 ```
-
