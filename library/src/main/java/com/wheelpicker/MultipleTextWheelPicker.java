@@ -40,7 +40,7 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
     private static final int MODE_CASCADE = 1;
 
     protected List<T> mSrcDataList;
-    protected List<D> mInitData;
+    protected List<Integer> mInitIndex;
     protected List<TextWheelPicker> mWheelPickers;
     protected List<TextWheelPickerAdapter> mTextWheelPickerAdapters;
 
@@ -51,6 +51,7 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
      * 级联数据监听器，当设置监听器时，表示数据级联；否则数据非级联
      */
     private OnCascadeWheelListener<List<T>> mOnCascadeWheelListener;
+    private boolean mTouch = false;
 
     public MultipleTextWheelPicker(Context context) {
         this(context, null);
@@ -61,9 +62,9 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
         init(data);
     }
 
-    public MultipleTextWheelPicker(Context context, List<D> d, List<T> data) {
+    public MultipleTextWheelPicker(Context context, List<Integer> index, List<T> data) {
         super(context);
-        mInitData = d;
+        mInitIndex = index;
         init(data);
     }
 
@@ -117,7 +118,7 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
                     mTextWheelPickerAdapters.add(adapter);
 
                     //set current
-                    int index = getIndex(i, d, pickerDataList);
+                    int index = getIndex(i, d);
 
                     twp.setCurrentItemWithoutReLayout(index);
                     mPickedVal.add(WheelPickerUtil.getStringVal(index, pickerDataList));
@@ -130,13 +131,13 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
         }
     }
 
-    private int getIndex(int i, T data, List<D> pickerDataList) {
+    private int getIndex(int i, T data) {
         int index = 0;
         if (data instanceof WheelPickerData) {
             WheelPickerData<D> wp = (WheelPickerData) data;
-            index = Math.max(0, WheelPickerUtil.indexOf(wp.currentText, pickerDataList));
-        } else if (mInitData != null && !mInitData.isEmpty() && i < mInitData.size()) {
-            index = Math.max(0, WheelPickerUtil.indexOf(mInitData.get(i), pickerDataList));
+            index = Math.max(0, wp.currentIndex);
+        } else if (mInitIndex != null && !mInitIndex.isEmpty() && i < mInitIndex.size()) {
+            index = Math.max(0, mInitIndex.get(i));
         }
 
         return index;
@@ -182,9 +183,12 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
 
     @SuppressLint("ResourceType")
     @Override
-    public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, String data) {
+    public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, String data, boolean touch) {
         //默认不联动
         int pickerId = wheelPicker.getId();
+        if (touch) {
+            mTouch = true;
+        }
 
         mPickedVal.set(pickerId, data);
         mPickedIndex.set(pickerId, index);
@@ -192,7 +196,10 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
         D pickedData = (d != null && !d.isEmpty() && d.size() > index) ? d.get(index) : null;
         mPickedData.set(pickerId, pickedData);
 
-        if (mOnCascadeWheelListener != null) {
+        /**
+         * 第一次设置数据时(非手势触摸)，不自动级联
+         */
+        if (mOnCascadeWheelListener != null && mTouch) {
             int size = mSrcDataList.size();
             if (pickerId < size - 1) {
                 List<T> cascadeData = mOnCascadeWheelListener.onCascade(pickerId, mPickedIndex);

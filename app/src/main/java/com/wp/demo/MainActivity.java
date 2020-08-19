@@ -2,18 +2,18 @@ package com.wp.demo;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.wheelpicker.AdministrativeMap;
 import com.wheelpicker.AdministrativeUtil;
+import com.wheelpicker.DataPicker;
 import com.wheelpicker.DateWheelPicker;
 import com.wheelpicker.OnCascadeWheelListener;
 import com.wheelpicker.OnDataPickListener;
 import com.wheelpicker.OnDatePickListener;
-import com.wheelpicker.DataPicker;
 import com.wheelpicker.OnMultiDataPickListener;
-import com.wheelpicker.widget.PickString;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,8 +21,8 @@ import java.util.List;
 
 public class MainActivity extends Activity {
     private Student mInitData = null;
-    private List<Student> mMultiInitData = null;
-    private List<?> mCascadeInitData = null;
+    private List<Integer> mMultiInitIndex = null;
+    private List<Integer> mCascadeInitIndex = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,11 +112,11 @@ public class MainActivity extends Activity {
                 stu.add(getStudents(1));
                 stu.add(getStudents(2));
 
-                DataPicker.pickData(MainActivity.this, mMultiInitData, stu, new OnMultiDataPickListener<Student>() {
+                DataPicker.pickData(MainActivity.this, mMultiInitIndex, stu, new OnMultiDataPickListener<Student>() {
 
                     @Override
                     public void onDataPicked(List<Integer> indexArr, List<String> val, List<Student> data) {
-                        mMultiInitData = data;
+                        mMultiInitIndex = indexArr;
                         String s = indexArr.toString() + ":" + val.toString();
                         Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
                     }
@@ -128,13 +128,13 @@ public class MainActivity extends Activity {
         findViewById(R.id.city_picker).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataPicker.pickData(MainActivity.this, mCascadeInitData, AdministrativeUtil.getDefaultPickString(map), false,
+                DataPicker.pickData(MainActivity.this, mCascadeInitIndex, AdministrativeUtil.getPickData(map, mCascadeInitIndex), false,
                         new OnMultiDataPickListener () {
                             @Override
                             public void onDataPicked(List indexArr, List val, List data) {
                                 String s = indexArr.toString() + ":" + val.toString();
                                 Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
-                                //mCascadeInitData = data;
+                                mCascadeInitIndex = indexArr;
                             }
                         }, new OnCascadeWheelListener<List<?>>() {
 

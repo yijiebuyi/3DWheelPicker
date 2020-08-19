@@ -394,7 +394,7 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
      * ==============abstract method==============
      */
 
-    protected void onWheelSelected(int index) {
+    protected void onWheelSelected(boolean touch, int index) {
 
     }
 
@@ -409,7 +409,7 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
             if (mCurrItemIndex > count - 1) {
                 mCurrItemIndex = count - 1;
             }
-            onWheelSelected(mCurrItemIndex);
+            onWheelSelected(false, mCurrItemIndex);
             requestComputeLayout();
         }
 

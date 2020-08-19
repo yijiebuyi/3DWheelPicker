@@ -431,7 +431,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 
     @SuppressWarnings("rawtypes")
     @Override
-    public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, String data) {
+    public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, String data, boolean touch) {
         switch (wheelPicker.getId()) {
             case TYPE_YEAR:
                 int year = getCurrentDate(data, mYearStr);

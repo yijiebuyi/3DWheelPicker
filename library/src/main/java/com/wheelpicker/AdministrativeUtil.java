@@ -61,6 +61,27 @@ public class AdministrativeUtil {
         return pickDataList;
     }
 
+    public static List<List<?>> getPickData(AdministrativeMap map, List<?> indexArr) {
+        if (map == null) {
+            return null;
+        }
+
+        List<List<?>> pickDataList = new ArrayList<>();
+        if (indexArr == null || indexArr.isEmpty()) {
+            pickDataList.add(map.provinces);
+            pickDataList.add(map.provinces.get(0).city);
+            pickDataList.add(map.provinces.get(0).city.get(0).areas);
+        } else {
+            int cityIndex = (Integer) indexArr.get(0);
+            int areaIndex = (Integer) indexArr.get(1);
+            pickDataList.add(map.provinces);
+            pickDataList.add(map.provinces.get(cityIndex).city);
+            pickDataList.add(map.provinces.get(cityIndex).city.get(areaIndex).areas);
+        }
+
+        return pickDataList;
+    }
+
     /**
      * input 流转换为字符串
      *

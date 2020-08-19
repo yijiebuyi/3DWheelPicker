@@ -180,13 +180,13 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
     }
 
     @Override
-    protected void onWheelSelected(int index) {
+    protected void onWheelSelected(boolean touch, int index) {
         if (mAdapter != null && index > -1 && index < mAdapter.getCount()) {
             setPickedItemIndex(index);
             mPickedData = mAdapter.getItemText(index);
             mPickedIndex = index;
             if (mOnWheelPickedListener != null) {
-                mOnWheelPickedListener.onWheelSelected(this, index, mPickedData);
+                mOnWheelPickedListener.onWheelSelected(this, index, mPickedData, touch);
             }
         } else {
             Log.i(TAG, "error index:" + index);
@@ -208,7 +208,7 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
         if (isFinshed) {
             correctLocation(mOffsetItemIndex, 0, mOffsetItemDelta);
             if (Math.abs(mOffsetItemDelta) < 0.01f) {
-                onWheelSelected(mCurrItemIndex);
+                onWheelSelected(true, mCurrItemIndex);
             }
         }
     }

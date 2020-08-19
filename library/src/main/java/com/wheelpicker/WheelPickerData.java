@@ -36,6 +36,10 @@ public class WheelPickerData<T> {
      */
     public T currentText;
     /**
+     * 当前默认选中text的index
+     */
+    public int currentIndex;
+    /**
      * 当前wheelPicker数据
      */
     public List<T> data;
@@ -65,14 +69,14 @@ public class WheelPickerData<T> {
     }
 
 
-    public static List<WheelPickerData> wrapper(@Nullable List<?> initData, @NonNull List<List<?>> srcData) {
+    public static List<WheelPickerData> wrapper(@Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData) {
         List<WheelPickerData> wrappers = new ArrayList<WheelPickerData>();
-        int size = initData != null ? initData.size() : 0;
+        int size = initIndex != null ? initIndex.size() : 0;
         for (int i = 0; i < srcData.size(); i++) {
             List<?> d = srcData.get(i);
             WheelPickerData wp = new WheelPickerData();
             wp.data = d;
-            wp.currentText = i < size ? initData.get(i) : null;
+            wp.currentIndex = i < size ? initIndex.get(i) : 0;
             wrappers.add(wp);
         }
 

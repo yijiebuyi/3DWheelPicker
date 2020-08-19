@@ -168,28 +168,28 @@ public class DataPicker {
     /**
      * 多行数据选择
      */
-    public static <T> void pickData(Context context, @Nullable List<?> initData, @NonNull List<List<?>> srcData,
+    public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData,
                                     final OnMultiDataPickListener listener) {
-        pickData(context, initData, srcData, false, listener, null);
+        pickData(context, initIndex, srcData, false, listener, null);
     }
 
     /**
      * 多行数据选择
      * @param context
-     * @param initData
+     * @param initIndex
      * @param srcData
      * @param listener
      * @param <T>
      */
-    public static <T> void pickData(Context context, @Nullable List<?> initData, @NonNull List<List<?>> srcData, boolean wrapper,
+    public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData, boolean wrapper,
                                     final OnMultiDataPickListener listener, final OnCascadeWheelListener cascadeListener) {
         PickOption option = PickOption.getPickDefaultOptionBuilder(context).build();
 
         //List<WheelPickerData> pickerData = WheelPickerData.wrapper(initData, srcData);
         //WheelPickerData.disScrollable(0, pickerData);
         //WheelPickerData.placeHold(1, pickerData);
-        final MultipleTextWheelPicker picker = wrapper ? new MultipleTextWheelPicker(context, WheelPickerData.wrapper(initData, srcData))
-                : new MultipleTextWheelPicker(context, initData, srcData);
+        final MultipleTextWheelPicker picker = wrapper ? new MultipleTextWheelPicker(context, WheelPickerData.wrapper(initIndex, srcData))
+                : new MultipleTextWheelPicker(context, initIndex, srcData);
 
         picker.setOnCascadeWheelListener(cascadeListener);
         setPickViewStyle(picker, option);
