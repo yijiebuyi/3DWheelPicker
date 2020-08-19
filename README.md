@@ -7,8 +7,8 @@ https://www.pgyer.com/wheelpicker
 ### 功能
  - 时间选择
  - 单行选择
- - 多个滚轮选择
- - 城市选择（待开发。。。）
+ - 多个滚轮选择（多级联）
+ - 城市选择 (城市数据可能不完整)
 
 ## 使用
  - 在project的build.gradle添加如下代码
@@ -102,12 +102,20 @@ dependencies {
     
     /**
      * 多行数据选择
-     * @param context
-     * @param initData 初始化选中的数据
-     * @param srcData 数据源
      */
-    public static <T> void pickData(Context context, @Nullable List<T> initData, @NonNull List<List<T>> srcData,
-                             final OnMultiDataPickListener listener) 
+    public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData,
+                                    final OnMultiDataPickListener listener)
+                                    
+     /**
+     * 多行数据选择
+     * @param context
+     * @param initIndex
+     * @param srcData
+     * @param listener
+     * @param <T>
+     */
+    public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData, boolean wrapper,
+                                    final OnMultiDataPickListener listener, final OnCascadeWheelListener cascadeListener)
     
       /**
      * 设置滚轮样式
