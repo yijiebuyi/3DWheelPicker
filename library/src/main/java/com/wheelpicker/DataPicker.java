@@ -167,18 +167,32 @@ public class DataPicker {
 
     /**
      * 多行数据选择
+     * @see #pickData(Context, List, List, OnMultiDataPickListener, OnCascadeWheelListener)
+     */
+    public static <T> void pickData(Context context, @Nullable List<?> initData, @NonNull List<List<?>> srcData,
+                                    final OnMultiDataPickListener listener) {
+        pickData(context, initData, srcData, false, listener, null);
+    }
+
+    /**
+     * 多行数据选择
      * @param context
      * @param initData
      * @param srcData
      * @param listener
      * @param <T>
      */
-    public static <T> void pickData(Context context, @Nullable List<T> initData, @NonNull List<List<T>> srcData, final OnMultiDataPickListener listener) {
+    public static <T> void pickData(Context context, @Nullable List<?> initData, @NonNull List<List<?>> srcData, boolean wrapper,
+                                    final OnMultiDataPickListener listener, final OnCascadeWheelListener cascadeListener) {
         PickOption option = PickOption.getPickDefaultOptionBuilder(context).build();
+
         List<WheelPickerData> pickerData = WheelPickerData.wrapper(initData, srcData);
         //WheelPickerData.disScrollable(0, pickerData);
         //WheelPickerData.placeHold(1, pickerData);
-        final MultipleTextWheelPicker picker = new MultipleTextWheelPicker(context, pickerData);
+        final MultipleTextWheelPicker picker = wrapper ? new MultipleTextWheelPicker(context, pickerData) :
+                new MultipleTextWheelPicker(context, srcData);
+
+        picker.setOnCascadeWheelListener(cascadeListener);
         setPickViewStyle(picker, option);
 
         BottomSheet bottomSheet = buildBottomSheet(context, picker);
@@ -256,5 +270,4 @@ public class DataPicker {
         bottomSheet.setContent(pickerView.asView());
         return bottomSheet;
     }
-
 }

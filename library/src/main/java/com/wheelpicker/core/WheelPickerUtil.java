@@ -1,6 +1,10 @@
 package com.wheelpicker.core;
 
+import android.text.TextUtils;
+
 import com.wheelpicker.widget.PickString;
+
+import java.util.List;
 
 /**
  * Copyright (C) 2017
@@ -29,5 +33,25 @@ public class WheelPickerUtil {
         } else {
             return d.toString();
         }
+    }
+
+    public static <T> int indexOf(T targetElement, List<T> data) {
+        if (data == null || data.isEmpty()) {
+            return -1;
+        }
+
+        String targetStr = WheelPickerUtil.formString(targetElement);
+        for (int i = 0; i < data.size(); i++) {
+            String str = WheelPickerUtil.formString(data.get(i));
+            if (TextUtils.equals(targetStr, str)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public static <T> String getStringVal(int index, List<T> data) {
+        return WheelPickerUtil.formString(data.get(index));
     }
 }

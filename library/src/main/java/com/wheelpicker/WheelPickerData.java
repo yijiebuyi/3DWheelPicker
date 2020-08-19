@@ -65,11 +65,11 @@ public class WheelPickerData<T> {
     }
 
 
-    public static <D>  List<WheelPickerData> wrapper(@Nullable List<D> initData, @NonNull List<List<D>> srcData) {
+    public static List<WheelPickerData> wrapper(@Nullable List<?> initData, @NonNull List<List<?>> srcData) {
         List<WheelPickerData> wrappers = new ArrayList<WheelPickerData>();
         int size = initData != null ? initData.size() : 0;
         for (int i = 0; i < srcData.size(); i++) {
-            List<D> d = srcData.get(i);
+            List<?> d = srcData.get(i);
             WheelPickerData wp = new WheelPickerData();
             wp.data = d;
             wp.currentText = i < size ? initData.get(i) : null;

@@ -5,18 +5,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.wheelpicker.AdministrativeMap;
 import com.wheelpicker.AdministrativeUtil;
 import com.wheelpicker.DateWheelPicker;
+import com.wheelpicker.OnCascadeWheelListener;
 import com.wheelpicker.OnDataPickListener;
 import com.wheelpicker.OnDatePickListener;
 import com.wheelpicker.DataPicker;
 import com.wheelpicker.OnMultiDataPickListener;
+import com.wheelpicker.widget.PickString;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends Activity {
+    private List<?> mInitData = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +104,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                List<List<Student>> stu = new ArrayList<List<Student>>();
+                List<List<?>> stu = new ArrayList<>();
                 stu.add(getStudents(0));
                 stu.add(getStudents(1));
                 stu.add(getStudents(2));
@@ -116,10 +120,32 @@ public class MainActivity extends Activity {
             }
         });
 
+        final AdministrativeMap map = AdministrativeUtil.loadCity(MainActivity.this);
         findViewById(R.id.city_picker).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdministrativeUtil.loadCity(MainActivity.this);
+                DataPicker.pickData(MainActivity.this, mInitData, AdministrativeUtil.getDefaultPickString(map), false,
+                        new OnMultiDataPickListener<PickString>() {
+                            @Override
+                            public void onDataPicked(List<Integer> indexArr, List<String> val, List<PickString> data) {
+                                String s = indexArr.toString() + ":" + val.toString();
+                                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+                                //mInitData = val;
+                            }
+                        }, new OnCascadeWheelListener<List<?>>() {
+
+                            @Override
+                            public List<? extends PickString> onCascade(int wheelIndex,  List<Integer> itemIndex) {
+                                //级联数据
+                                if (wheelIndex == 0) {
+                                    return map.provinces.get(itemIndex.get(0)).city;
+                                } else if (wheelIndex == 1) {
+                                    return map.provinces.get(itemIndex.get(0)).city.get(itemIndex.get(1)).areas;
+                                }
+
+                                return null;
+                            }
+                        });
             }
         });
     }

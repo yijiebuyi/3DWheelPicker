@@ -1,11 +1,13 @@
 package com.wheelpicker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.wheelpicker.core.AbstractWheelPicker;
+import com.wheelpicker.core.WheelPickerUtil;
 import com.wheelpicker.widget.IPickerView;
 import com.wheelpicker.core.OnWheelPickedListener;
 import com.wheelpicker.widget.TextWheelPicker;
@@ -17,18 +19,28 @@ import java.util.List;
 /**
  * Copyright (C) 2017
  * 版权所有
- *
+ * <p>
  * 功能描述：多个WheelPicker
  * 作者：yijiebuyi
  * 创建时间：2018/4/20
- *
+ * <p>
  * 修改人：
  * 修改描述：
  * 修改日期
  */
-public class MultipleTextWheelPicker extends LinearLayout
+public class MultipleTextWheelPicker<D, T> extends LinearLayout
         implements OnWheelPickedListener<String>, IPickerView {
-    protected List<WheelPickerData> mSrcDataList;
+    /**
+     * 正常
+     */
+    private static final int MODE_NORMAL = 0;
+    /**
+     * 级联
+     */
+    private static final int MODE_CASCADE = 1;
+
+    protected List<T> mSrcDataList;
+    protected List<D> mInitData;
     protected List<TextWheelPicker> mWheelPickers;
     protected List<TextWheelPickerAdapter> mTextWheelPickerAdapters;
 
@@ -36,20 +48,34 @@ public class MultipleTextWheelPicker extends LinearLayout
     protected List<Integer> mPickedIndex;
     protected List mPickedData;
 
+    private OnCascadeWheelListener<List<T>> mOnCascadeWheelListener;
+
     public MultipleTextWheelPicker(Context context) {
-        super(context);
+        this(context, null);
     }
 
-    public MultipleTextWheelPicker(Context context, List<WheelPickerData> data) {
+    public MultipleTextWheelPicker(Context context, List<T> data) {
+        this(context, MODE_NORMAL, data);
+    }
+
+    public MultipleTextWheelPicker(Context context, int mode, List<T> data) {
         super(context);
         init(data);
     }
 
-    public void setData(List<WheelPickerData> data) {
+    public void setSrcData(List<T> data) {
         init(data);
     }
 
-    private void init(List<WheelPickerData> data) {
+    public void setInitData(List<D> d) {
+        mInitData = d;
+    }
+
+    public void setOnCascadeWheelListener (OnCascadeWheelListener listener) {
+        mOnCascadeWheelListener = listener;
+    }
+
+    private void init(List<T> data) {
         mSrcDataList = data;
 
         //set style
@@ -60,54 +86,47 @@ public class MultipleTextWheelPicker extends LinearLayout
         if (data != null && !data.isEmpty()) {
             int size = data.size();
 
-            int count = 0;
-            for (int i = 0; i < size; i++) {
-                WheelPickerData mp = data.get(i);
-                if (!mp.placeHoldView) {
-                    count++;
-                }
-            }
+            mWheelPickers = new ArrayList<TextWheelPicker>(size);
+            mTextWheelPickerAdapters = new ArrayList<TextWheelPickerAdapter>(size);
 
-            mWheelPickers = new ArrayList<TextWheelPicker>(count);
-            mTextWheelPickerAdapters = new ArrayList<TextWheelPickerAdapter>(count);
-            mPickedVal = new ArrayList<String>(count);
-            mPickedIndex = new ArrayList<Integer>(count);
-            mPickedData = new ArrayList<>();
+            mPickedVal = new ArrayList<String>(size);
+            mPickedIndex = new ArrayList<Integer>(size);
+            mPickedData = new ArrayList<>(size);
 
             LayoutParams llParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             llParams.weight = 1;
 
             Context context = getContext();
-            int j = 0;
-            int k = size;
             for (int i = 0; i < size; i++) {
-                WheelPickerData mp = data.get(i);
-                if (mp.placeHoldView) {
+                T d = data.get(i);
+                int id = i;
+                List<D> pickerDataList = null;
+                if (isHolderView(d)) {
                     //占位view
-                    TextWheelPicker holdView = new TextWheelPicker(context, k++);
+                    TextWheelPicker holdView = new TextWheelPicker(context, id);
                     holdView.setTouchable(false);
                     holdView.setLineStorkeWidth(0);
 
                     addView(holdView, llParams);
-                } else if (mp.data != null && !mp.data.isEmpty()) {
-                    int id = j++;
+                } else if ((pickerDataList = asList(d)) != null && !pickerDataList.isEmpty()) {
                     TextWheelPicker twp = new TextWheelPicker(context, id);
-                    twp.setTouchable(mp.scrollable);
+                    twp.setTouchable(scrollable(d));
                     twp.setOnWheelPickedListener(this);
 
                     addView(twp, llParams);
                     mWheelPickers.add(twp);
 
                     TextWheelPickerAdapter adapter = new TextWheelPickerAdapter();
-                    adapter.setData(mp.data);
+                    adapter.setData(pickerDataList);
                     mTextWheelPickerAdapters.add(adapter);
 
                     //set current
-                    int index = Math.max(0, mp.indexOf(mp.currentText));
+                    int index = getIndex(i, d, pickerDataList);
+
                     twp.setCurrentItemWithoutReLayout(index);
-                    mPickedVal.add(mp.getStringVal(index));
+                    mPickedVal.add(WheelPickerUtil.getStringVal(index, pickerDataList));
                     mPickedIndex.add(index);
-                    mPickedData.add(mp.get(index));
+                    mPickedData.add(pickerDataList.get(index));
 
                     twp.setAdapter(adapter);
                 }
@@ -115,12 +134,75 @@ public class MultipleTextWheelPicker extends LinearLayout
         }
     }
 
+    private int getIndex(int i, T data, List<D> pickerDataList) {
+        int index = 0;
+        if (data instanceof WheelPickerData) {
+            WheelPickerData<D> wp = (WheelPickerData) data;
+            index = Math.max(0, WheelPickerUtil.indexOf(wp.currentText, pickerDataList));
+        } else if (mInitData != null && !mInitData.isEmpty() && i < mInitData.size()) {
+            index = Math.max(0, WheelPickerUtil.indexOf(mInitData.get(i), pickerDataList));
+        }
+
+        return index;
+    }
+
+    private List asList(T data) {
+        if (data instanceof List) {
+            return (List) data;
+        } else if (data instanceof WheelPickerData) {
+            return ((WheelPickerData) data).data;
+        }
+        return null;
+    }
+
+    private boolean isHolderView(T data) {
+        if (data instanceof WheelPickerData) {
+            return ((WheelPickerData) data).placeHoldView;
+        }
+
+        return false;
+    }
+
+    private boolean scrollable(T data) {
+        if (data instanceof WheelPickerData) {
+            return ((WheelPickerData) data).scrollable;
+        }
+
+        return true;
+    }
+
+    /**
+     * 更新picker 数据
+     */
+    public void updateWheelPickData(int index, T data) {
+        if (index < 0 || index >= mSrcDataList.size()) {
+            return;
+        }
+
+        mSrcDataList.set(index, data);
+    }
+
+    @SuppressLint("ResourceType")
     @Override
     public void onWheelSelected(AbstractWheelPicker wheelPicker, int index, String data) {
         //默认不联动
-        mPickedVal.set(wheelPicker.getId(), data);
-        mPickedIndex.set(wheelPicker.getId(), index);
-        mPickedData.set(wheelPicker.getId(), mSrcDataList.get(wheelPicker.getId()).get(index));
+        int pickerId = wheelPicker.getId();
+
+        mPickedVal.set(pickerId, data);
+        mPickedIndex.set(pickerId, index);
+        List<D> d = asList(mSrcDataList.get(pickerId));
+        D pickedData = (d != null && !d.isEmpty() && d.size() > index) ? d.get(index) : null;
+        mPickedData.set(pickerId, pickedData);
+
+        if (mOnCascadeWheelListener != null) {
+            int size = mSrcDataList.size();
+            if (pickerId < size - 1) {
+                List<T> cascadeData = mOnCascadeWheelListener.onCascade(pickerId, mPickedIndex);
+                if (cascadeData != null) {
+                    mTextWheelPickerAdapters.get(pickerId + 1).setData(cascadeData);
+                }
+            }
+        }
     }
 
     public void setTextSize(int textSize) {

@@ -3,6 +3,8 @@ package com.wheelpicker;
 import android.content.Context;
 import android.util.Log;
 
+import com.wheelpicker.widget.PickString;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -10,7 +12,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Copyright (C) 2017
@@ -27,18 +31,34 @@ import java.util.Iterator;
  */
 
 public class AdministrativeUtil {
-    public static void loadCity(Context context) {
+    public static AdministrativeMap loadCity(Context context) {
+        AdministrativeMap map = null;
         try {
             String fileName = "pca_compress.json";
             InputStream is = context.getAssets().open(fileName);
             String json = convertStreamToString(is);
             Log.i("aaa", json);
 
-            AdministrativeMap map = Json2AdministrativeMap(json);
+            map = Json2AdministrativeMap(json);
             Log.i("aaa", "province: " + map.provinces.size());
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return map;
+    }
+
+    public static List<List<?>> getDefaultPickString(AdministrativeMap map) {
+        if (map == null) {
+            return null;
+        }
+
+        List<List<?>> pickDataList = new ArrayList<>();
+        pickDataList.add(map.provinces);
+        pickDataList.add(map.provinces.get(0).city);
+        pickDataList.add(map.provinces.get(0).city.get(0).areas);
+
+        return pickDataList;
     }
 
     /**
@@ -62,7 +82,7 @@ public class AdministrativeUtil {
         return sb.toString();
     }
 
-    public static AdministrativeMap Json2AdministrativeMap(String data) {
+    private static AdministrativeMap Json2AdministrativeMap(String data) {
         AdministrativeMap map = new AdministrativeMap();
         map.provinces = new ArrayList<>(34);
         map.year = 2017;
