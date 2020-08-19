@@ -139,7 +139,7 @@ dependencies {
 ### 也可以使用Textwheelpicker
 
 ```java
-   参照 DateWheelPicker
+   参照 DateWheelPicker，SingleTextWheelPicker
    
 ```
 
