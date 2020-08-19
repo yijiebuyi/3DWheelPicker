@@ -167,7 +167,6 @@ public class DataPicker {
 
     /**
      * 多行数据选择
-     * @see #pickData(Context, List, List, OnMultiDataPickListener, OnCascadeWheelListener)
      */
     public static <T> void pickData(Context context, @Nullable List<?> initData, @NonNull List<List<?>> srcData,
                                     final OnMultiDataPickListener listener) {
@@ -186,11 +185,11 @@ public class DataPicker {
                                     final OnMultiDataPickListener listener, final OnCascadeWheelListener cascadeListener) {
         PickOption option = PickOption.getPickDefaultOptionBuilder(context).build();
 
-        List<WheelPickerData> pickerData = WheelPickerData.wrapper(initData, srcData);
+        //List<WheelPickerData> pickerData = WheelPickerData.wrapper(initData, srcData);
         //WheelPickerData.disScrollable(0, pickerData);
         //WheelPickerData.placeHold(1, pickerData);
-        final MultipleTextWheelPicker picker = wrapper ? new MultipleTextWheelPicker(context, pickerData) :
-                new MultipleTextWheelPicker(context, srcData);
+        final MultipleTextWheelPicker picker = wrapper ? new MultipleTextWheelPicker(context, WheelPickerData.wrapper(initData, srcData))
+                : new MultipleTextWheelPicker(context, initData, srcData);
 
         picker.setOnCascadeWheelListener(cascadeListener);
         setPickViewStyle(picker, option);

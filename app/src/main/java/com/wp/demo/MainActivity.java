@@ -20,7 +20,9 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends Activity {
-    private List<?> mInitData = null;
+    private Student mInitData = null;
+    private List<Student> mMultiInitData = null;
+    private List<?> mCascadeInitData = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +93,10 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                DataPicker.pickData(MainActivity.this, null, getStudents(1), new OnDataPickListener<Student>() {
+                DataPicker.pickData(MainActivity.this, mInitData, getStudents(1), new OnDataPickListener<Student>() {
                     @Override
                     public void onDataPicked(int index, String val, Student data) {
+                        mInitData = data;
                         Toast.makeText(MainActivity.this, val, Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -109,10 +112,11 @@ public class MainActivity extends Activity {
                 stu.add(getStudents(1));
                 stu.add(getStudents(2));
 
-                DataPicker.pickData(MainActivity.this, null, stu, new OnMultiDataPickListener<Student>() {
+                DataPicker.pickData(MainActivity.this, mMultiInitData, stu, new OnMultiDataPickListener<Student>() {
 
                     @Override
                     public void onDataPicked(List<Integer> indexArr, List<String> val, List<Student> data) {
+                        mMultiInitData = data;
                         String s = indexArr.toString() + ":" + val.toString();
                         Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
                     }
@@ -124,18 +128,18 @@ public class MainActivity extends Activity {
         findViewById(R.id.city_picker).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataPicker.pickData(MainActivity.this, mInitData, AdministrativeUtil.getDefaultPickString(map), false,
-                        new OnMultiDataPickListener<PickString>() {
+                DataPicker.pickData(MainActivity.this, mCascadeInitData, AdministrativeUtil.getDefaultPickString(map), false,
+                        new OnMultiDataPickListener () {
                             @Override
-                            public void onDataPicked(List<Integer> indexArr, List<String> val, List<PickString> data) {
+                            public void onDataPicked(List indexArr, List val, List data) {
                                 String s = indexArr.toString() + ":" + val.toString();
                                 Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
-                                //mInitData = val;
+                                //mCascadeInitData = data;
                             }
                         }, new OnCascadeWheelListener<List<?>>() {
 
                             @Override
-                            public List<? extends PickString> onCascade(int wheelIndex,  List<Integer> itemIndex) {
+                            public List<?> onCascade(int wheelIndex,  List<Integer> itemIndex) {
                                 //级联数据
                                 if (wheelIndex == 0) {
                                     return map.provinces.get(itemIndex.get(0)).city;

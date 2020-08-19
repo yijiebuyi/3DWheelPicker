@@ -47,7 +47,9 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
     protected List<String> mPickedVal;
     protected List<Integer> mPickedIndex;
     protected List mPickedData;
-
+    /**
+     * 级联数据监听器，当设置监听器时，表示数据级联；否则数据非级联
+     */
     private OnCascadeWheelListener<List<T>> mOnCascadeWheelListener;
 
     public MultipleTextWheelPicker(Context context) {
@@ -55,20 +57,14 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
     }
 
     public MultipleTextWheelPicker(Context context, List<T> data) {
-        this(context, MODE_NORMAL, data);
-    }
-
-    public MultipleTextWheelPicker(Context context, int mode, List<T> data) {
         super(context);
         init(data);
     }
 
-    public void setSrcData(List<T> data) {
-        init(data);
-    }
-
-    public void setInitData(List<D> d) {
+    public MultipleTextWheelPicker(Context context, List<D> d, List<T> data) {
+        super(context);
         mInitData = d;
+        init(data);
     }
 
     public void setOnCascadeWheelListener (OnCascadeWheelListener listener) {
@@ -171,15 +167,17 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
         return true;
     }
 
-    /**
-     * 更新picker 数据
-     */
-    public void updateWheelPickData(int index, T data) {
-        if (index < 0 || index >= mSrcDataList.size()) {
-            return;
+    public void notifyDataSetChanged() {
+        if (mTextWheelPickerAdapters != null && !mTextWheelPickerAdapters.isEmpty()) {
+            if (mOnCascadeWheelListener == null) {
+                for (TextWheelPickerAdapter adapter : mTextWheelPickerAdapters) {
+                    adapter.notifyDataSetChanged();
+                }
+            } else {
+                //当时级联的时候，只需要通知第一个数据变化
+                mTextWheelPickerAdapters.get(0).notifyDataSetChanged();
+            }
         }
-
-        mSrcDataList.set(index, data);
     }
 
     @SuppressLint("ResourceType")

@@ -1,6 +1,5 @@
 package com.wheelpicker.widget;
 
-import com.wheelpicker.PickDataWrapper;
 import com.wheelpicker.core.WheelPickerUtil;
 
 import java.util.List;
