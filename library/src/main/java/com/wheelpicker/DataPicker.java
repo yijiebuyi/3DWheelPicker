@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.wheelpicker.core.WheelPickerUtil;
 import com.wheelpicker.widget.IPickerView;
 import com.wheelpicker.widget.TextWheelPickerAdapter;
 
@@ -118,7 +119,7 @@ public class DataPicker {
                 .build();
         final FutureTimePicker picker = (FutureTimePicker) buildDateWheelPicker(context, option, PickMode.MODE_FUTURE_DATE);
         picker.setPickedTime(calendar.getTimeInMillis());
-        picker.notifyDataSetChanged();
+        //picker.notifyDataSetChanged();
 
         BottomSheet bottomSheet = buildBottomSheet(context, picker);
         bottomSheet.show();
@@ -151,6 +152,8 @@ public class DataPicker {
 
         TextWheelPickerAdapter adapter = new TextWheelPickerAdapter(srcData);
         picker.setAdapter(adapter);
+        int index = WheelPickerUtil.indexOf(initData, srcData);
+        picker.setCurrentItem(index < 0 ? 0 : index);
 
         BottomSheet bottomSheet = buildBottomSheet(context, picker);
         bottomSheet.show();

@@ -20,6 +20,11 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends Activity {
+    private Date mInitBirthday = new Date();
+    private Date mInitDate = new Date();
+    private Date mInitFutureDateTime = new Date();
+    private Date mInitFutureDate = new Date();
+
     private Student mInitData = null;
     private List<Integer> mMultiInitIndex = null;
     private List<Integer> mCascadeInitIndex = null;
@@ -35,10 +40,11 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                DataPicker.pickBirthday(MainActivity.this, new Date(System.currentTimeMillis()),
+                DataPicker.pickBirthday(MainActivity.this, mInitBirthday,
                         new OnDatePickListener() {
                             @Override
                             public void onDatePicked(long time, int year, int month, int day, int hour, int minute, int second) {
+                                mInitBirthday.setTime(time);
                                 Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day, Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -49,10 +55,11 @@ public class MainActivity extends Activity {
         findViewById(R.id.picker_date).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataPicker.pickDate(MainActivity.this, new Date(System.currentTimeMillis()),
+                DataPicker.pickDate(MainActivity.this, mInitDate,
                         DateWheelPicker.TYPE_ALL, 100, 100, new OnDatePickListener() {
                             @Override
                             public void onDatePicked(long time, int year, int month, int day, int hour, int minute, int second) {
+                                mInitDate.setTime(time);
                                 Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day + " " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -64,10 +71,11 @@ public class MainActivity extends Activity {
         findViewById(R.id.picker_future_date).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataPicker.pickDate(MainActivity.this, new Date(System.currentTimeMillis()),
+                DataPicker.pickDate(MainActivity.this, mInitFutureDateTime,
                         DateWheelPicker.TYPE_ALL, 0, 100, new OnDatePickListener() {
                             @Override
                             public void onDatePicked(long time, int year, int month, int day, int hour, int minute, int second) {
+                                mInitFutureDateTime.setTime(time);
                                 Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day + " " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
                             }
                         });
