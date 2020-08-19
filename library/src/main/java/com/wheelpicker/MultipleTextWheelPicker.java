@@ -20,7 +20,7 @@ import java.util.List;
  * Copyright (C) 2017
  * 版权所有
  * <p>
- * 功能描述：多个WheelPicker
+ * 功能描述：多wheel数据选择Picker
  * 作者：yijiebuyi
  * 创建时间：2018/4/20
  * <p>
