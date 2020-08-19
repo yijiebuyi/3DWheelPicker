@@ -32,8 +32,6 @@ public class MultipleTextWheelPicker extends LinearLayout
     protected List<TextWheelPicker> mWheelPickers;
     protected List<TextWheelPickerAdapter> mTextWheelPickerAdapters;
 
-    protected OnMultiPickListener mOnMultiPickListener;
-
     protected List<String> mPickedVal;
     protected List<Integer> mPickedIndex;
     protected List mPickedData;
@@ -47,18 +45,8 @@ public class MultipleTextWheelPicker extends LinearLayout
         init(data);
     }
 
-    public MultipleTextWheelPicker(Context context, List<WheelPickerData> data, OnMultiPickListener listener) {
-        super(context);
-        init(data);
-        setOnMultiPickListener(listener);
-    }
-
     public void setData(List<WheelPickerData> data) {
         init(data);
-    }
-
-    public void setOnMultiPickListener(OnMultiPickListener listener) {
-        mOnMultiPickListener = listener;
     }
 
     private void init(List<WheelPickerData> data) {
@@ -133,10 +121,6 @@ public class MultipleTextWheelPicker extends LinearLayout
         mPickedVal.set(wheelPicker.getId(), data);
         mPickedIndex.set(wheelPicker.getId(), index);
         mPickedData.set(wheelPicker.getId(), mSrcDataList.get(wheelPicker.getId()).get(index));
-
-        if (mOnMultiPickListener != null) {
-            mOnMultiPickListener.onDataPicked(mPickedVal);
-        }
     }
 
     public void setTextSize(int textSize) {
@@ -240,9 +224,4 @@ public class MultipleTextWheelPicker extends LinearLayout
         return mPickedData;
     }
 
-    public interface OnMultiPickListener {
-        public void onDataPicked(List<String> pickedData);
-
-        public void onCancel();
-    }
 }

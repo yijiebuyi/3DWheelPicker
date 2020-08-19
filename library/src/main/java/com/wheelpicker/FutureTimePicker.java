@@ -79,8 +79,6 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
     private TextWheelPickerAdapter mHourPickerAdapter;
     private TextWheelPickerAdapter mMinutePickerAdapter;
 
-    private OnFutureDatePickListener mOnFutureDatePickListener;
-
     public FutureTimePicker(Context context) {
         super(context);
         init();
@@ -285,19 +283,6 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
 
         mSelectedHour = getCurrentDate(mHourPickerAdapter.getItemText(hIndex), mHourStr);
         mSelectedMinute = getCurrentDate(mMinutePickerAdapter.getItemText(mIndex), mMinuteStr);
-
-        if (mOnFutureDatePickListener != null) {
-            mOnFutureDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth, mSelectedDay,
-                    mSelectedHour, mSelectedMinute, 0);
-        }
-    }
-
-    public void setOnFutureDatePickListener(OnFutureDatePickListener listener) {
-        mOnFutureDatePickListener = listener;
-        if (mOnFutureDatePickListener != null) {
-            mOnFutureDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth, mSelectedDay,
-                    mSelectedHour, mSelectedMinute, mSelectedSecond);
-        }
     }
 
     private void updateMinHour(int minHour) {
@@ -419,11 +404,6 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
                 mSelectedMinute = getCurrentDate(data, mMinuteStr);
                 break;
         }
-
-        if (mOnFutureDatePickListener != null) {
-            mOnFutureDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth, mSelectedDay,
-                    mSelectedHour, mSelectedMinute, 0);
-        }
     }
 
     public void notifyDataSetChanged() {
@@ -460,10 +440,4 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
     public int getSelectedSecond() {
         return mSelectedSecond;
     }
-
-    public interface OnFutureDatePickListener {
-        public void onDatePicked(int year, int month, int day, int hour, int minute, int second);
-    }
-
-
 }

@@ -105,8 +105,6 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
     private TextWheelPickerAdapter mMinutePickerAdapter;
     private TextWheelPickerAdapter mSecondPickerAdapter;
 
-    private OnDatePickListener mOnDatePickListener;
-
     public DateWheelPicker(Context context) {
         super(context);
         init();
@@ -251,10 +249,6 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
         } else {
             mSecondWheelPicker.setVisibility(antiVisibility);
         }
-    }
-
-    public void setOnDatePickListener(OnDatePickListener listener) {
-        mOnDatePickListener = listener;
     }
 
     public void setDateRange(int from, int to) {
@@ -575,11 +569,6 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
             default:
                 break;
         }
-
-        if (mOnDatePickListener != null) {
-            mOnDatePickListener.onDatePicked(mSelectedYear, mSelectedMonth, mSelectedDay,
-                    mSelectedHour, mSelectedMinute, mSelectedSecond);
-        }
     }
 
 
@@ -765,7 +754,4 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
         return mSelectedSecond;
     }
 
-    public interface OnDatePickListener {
-        public void onDatePicked(int year, int month, int day, int hour, int minute, int second);
-    }
 }

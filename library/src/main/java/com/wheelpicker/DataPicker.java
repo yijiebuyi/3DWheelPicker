@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.wheelpicker.widget.IPickerView;
-import com.wheelpicker.widget.PickString;
 import com.wheelpicker.widget.TextWheelPickerAdapter;
 
 import java.util.Calendar;

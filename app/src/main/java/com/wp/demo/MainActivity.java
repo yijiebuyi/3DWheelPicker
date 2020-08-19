@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.wheelpicker.AdministrativeUtil;
 import com.wheelpicker.DateWheelPicker;
 import com.wheelpicker.OnDataPickListener;
 import com.wheelpicker.OnDatePickListener;
@@ -35,6 +36,7 @@ public class MainActivity extends Activity {
                                 Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day, Toast.LENGTH_SHORT).show();
                             }
                         });
+
             }
         });
 
@@ -94,7 +96,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        findViewById(R.id.muliti_picker_txt).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.multi_picker_txt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -111,6 +113,13 @@ public class MainActivity extends Activity {
                         Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+        });
+
+        findViewById(R.id.city_picker).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AdministrativeUtil.loadCity(MainActivity.this);
             }
         });
     }
