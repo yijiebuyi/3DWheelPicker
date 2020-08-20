@@ -6,7 +6,11 @@ import android.os.Build;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
+import android.widget.Scroller;
 
 import androidx.core.view.ViewCompat;
 
@@ -49,7 +53,7 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
     public static final int HORIZENTAL = 1 << 2;
 
     private static final int CORRECT_ANIMATION_DURATION = 250;
-    private static final float MOVE_FACTOR = 0.4F;
+    private static final float MOVE_FACTOR = 0.3F;
 
     protected static int mOrientation = VETTAICL;
     protected int mOverOffset;
@@ -140,15 +144,20 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
      */
     private class FlingRunnable implements Runnable {
         protected WheelScroller mScroller;
+        private Interpolator mInterpolator = new DecelerateInterpolator(4);
+        private float friction = ViewConfiguration.getScrollFriction();
 
         private FlingRunnable(Context context) {
             if (OSUtils.isEMUI()) {
-                mScroller = new ScrollerCompat(context);
+                mScroller = new ScrollerCompat(context, mInterpolator);
+                mScroller.setFriction(friction);
             } else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-                    mScroller = new OverScrollerCompat(context);
+                    mScroller = new OverScrollerCompat(context, mInterpolator);
+                    mScroller.setFriction(friction);
                 } else {
-                    mScroller = new ScrollerCompat(context);
+                    mScroller = new ScrollerCompat(context, mInterpolator);
+                    mScroller.setFriction(friction);
                 }
             }
         }
