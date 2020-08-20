@@ -3,6 +3,8 @@ package com.wheelpicker;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.core.app.NavUtils;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -34,10 +36,10 @@ public class AdministrativeUtil {
             String fileName = "pca_compress.json";
             InputStream is = context.getAssets().open(fileName);
             String json = convertStreamToString(is);
-            Log.i("aaa", json);
+            //Log.i("aaa", json);
 
             map = Json2AdministrativeMap(json);
-            Log.i("aaa", "province: " + map.provinces.size());
+            //Log.i("aaa", "province: " + map.provinces.size());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,17 +66,21 @@ public class AdministrativeUtil {
         }
 
         List<List<?>> pickDataList = new ArrayList<>();
-        if (indexArr == null || indexArr.isEmpty()) {
-            pickDataList.add(map.provinces);
-            pickDataList.add(map.provinces.get(0).city);
-            pickDataList.add(map.provinces.get(0).city.get(0).areas);
-        } else {
-            int cityIndex = indexArr.get(0);
-            int areaIndex = indexArr.get(1);
-            pickDataList.add(map.provinces);
-            pickDataList.add(map.provinces.get(cityIndex).city);
-            pickDataList.add(map.provinces.get(cityIndex).city.get(areaIndex).areas);
+
+        int cityIndex = 0;
+        int areaIndex = 0;
+        if (indexArr != null && !indexArr.isEmpty()) {
+            cityIndex = indexArr.get(0);
+            areaIndex = indexArr.get(1);
         }
+
+        pickDataList.add(map.provinces);
+        List<AdministrativeMap.Province> province = map.provinces;
+        pickDataList.add(province == null || province.isEmpty() ? new ArrayList<>() :
+                map.provinces.get(cityIndex).city);
+        List<AdministrativeMap.City> cities = map.provinces.get(cityIndex).city;
+        pickDataList.add(cities == null || cities.isEmpty() ? new ArrayList<>() :
+                cities.get(areaIndex).areas);
 
         return pickDataList;
     }

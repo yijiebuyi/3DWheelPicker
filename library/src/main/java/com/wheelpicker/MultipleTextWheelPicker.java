@@ -105,7 +105,7 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
                     holdView.setLineStorkeWidth(0);
 
                     addView(holdView, llParams);
-                } else if ((pickerDataList = asList(d)) != null && !pickerDataList.isEmpty()) {
+                } else if ((pickerDataList = asList(d)) != null /*&& !pickerDataList.isEmpty()*/) {
                     TextWheelPicker twp = new TextWheelPicker(context, id);
                     twp.setTouchable(scrollable(d));
                     twp.setOnWheelPickedListener(this);
@@ -119,11 +119,17 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
 
                     //set current
                     int index = getIndex(i, d);
-
                     twp.setCurrentItemWithoutReLayout(index);
-                    mPickedVal.add(WheelPickerUtil.getStringVal(index, pickerDataList));
-                    mPickedIndex.add(index);
-                    mPickedData.add(pickerDataList.get(index));
+
+                    if (pickerDataList.isEmpty()) {
+                        mPickedVal.add(null);
+                        mPickedIndex.add(0);
+                        mPickedData.add(null);
+                    } else {
+                        mPickedVal.add(WheelPickerUtil.getStringVal(index, pickerDataList));
+                        mPickedIndex.add(index);
+                        mPickedData.add(pickerDataList.get(index));
+                    }
 
                     twp.setAdapter(adapter);
                 }
@@ -203,8 +209,19 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
             int size = mSrcDataList.size();
             if (pickerId < size - 1) {
                 List<T> cascadeData = mOnCascadeWheelListener.onCascade(pickerId, mPickedIndex);
-                if (cascadeData != null) {
+                if (cascadeData != null && !cascadeData.isEmpty()) {
                     mTextWheelPickerAdapters.get(pickerId + 1).setData(cascadeData);
+                } else {
+                    for (int i = pickerId + 1; i < mTextWheelPickerAdapters.size(); i++) {
+                        mPickedVal.set(i, null);
+                        mPickedIndex.set(i, 0);
+                        mPickedData.set(i, null);
+                        mTextWheelPickerAdapters.get(i).setData(null);
+                    }
+
+                    for (int i = pickerId + 1; i < mWheelPickers.size(); i++) {
+                        mWheelPickers.get(i).setCurrentItem(0);
+                    }
                 }
             }
         }

@@ -286,7 +286,7 @@ public class PickOption {
                 .setVisibleItemCount(9)
                 .setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px20))
                 .setItemTextColor(context.getResources().getColor(R.color.font_black))
-                .setItemTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_32px))
+                .setItemTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_36px))
                 .setVerPadding(context.getResources().getDimensionPixelSize(R.dimen.px20))
                 .setBackgroundColor(Color.WHITE);
 

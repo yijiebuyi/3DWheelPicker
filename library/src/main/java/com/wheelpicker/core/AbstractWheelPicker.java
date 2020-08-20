@@ -114,7 +114,7 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
     private void init(AttributeSet attrs) {
         obtainAttrs(attrs);
         instantiation();
-        computeWheelSize();
+        //computeWheelSize();
     }
 
     protected void obtainAttrs(AttributeSet attrs) {
@@ -408,6 +408,9 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
             }
             if (mCurrItemIndex > count - 1) {
                 mCurrItemIndex = count - 1;
+            }
+            if (mCurrItemIndex < 0) {
+                mCurrItemIndex = 0;
             }
             onWheelSelected(false, mCurrItemIndex);
             requestComputeLayout();

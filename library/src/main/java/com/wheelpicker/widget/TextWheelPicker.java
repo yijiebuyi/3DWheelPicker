@@ -6,6 +6,8 @@ import android.graphics.Camera;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -30,6 +32,7 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
     private final Camera mCamera = new Camera();
     private final Matrix mRotateMatrix = new Matrix();
     private final Matrix mDepthMatrix = new Matrix();
+    private final RectF mCurrentItemRect = new RectF();
 
     private int mRadius;
 
@@ -100,6 +103,9 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
                     mWheelCenterY - mLineOffset, mLinePaint);
             canvas.drawLine(0, mWheelCenterY + mLineOffset, mViewWidth,
                     mWheelCenterY + mLineOffset, mLinePaint);
+
+            mCurrentItemRect.set(0, mWheelCenterY - mLineOffset,
+                    mViewWidth, mWheelCenterY + mLineOffset);
         }
     }
 
@@ -159,12 +165,20 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
             mRotateMatrix.postConcat(mDepthMatrix);
             canvas.concat(mRotateMatrix);
 
-            if (i == getHighLightItem(mCurrItemIndex)) {
+            /*if (i == getHighLightItem(mCurrItemIndex)) {
                 mPaint.setAlpha(255);
             } else {
                 mPaint.setAlpha(128 - (int) (128 * relDegree));
-            }
+            }*/
+            //先绘制文本渐变，离当前item越远，alpha值越小
+            mPaint.setAlpha(128 - (int) (128 * relDegree));
             draw(canvas, mPaint, mAdapter.getItemText(i), space, mWheelCenterX, mWheelCenterTextY);
+
+            //设置当前选中item为非透明
+            mPaint.setAlpha(255);
+            canvas.clipRect(mCurrentItemRect);
+            draw(canvas, mPaint, mAdapter.getItemText(i), space, mWheelCenterX, mWheelCenterTextY);
+
             canvas.restore();
         }
 
@@ -215,7 +229,23 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
 
     @Override
     protected void draw(Canvas canvas, Paint paint, String data, float space, float x, float y) {
-        canvas.drawText(getDrawText(data), x, y + space, paint);
+        fitTextSize(data, paint);
+        canvas.drawText(/*getDrawText(data)*/data, x, y + space, paint);
+    }
+
+    private void fitTextSize(String text, Paint paint) {
+        float fitTextSize = mTextSize;
+        if (mTextSize == 0) {
+            return;
+        }
+
+        paint.setTextSize(mTextSize);
+        float currWidth = paint.measureText(text);
+        while (currWidth > mViewWidth) {
+            fitTextSize = fitTextSize - 4;
+            paint.setTextSize(fitTextSize);
+            currWidth = paint.measureText(text);
+        }
     }
 
     @Override
@@ -234,6 +264,13 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
         }
 
         return currentItem;
+    }
+
+    @Override
+    public void setCurrentItem(int index) {
+        mOldOffsetItemIndex = 0;
+        mOffsetItemIndex = 0;
+        super.setCurrentItem(index);
     }
 
     /**

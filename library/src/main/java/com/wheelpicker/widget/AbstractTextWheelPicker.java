@@ -29,8 +29,8 @@ import android.util.AttributeSet;
 public abstract class AbstractTextWheelPicker extends ScrollWheelPicker<TextBaseAdapter> {
     protected int mUnitDegree;
 
-    private int mTextColor;
-    private int mTextSize;
+    protected int mTextColor;
+    protected float mTextSize;
 
     protected Rect mItemBounds = new Rect();
     private Point mItemSize = new Point();
@@ -108,6 +108,7 @@ public abstract class AbstractTextWheelPicker extends ScrollWheelPicker<TextBase
         }
 
         if (mOrientation == VETTAICL && mAutoMeasureItemHeight) {
+            mPaint.setTextSize(mTextSize);
             FontMetrics ftms = mPaint.getFontMetrics();
             mItemMaxHeight = (int) Math.abs(ftms.bottom - ftms.top);
         }
@@ -150,6 +151,7 @@ public abstract class AbstractTextWheelPicker extends ScrollWheelPicker<TextBase
     }
 
     public void setTextSize(float textSize) {
+        mTextSize = textSize;
         mPaint.setTextSize(textSize);
     }
 
