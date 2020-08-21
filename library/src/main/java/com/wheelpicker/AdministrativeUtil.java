@@ -1,9 +1,6 @@
 package com.wheelpicker;
 
 import android.content.Context;
-import android.util.Log;
-
-import androidx.core.app.NavUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,7 +36,7 @@ public class AdministrativeUtil {
             String json = convertStreamToString(is);
             map = Json2AdministrativeMap(json);*/
 
-            String fileName = "province.json";
+            String fileName = "province_compress.json";
             InputStream is = context.getAssets().open(fileName);
             String json = convertStreamToString(is);
             map = Json2Provinces(json);
