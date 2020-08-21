@@ -210,6 +210,7 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
             if (pickerId < size - 1) {
                 List<T> cascadeData = mOnCascadeWheelListener.onCascade(pickerId, mPickedIndex);
                 if (cascadeData != null && !cascadeData.isEmpty()) {
+                    mWheelPickers.get(pickerId + 1).setCurrentItem(0);
                     mTextWheelPickerAdapters.get(pickerId + 1).setData(cascadeData);
                 } else {
                     for (int i = pickerId + 1; i < mTextWheelPickerAdapters.size(); i++) {

@@ -29,6 +29,8 @@ public class MainActivity extends Activity {
     private List<Integer> mMultiInitIndex = null;
     private List<Integer> mCascadeInitIndex = null;
 
+    private AdministrativeMap mAdministrativeMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,11 +134,14 @@ public class MainActivity extends Activity {
             }
         });
 
-        final AdministrativeMap map = AdministrativeUtil.loadCity(MainActivity.this);
         findViewById(R.id.city_picker).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataPicker.pickData(MainActivity.this, mCascadeInitIndex, AdministrativeUtil.getPickData(map, mCascadeInitIndex), false,
+                if (mAdministrativeMap == null) {
+                    mAdministrativeMap = AdministrativeUtil.loadCity(MainActivity.this);
+                }
+                DataPicker.pickData(MainActivity.this, mCascadeInitIndex,
+                        AdministrativeUtil.getPickData(mAdministrativeMap, mCascadeInitIndex), false,
                         new OnMultiDataPickListener () {
                             @Override
                             public void onDataPicked(List indexArr, List val, List data) {
@@ -150,9 +155,9 @@ public class MainActivity extends Activity {
                             public List<?> onCascade(int wheelIndex,  List<Integer> itemIndex) {
                                 //级联数据
                                 if (wheelIndex == 0) {
-                                    return map.provinces.get(itemIndex.get(0)).city;
+                                    return mAdministrativeMap.provinces.get(itemIndex.get(0)).city;
                                 } else if (wheelIndex == 1) {
-                                    return map.provinces.get(itemIndex.get(0)).city.get(itemIndex.get(1)).areas;
+                                    return mAdministrativeMap.provinces.get(itemIndex.get(0)).city.get(itemIndex.get(1)).areas;
                                 }
 
                                 return null;

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.core.app.NavUtils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -33,12 +34,15 @@ public class AdministrativeUtil {
     public static AdministrativeMap loadCity(Context context) {
         AdministrativeMap map = null;
         try {
-            String fileName = "pca_compress.json";
+            /*String fileName = "pca_compress.json";
             InputStream is = context.getAssets().open(fileName);
             String json = convertStreamToString(is);
-            //Log.i("aaa", json);
+            map = Json2AdministrativeMap(json);*/
 
-            map = Json2AdministrativeMap(json);
+            String fileName = "province.json";
+            InputStream is = context.getAssets().open(fileName);
+            String json = convertStreamToString(is);
+            map = Json2Provinces(json);
             //Log.i("aaa", "province: " + map.provinces.size());
         } catch (IOException e) {
             e.printStackTrace();
@@ -151,6 +155,50 @@ public class AdministrativeUtil {
                     }
                 }
 
+                map.provinces.add(province);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return map;
+
+    }
+
+    private static AdministrativeMap Json2Provinces(String data) {
+        AdministrativeMap map = new AdministrativeMap();
+        map.year = 2018;
+        try {
+            JSONArray provinceArr = new JSONArray(data);
+            int provinceSize = provinceArr.length();
+            map.provinces = new ArrayList<>(provinceSize);
+            for (int i= 0; i < provinceSize; i++) {
+                AdministrativeMap.Province province = new AdministrativeMap.Province();
+                JSONObject provinceObj = provinceArr.getJSONObject(i);
+                province.name = provinceObj.getString("name");
+
+                JSONArray cityArr = provinceObj.getJSONArray("city");
+                int citySize = cityArr.length();
+                province.city = new ArrayList<>(citySize);
+                for (int j= 0; j < citySize; j++) {
+                    AdministrativeMap.City city = new AdministrativeMap.City();
+                    JSONObject cityObj = cityArr.getJSONObject(j);
+                    city.name = cityObj.getString("name");
+
+                    JSONArray areaArr = cityObj.getJSONArray("area");
+                    int areaSize = areaArr.length();
+                    city.areas = new ArrayList<>(areaSize);
+                    for (int k = 0; k < areaSize; k++) {
+                        AdministrativeMap.Area area = new AdministrativeMap.Area();
+                        area.name = areaArr.getString(k);
+
+                        //add area to list
+                        city.areas.add(area);
+                    }
+                    //add city to list
+                    province.city.add(city);
+                }
+                //add province to list
                 map.provinces.add(province);
             }
         } catch (Exception e) {
