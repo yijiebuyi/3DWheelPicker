@@ -6,7 +6,6 @@ import android.graphics.Camera;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -234,6 +233,11 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
         canvas.drawText(/*getDrawText(data)*/data, x, y + space, paint);
     }
 
+    /**
+     * 调整text的大小，让所有文字都可以全部显示到view中
+     * @param text
+     * @param paint
+     */
     private void fitTextSize(String text, Paint paint) {
         float fitTextSize = mTextSize;
         if (mTextSize == 0) {
@@ -276,10 +280,12 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
 
     /**
      * 获取高亮显示的item索引
-     *
+     * 已弃用，转至
+     * @see #fitTextSize(String, Paint) 
      * @param item
      * @return
      */
+    @Deprecated
     private int getHighLightItem(int item) {
         if (mOffsetItemDelta > 0) {
             if (mOffsetItemDelta > mUnitDegree / 2) {
@@ -295,6 +301,11 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
         }
     }
 
+    /**
+     * 根据view的宽度截取字符串
+     * @param data
+     * @return
+     */
     private String getDrawText(String data) {
         if (data == null) {
             return data;
