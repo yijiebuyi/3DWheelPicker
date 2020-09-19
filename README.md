@@ -1,5 +1,5 @@
 # 3DWheelPicker
-3D效果 数据选择控件
+3D效果 数据选择控件，赶紧点击下面链接下载体验
 
 # Demo下载
 https://www.pgyer.com/wheelpicker
