@@ -70,7 +70,13 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
      */
     protected int mVisibleItemCount;
     protected int mItemSpace;
+    /**
+     * 当前变化的索引值，(当被初始化时，显示第几个item)
+     */
     protected int mCurrItemIndex;
+    /**
+     *  滚动index时的索引值使用mPickedItemIndex表示
+     */
     protected int mPickedItemIndex;
     protected int mColor;
     protected int mLineColor;

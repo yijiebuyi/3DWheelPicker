@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
@@ -57,6 +58,10 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
 
     protected static int mOrientation = VETTAICL;
     protected int mOverOffset;
+    /**
+     * 是否支持循环滚动
+     */
+    protected boolean mLoop = false;
 
     protected WheelPickerImpl mWheelPickerImpl;
 
@@ -181,10 +186,25 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
         }
 
         public void fling() {
+            int minScrollOffset = mLoop ? Integer.MIN_VALUE : mMinScrollOffset;
+            int maxScrollOffset = mLoop ? Integer.MAX_VALUE : mMaxScrollOffset;
+
+            Log.i("aaa", "  min=" + minScrollOffset + " max=" + maxScrollOffset);
+            //minScrollOffset = 0;
+            //maxScrollOffset = 200;
+
             if (mOrientation == HORIZENTAL) {
-                mScroller.fling((int) (mCurrentX), 0, (int) mTracker.getXVelocity(), 0, mMinScrollOffset, mMaxScrollOffset, 0, 0, mOverOffset, 0);
+                mScroller.fling((int) (mCurrentX), 0,
+                        (int) mTracker.getXVelocity(), 0,
+                        minScrollOffset, maxScrollOffset,
+                        0, 0,
+                        mOverOffset, 0);
             } else {
-                mScroller.fling(0, (int) (mCurrentY), 0, (int) mTracker.getYVelocity(), 0, 0, mMinScrollOffset, mMaxScrollOffset, 0, mOverOffset);
+                mScroller.fling(0, (int) (mCurrentY),
+                        0, (int) mTracker.getYVelocity(),
+                        0, 0,
+                        minScrollOffset, maxScrollOffset,
+                        0, mOverOffset);
             }
             ViewCompat.postOnAnimation(ScrollWheelPicker.this, this);
         }

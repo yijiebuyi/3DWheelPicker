@@ -3,6 +3,8 @@ package com.wheelpicker;
 import android.content.Context;
 import android.graphics.Color;
 
+import com.wheelpicker.widget.AbstractViewWheelPicker;
+
 /**
  * Copyright (C) 2017
  * 版权所有
@@ -80,7 +82,7 @@ public class PickOption {
     /**
      * pickerView 滚轮偏向因子（0.0 ~ 1.0）
      */
-    private int shadowFactor;
+    private float shadowFactor;
 
     public int getDateWitchVisible() {
         return dateWitchVisible;
@@ -138,7 +140,7 @@ public class PickOption {
         return shadowGravity;
     }
 
-    public int getShadowFactor() {
+    public float getShadowFactor() {
         return shadowFactor;
     }
 
@@ -181,7 +183,7 @@ public class PickOption {
         private int verPadding;
         private int horPadding;
         private int shadowGravity;
-        private int shadowFactor;
+        private float shadowFactor;
 
         //默认配置
         public Builder() {
@@ -194,6 +196,8 @@ public class PickOption {
             itemTextColor = 0XFF333333;
             itemLineColor = 0xBB000000;
             backgroundColor = 0xFFFFFFFF;
+            shadowGravity = AbstractViewWheelPicker.SHADOW_RIGHT;
+            shadowFactor = 0.4f;
         }
 
         public Builder setDateWitchVisible(int dateWitchVisible) {
@@ -288,6 +292,7 @@ public class PickOption {
                 .setItemTextColor(context.getResources().getColor(R.color.font_black))
                 .setItemTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_36px))
                 .setVerPadding(context.getResources().getDimensionPixelSize(R.dimen.px20))
+                .setShadowGravity(AbstractViewWheelPicker.SHADOW_RIGHT)
                 .setBackgroundColor(Color.WHITE);
 
         return builder;

@@ -130,40 +130,40 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
                 }
             }
 
-            float space = computeSpace(rotateDegree, mRadius);
-            float relDegree = Math.abs(rotateDegree) / 90;
-            canvas.save();
-            mCamera.save();
-            mRotateMatrix.reset();
+    float space = computeSpace(rotateDegree, mRadius);
+    float relDegree = Math.abs(rotateDegree) / 90;
+    canvas.save();
+    mCamera.save();
+    mRotateMatrix.reset();
 
-            //apply gravity
-            if (mShadowGravity == SHADOW_RIGHT) {
-                mCamera.translate(-mShadowOffset, 0, 0);
-            } else if (mShadowGravity == SHADOW_LEFT) {
-                mCamera.translate(mShadowOffset, 0, 0);
-            }
-            //rotate
-            mWheelPickerImpl.rotateCamera(mCamera, rotateDegree);
-            mCamera.getMatrix(mRotateMatrix);
-            mCamera.restore();
-            mWheelPickerImpl.matrixToCenter(mRotateMatrix, space, mWheelCenterX, mWheelCenterY);
-            //apply gravity
-            if (mShadowGravity == SHADOW_RIGHT) {
-                mRotateMatrix.postTranslate(mShadowOffset, 0);
-            } else if (mShadowGravity == SHADOW_LEFT) {
-                mRotateMatrix.postTranslate(-mShadowOffset, 0);
-            }
+    //apply gravity
+    if (mShadowGravity == SHADOW_RIGHT) {
+        mCamera.translate(-mShadowOffset, 0, 0);
+    } else if (mShadowGravity == SHADOW_LEFT) {
+        mCamera.translate(mShadowOffset, 0, 0);
+    }
+    //rotate
+    mWheelPickerImpl.rotateCamera(mCamera, rotateDegree);
+    mCamera.getMatrix(mRotateMatrix);
+    mCamera.restore();
+    mWheelPickerImpl.matrixToCenter(mRotateMatrix, space, mWheelCenterX, mWheelCenterY);
+    //apply gravity
+    if (mShadowGravity == SHADOW_RIGHT) {
+        mRotateMatrix.postTranslate(mShadowOffset, 0);
+    } else if (mShadowGravity == SHADOW_LEFT) {
+        mRotateMatrix.postTranslate(-mShadowOffset, 0);
+    }
 
-            float depth = computeDepth(rotateDegree, mRelRadius);
-            mCamera.save();
-            mDepthMatrix.reset();
-            mCamera.translate(0, 0, depth);
-            mCamera.getMatrix(mDepthMatrix);
-            mCamera.restore();
-            mWheelPickerImpl.matrixToCenter(mDepthMatrix, space, mWheelCenterX, mWheelCenterY);
+    float depth = computeDepth(rotateDegree, mRelRadius);
+    mCamera.save();
+    mDepthMatrix.reset();
+    mCamera.translate(0, 0, depth);
+    mCamera.getMatrix(mDepthMatrix);
+    mCamera.restore();
+    mWheelPickerImpl.matrixToCenter(mDepthMatrix, space, mWheelCenterX, mWheelCenterY);
 
-            mRotateMatrix.postConcat(mDepthMatrix);
-            canvas.concat(mRotateMatrix);
+    mRotateMatrix.postConcat(mDepthMatrix);
+    canvas.concat(mRotateMatrix);
 
             /*if (i == getHighLightItem(mCurrItemIndex)) {
                 mPaint.setAlpha(255);
