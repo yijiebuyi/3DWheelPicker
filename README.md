@@ -2,7 +2,7 @@
 3D效果 数据选择控件，赶紧点击下面链接下载体验
 
 # Demo下载
-https://www.pgyer.com/wheelpicker
+http://d.firim.pro/3dwheelpicker
 
 ### 功能
  - 时间选择
@@ -117,26 +117,46 @@ dependencies {
     public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData, boolean wrapper,
                                     final OnMultiDataPickListener listener, final OnCascadeWheelListener cascadeListener)
     
-      /**
+
+```
+
+#### 设置滚轮样式
+```java
+   final SingleTextWheelPicker picker = new SingleTextWheelPicker(context);
+   PickOption option = PickOption.getPickDefaultOptionBuilder(context)
+                .setItemTextColor(0XFFFF0000)
+                .setItemLineColor(0xFF00FF00)
+                .setItemTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_22px))
+                .setItemS
+   setPickViewStyle(picker, option);
+        
+    /**
      * 设置滚轮样式
      * @param pickerView
      * @param option
      */
     private static void setPickViewStyle(IPickerView pickerView, PickOption option) {
-        ((View) pickerView).setBackgroundColor(option.getBackgroundColor());
-        ((View) pickerView).setPadding(0, option.getVerPadding(), 0, option.getVerPadding());
+        //设置view样式
+        pickerView.asView().setBackgroundColor(option.getBackgroundColor());
+        pickerView.asView().setPadding(0, option.getVerPadding(), 0, option.getVerPadding());
 
-        pickerView.setTextColor(option.getItemTextColor());
-        pickerView.setVisibleItemCount(option.getVisibleItemCount());
-        pickerView.setTextSize(option.getItemTextSize());
-        pickerView.setItemSpace(option.getItemSpace());
-        .....
+        //设置Item样式
+        pickerView.setTextColor(option.getItemTextColor()); //设置item的文本颜色
+        pickerView.setVisibleItemCount(option.getVisibleItemCount()); //设置可见item的数量，必须是奇数： 如1,3,5,7,9...
+        pickerView.setTextSize(option.getItemTextSize());//设置item的文本字体大小
+        pickerView.setItemSpace(option.getItemSpace());//设置item的间距
+        pickerView.setLineColor(option.getItemLineColor());//设置item的分割线的颜色
+        pickerView.setLineWidth(option.getItemLineWidth());//设置item分割线的宽度
+
+        //设置滚轮效果
+        pickerView.setShadow(option.getShadowGravity(), option.getShadowFactor()); //设置滚轮偏向，偏向因子（偏向因子取值[0,1]）
+        pickerView.setScrollMoveFactor(option.getFingerMoveFactor()); //设置手指移动是item跟随滚动灵敏度（取值(0,1]）
+        pickerView.setScrollAnimFactor(option.getFlingAnimFactor()); //设置滚动动画阻尼因子（取值(0,1]）
+        pickerView.setScrollOverOffset(option.getOverScrollOffset()); //设置滚轮滑动到顶端或底端的最大回弹的偏移量
     }
 ```
 
-
-
-### 也可以使用Textwheelpicker
+#### 也可以使用Textwheelpicker
 
 ```java
    参照 DateWheelPicker，SingleTextWheelPicker
