@@ -58,6 +58,7 @@ public interface IPickerView {
      * 设置item的宽高
      * @param itemWidth
      * @param itemHeight
+     * @deprecated pickerView自动计算
      */
     public void setItemSize(int itemWidth, int itemHeight);
 

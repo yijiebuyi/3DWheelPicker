@@ -86,7 +86,7 @@ public class SingleTextWheelPicker extends TextWheelPicker implements IPickerVie
 
     @Override
     public void setScrollOverOffset(int offset) {
-        super.setOverScrollOffset(offset);
+        super.setOverOffset(offset);
     }
 
     @Override

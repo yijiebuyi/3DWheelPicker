@@ -461,12 +461,12 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
 
     @Override
     public void setScrollOverOffset(int offset) {
-        mYearWheelPicker.setOverScrollOffset(offset);
-        mMonthWheelPicker.setOverScrollOffset(offset);
-        mDayWheelPicker.setOverScrollOffset(offset);
-        mHourWheelPicker.setOverScrollOffset(offset);
-        mMinuteWheelPicker.setOverScrollOffset(offset);
-        mSecondWheelPicker.setOverScrollOffset(offset);
+        mYearWheelPicker.setOverOffset(offset);
+        mMonthWheelPicker.setOverOffset(offset);
+        mDayWheelPicker.setOverOffset(offset);
+        mHourWheelPicker.setOverOffset(offset);
+        mMinuteWheelPicker.setOverOffset(offset);
+        mSecondWheelPicker.setOverOffset(offset);
     }
 
     @Override

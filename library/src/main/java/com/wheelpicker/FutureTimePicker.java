@@ -373,9 +373,9 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
 
     @Override
     public void setScrollOverOffset(int offset) {
-        mDayWheelPicker.setOverScrollOffset(offset);
-        mHourWheelPicker.setOverScrollOffset(offset);
-        mMinuteWheelPicker.setOverScrollOffset(offset);
+        mDayWheelPicker.setOverOffset(offset);
+        mHourWheelPicker.setOverOffset(offset);
+        mMinuteWheelPicker.setOverOffset(offset);
     }
 
     @Override

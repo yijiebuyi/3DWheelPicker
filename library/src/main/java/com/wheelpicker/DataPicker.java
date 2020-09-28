@@ -146,7 +146,12 @@ public class DataPicker {
      * @param <T>
      */
     public static <T> void pickData(Context context, @Nullable T initData, @NonNull final List<T> srcData, final OnDataPickListener listener) {
-        PickOption option = PickOption.getPickDefaultOptionBuilder(context).build();
+        PickOption option = PickOption.getPickDefaultOptionBuilder(context)
+                .setItemTextColor(0XFFFF0000)
+                .setItemLineColor(0xFF00FF00)
+                .setItemTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_22px))
+                .setItemSpace(context.getResources().getDimensionPixelSize(R.dimen.px36))
+                .build();
         final SingleTextWheelPicker picker = new SingleTextWheelPicker(context);
         setPickViewStyle(picker, option);
 
@@ -186,7 +191,11 @@ public class DataPicker {
      */
     public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData, boolean wrapper,
                                     final OnMultiDataPickListener listener, final OnCascadeWheelListener cascadeListener) {
-        PickOption option = PickOption.getPickDefaultOptionBuilder(context).build();
+        PickOption option = PickOption.getPickDefaultOptionBuilder(context)
+                .setFlingAnimFactor(0.2f)
+                .setVisibleItemCount(9)
+                .setItemLineColor(0xFF0022FF)
+                .build();
 
         //List<WheelPickerData> pickerData = WheelPickerData.wrapper(initData, srcData);
         //WheelPickerData.disScrollable(0, pickerData);
@@ -260,12 +269,13 @@ public class DataPicker {
         pickerView.setVisibleItemCount(option.getVisibleItemCount());
         pickerView.setTextSize(option.getItemTextSize());
         pickerView.setItemSpace(option.getItemSpace());
+        pickerView.setLineColor(option.getItemLineColor());
+        pickerView.setLineWidth(option.getItemLineWidth());
 
         pickerView.setShadow(option.getShadowGravity(), option.getShadowFactor());
         pickerView.setScrollMoveFactor(option.getFingerMoveFactor());
         pickerView.setScrollAnimFactor(option.getFlingAnimFactor());
         pickerView.setScrollOverOffset(option.getOverScrollOffset());
-
     }
 
     /**

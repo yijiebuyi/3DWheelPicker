@@ -367,10 +367,11 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
         mFlingAnimFactor = flingAnimFactor;
     }
 
-    public void setOverScrollOffset(int overScrollOffset) {
+    public void setOverOffset(int overScrollOffset) {
         if (overScrollOffset < 0) {
             return;
         }
-        mOverScrollOffset = mOverScrollOffset;
+
+        mOverScrollOffset = overScrollOffset;
     }
 }

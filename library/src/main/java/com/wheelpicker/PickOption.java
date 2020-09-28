@@ -225,7 +225,7 @@ public class PickOption {
 
             visibleItemCount = 7;
             itemTextColor = 0XFF333333;
-            itemLineColor = 0xBB000000;
+            itemLineColor = 0xFFCCCCCC;
             backgroundColor = 0xFFFFFFFF;
             shadowGravity = AbstractViewWheelPicker.SHADOW_RIGHT;
             shadowFactor = 0.4f;

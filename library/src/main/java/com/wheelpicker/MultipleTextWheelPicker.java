@@ -329,7 +329,7 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
     @Override
     public void setScrollOverOffset(int offset) {
         for (TextWheelPicker picker : mWheelPickers) {
-            picker.setOverScrollOffset(offset);
+            picker.setOverOffset(offset);
         }
     }
 
