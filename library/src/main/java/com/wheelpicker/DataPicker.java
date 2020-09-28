@@ -263,7 +263,8 @@ public class DataPicker {
         pickerView.setItemSpace(option.getItemSpace());
 
         pickerView.setShadow(option.getShadowGravity(), option.getShadowFactor());
-        pickerView.setScrollFactor(0.5f);
+        pickerView.setMoveFactor(option.getFingerMoveFactor());
+        pickerView.setScrollAnimFactor(option.getFlingAnimFactor());
     }
 
     /**

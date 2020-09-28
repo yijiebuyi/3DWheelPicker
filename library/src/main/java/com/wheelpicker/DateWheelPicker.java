@@ -438,14 +438,25 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
         mSecondWheelPicker.setShadowFactor(factor);
     }
 
-    @Override
-    public void setScrollFactor(float factor) {
 
+    @Override
+    public void setScrollAnimFactor(float factor) {
+        mYearWheelPicker.setFlingAnimFactor(factor);
+        mMonthWheelPicker.setFlingAnimFactor(factor);
+        mDayWheelPicker.setFlingAnimFactor(factor);
+        mHourWheelPicker.setFlingAnimFactor(factor);
+        mMinuteWheelPicker.setFlingAnimFactor(factor);
+        mSecondWheelPicker.setFlingAnimFactor(factor);
     }
 
     @Override
-    public void setRollbackAnimInterpolator(Interpolator interceptor) {
-
+    public void setMoveFactor(float factor) {
+        mYearWheelPicker.setFingerMoveFactor(factor);
+        mMonthWheelPicker.setFingerMoveFactor(factor);
+        mDayWheelPicker.setFingerMoveFactor(factor);
+        mHourWheelPicker.setFingerMoveFactor(factor);
+        mMinuteWheelPicker.setFingerMoveFactor(factor);
+        mSecondWheelPicker.setFingerMoveFactor(factor);
     }
 
     @Override

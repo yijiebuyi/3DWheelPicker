@@ -358,13 +358,17 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
     }
 
     @Override
-    public void setScrollFactor(float factor) {
-
+    public void setScrollAnimFactor(float factor) {
+        mDayWheelPicker.setFlingAnimFactor(factor);
+        mHourWheelPicker.setFlingAnimFactor(factor);
+        mMinuteWheelPicker.setFlingAnimFactor(factor);
     }
 
     @Override
-    public void setRollbackAnimInterpolator(Interpolator interceptor) {
-
+    public void setMoveFactor(float factor) {
+        mDayWheelPicker.setFingerMoveFactor(factor);
+        mHourWheelPicker.setFingerMoveFactor(factor);
+        mMinuteWheelPicker.setFingerMoveFactor(factor);
     }
 
     @Override

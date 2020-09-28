@@ -5,16 +5,14 @@ import android.content.Context;
 import android.os.Build;
 import android.os.SystemClock;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
-import android.view.animation.LinearInterpolator;
-import android.widget.Scroller;
 
 import androidx.core.view.ViewCompat;
 
+import com.wheelpicker.R;
 import com.wheelpicker.anim.Animation;
 
 /*
@@ -54,10 +52,15 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
     public static final int HORIZENTAL = 1 << 2;
 
     private static final int CORRECT_ANIMATION_DURATION = 250;
-    private static final float MOVE_FACTOR = 0.3F;
+    /**
+     * 手指滑动，滚轮跟随滚动因子
+     */
+    private static final float MOVE_FACTOR = 0.2F;
+
+    private final Interpolator DEFAULT_FLING_ANIM_INTERPOLATOR  = new DecelerateInterpolator(4);
+    private final Interpolator DEFAULT_ROLLBACK_ANIM_INTERPOLATOR  = new DecelerateInterpolator(4);
 
     protected static int mOrientation = VETTAICL;
-    protected int mOverOffset;
     /**
      * 是否支持循环滚动
      */
@@ -66,13 +69,35 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
     protected WheelPickerImpl mWheelPickerImpl;
 
     private CorrectAnimRunnable mCorrectRunnable;
-    private FlingRunnable mFlingRunnable;
     private TransLateAnim mAnimController;
 
+    private FlingRunnable mFlingRunnable;
+
+    /**
+     * overScroll偏移量
+     */
+    private int mOverScrollOffset;
     private int mMinScrollOffset;
     private int mMaxScrollOffset;
 
     private int mScrollState = SCROLL_STATE_IDLE;
+
+    /**
+     * 手指滑动，滚动跟随滚动因子
+     */
+    private float mFingerMoveFactor = MOVE_FACTOR * 1.0f;
+    /**
+     * fling滚动阻尼因子
+     */
+    private float mFlingAnimFactor = 0.8f;
+    /**
+     * 手指离开屏幕后，动画Anim的插值器
+     */
+    private Interpolator mFlingAnimInterpolator = DEFAULT_FLING_ANIM_INTERPOLATOR;
+    /**
+     * 回滚动画的插值器
+     */
+    private Interpolator mRollbackAnimInterpolator = DEFAULT_ROLLBACK_ANIM_INTERPOLATOR;
 
     public ScrollWheelPicker(Context context) {
         super(context);
@@ -98,6 +123,8 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
         mAnimController = new TransLateAnim();
         mFlingRunnable = new FlingRunnable(getContext());
         mCorrectRunnable = new CorrectAnimRunnable();
+
+        mOverScrollOffset = getResources().getDimensionPixelOffset(R.dimen.px24);
     }
 
     protected void setOrientation(int orientation) {
@@ -127,7 +154,7 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
     protected void onTouchMove(MotionEvent event) {
         mScrollState = SCROLL_STATE_DRAGGING;
         mCurrentX = (mCurrentX + mDeltaX);
-        mCurrentY = (mCurrentY + mDeltaY * MOVE_FACTOR);
+        mCurrentY = (mCurrentY + mDeltaY * mFingerMoveFactor);
 
         onScrolling(mCurrentX, mCurrentY, false);
     }
@@ -149,19 +176,18 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
      */
     private class FlingRunnable implements Runnable {
         protected WheelScroller mScroller;
-        private Interpolator mInterpolator = new DecelerateInterpolator(4);
         private float friction = ViewConfiguration.getScrollFriction();
 
         private FlingRunnable(Context context) {
             if (OSUtils.isEMUI()) {
-                mScroller = new ScrollerCompat(context, mInterpolator);
+                mScroller = new ScrollerCompat(context, mFlingAnimInterpolator);
                 mScroller.setFriction(friction);
             } else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-                    mScroller = new OverScrollerCompat(context, mInterpolator);
+                    mScroller = new OverScrollerCompat(context, mFlingAnimInterpolator);
                     mScroller.setFriction(friction);
                 } else {
-                    mScroller = new ScrollerCompat(context, mInterpolator);
+                    mScroller = new ScrollerCompat(context, mFlingAnimInterpolator);
                     mScroller.setFriction(friction);
                 }
             }
@@ -189,23 +215,24 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
             int minScrollOffset = mLoop ? Integer.MIN_VALUE : mMinScrollOffset;
             int maxScrollOffset = mLoop ? Integer.MAX_VALUE : mMaxScrollOffset;
 
-            Log.i("aaa", "  min=" + minScrollOffset + " max=" + maxScrollOffset);
+            //Log.i("aaa", "  min=" + minScrollOffset + " max=" + maxScrollOffset);
             //minScrollOffset = 0;
             //maxScrollOffset = 200;
 
             if (mOrientation == HORIZENTAL) {
                 mScroller.fling((int) (mCurrentX), 0,
-                        (int) mTracker.getXVelocity(), 0,
+                        (int) (mTracker.getXVelocity() * mFlingAnimFactor), 0,
                         minScrollOffset, maxScrollOffset,
                         0, 0,
-                        mOverOffset, 0);
+                        mOverScrollOffset, 0);
             } else {
                 mScroller.fling(0, (int) (mCurrentY),
-                        0, (int) mTracker.getYVelocity(),
+                        0, (int) (mTracker.getYVelocity() * mFlingAnimFactor),
                         0, 0,
                         minScrollOffset, maxScrollOffset,
-                        0, mOverOffset);
+                        0, mOverScrollOffset);
             }
+            //开启fling动画
             ViewCompat.postOnAnimation(ScrollWheelPicker.this, this);
         }
 
@@ -328,4 +355,22 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
     }
 
     protected abstract void onScrolling(float offsetX, float offsetY, boolean isFinshed);
+
+    public void setFingerMoveFactor(float fingerMoveFactor) {
+        fingerMoveFactor = Animation.clamp(fingerMoveFactor, 0.001f, 1);
+        fingerMoveFactor *= MOVE_FACTOR;
+        mFingerMoveFactor = fingerMoveFactor;
+    }
+
+    public void setFlingAnimFactor(float flingAnimFactor) {
+        flingAnimFactor = Animation.clamp(flingAnimFactor, 0.001f, 1);
+        mFlingAnimFactor = flingAnimFactor;
+    }
+
+    public void setOverScrollOffset(int overScrollOffset) {
+        if (overScrollOffset < 0) {
+            return;
+        }
+        mOverScrollOffset = mOverScrollOffset;
+    }
 }

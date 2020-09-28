@@ -83,6 +83,18 @@ public class PickOption {
      * pickerView 滚轮偏向因子（0.0 ~ 1.0）
      */
     private float shadowFactor;
+    /**
+     * 手指滑动，滚轮跟随滚动因子
+     */
+    private float fingerMoveFactor;
+    /**
+     * fling滚动阻尼因子
+     */
+    private float flingAnimFactor;
+    /**
+     * 回弹的偏移量
+     */
+    private int overScrollOffset;
 
     public int getDateWitchVisible() {
         return dateWitchVisible;
@@ -144,6 +156,18 @@ public class PickOption {
         return shadowFactor;
     }
 
+    public float getFingerMoveFactor() {
+        return fingerMoveFactor;
+    }
+
+    public float getFlingAnimFactor() {
+        return flingAnimFactor;
+    }
+
+    public int getOverScrollOffset() {
+        return overScrollOffset;
+    }
+
     private PickOption(Builder builder) {
         dateWitchVisible = builder.dateWitchVisible;
         durationDays = builder.durationDays;
@@ -161,6 +185,10 @@ public class PickOption {
         horPadding = builder.horPadding;
         shadowGravity = builder.shadowGravity;
         shadowFactor = builder.shadowFactor;
+
+        flingAnimFactor = builder.flingAnimFactor;
+        fingerMoveFactor = builder.fingerMoveFactor;
+        overScrollOffset = builder.overScrollOffset;
     }
 
     /**
@@ -184,6 +212,9 @@ public class PickOption {
         private int horPadding;
         private int shadowGravity;
         private float shadowFactor;
+        private float fingerMoveFactor;
+        private float flingAnimFactor;
+        private int overScrollOffset;
 
         //默认配置
         public Builder() {
@@ -198,6 +229,9 @@ public class PickOption {
             backgroundColor = 0xFFFFFFFF;
             shadowGravity = AbstractViewWheelPicker.SHADOW_RIGHT;
             shadowFactor = 0.4f;
+
+            fingerMoveFactor = 1.0f;
+            flingAnimFactor = 0.7f;
         }
 
         public Builder setDateWitchVisible(int dateWitchVisible) {
@@ -273,6 +307,22 @@ public class PickOption {
         public Builder setShadowFactor(float shadowFactor) {
             this.shadowFactor = shadowFactor;
             return this;
+        }
+
+        public void setFingerMoveFactor(float fingerMoveFactor) {
+            this.fingerMoveFactor = fingerMoveFactor;
+        }
+
+        public void setFlingAnimFactor(float flingAnimFactor) {
+            this.flingAnimFactor = flingAnimFactor;
+        }
+
+        public int getOverScrollOffset() {
+            return overScrollOffset;
+        }
+
+        public void setOverScrollOffset(int overScrollOffset) {
+            this.overScrollOffset = overScrollOffset;
         }
 
         public PickOption build() {

@@ -78,7 +78,6 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
         mLineOffset = mItemMaxHeight / 2 + mItemSpace * 0.8f;
 
         mShadowOffset = SHADOW_MAX * mShadowFactor;
-        mOverOffset = getResources().getDimensionPixelOffset(R.dimen.px24);
         mRelRadius = mRadius * DEPTH_FACTOR;
 
         if (mAdapter != null) {

@@ -311,14 +311,19 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
         }
     }
 
-    @Override
-    public void setScrollFactor(float factor) {
 
+    @Override
+    public void setScrollAnimFactor(float factor) {
+        for (TextWheelPicker picker : mWheelPickers) {
+            picker.setFlingAnimFactor(factor);
+        }
     }
 
     @Override
-    public void setRollbackAnimInterpolator(Interpolator interceptor) {
-
+    public void setMoveFactor(float factor) {
+        for (TextWheelPicker picker : mWheelPickers) {
+            picker.setFingerMoveFactor(factor);
+        }
     }
 
     @Override

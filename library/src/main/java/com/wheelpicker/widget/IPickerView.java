@@ -72,13 +72,13 @@ public interface IPickerView {
      * 设置滚动阻尼因子
      * @param factor
      */
-    public void setScrollFactor(float factor);
+    public void setScrollAnimFactor(float factor);
 
     /**
-     * 设置回滚动画插值器
-     * @param interceptor
+     * 设置回手指滑动因子
+     * @param factor
      */
-    public void setRollbackAnimInterpolator(Interpolator interceptor);
+    public void setMoveFactor(float factor);
 
     public View asView();
 }
