@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
 
 import com.wheelpicker.core.AbstractWheelPicker;
@@ -418,6 +419,33 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
         mHourWheelPicker.setItemSize(itemWidth, itemHeight);
         mMinuteWheelPicker.setItemSize(itemWidth, itemHeight);
         mSecondWheelPicker.setItemSize(itemWidth, itemHeight);
+    }
+
+    @Override
+    public void setShadow(int gravity, float factor) {
+        mYearWheelPicker.setShadowGravity(gravity);
+        mMonthWheelPicker.setShadowGravity(gravity);
+        mDayWheelPicker.setShadowGravity(gravity);
+        mHourWheelPicker.setShadowGravity(gravity);
+        mMinuteWheelPicker.setShadowGravity(gravity);
+        mSecondWheelPicker.setShadowGravity(gravity);
+
+        mYearWheelPicker.setShadowFactor(factor);
+        mMonthWheelPicker.setShadowFactor(factor);
+        mDayWheelPicker.setShadowFactor(factor);
+        mHourWheelPicker.setShadowFactor(factor);
+        mMinuteWheelPicker.setShadowFactor(factor);
+        mSecondWheelPicker.setShadowFactor(factor);
+    }
+
+    @Override
+    public void setScrollFactor(float factor) {
+
+    }
+
+    @Override
+    public void setRollbackAnimInterpolator(Interpolator interceptor) {
+
     }
 
     @Override

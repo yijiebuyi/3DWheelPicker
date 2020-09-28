@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
 
 import com.wheelpicker.core.AbstractWheelPicker;
@@ -300,6 +301,24 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
         for (TextWheelPicker picker : mWheelPickers) {
             picker.setItemSize(itemWidth, itemHeight);
         }
+    }
+
+    @Override
+    public void setShadow(int gravity, float factor) {
+        for (TextWheelPicker picker : mWheelPickers) {
+            picker.setShadowGravity(gravity);
+            picker.setShadowFactor(factor);
+        }
+    }
+
+    @Override
+    public void setScrollFactor(float factor) {
+
+    }
+
+    @Override
+    public void setRollbackAnimInterpolator(Interpolator interceptor) {
+
     }
 
     @Override

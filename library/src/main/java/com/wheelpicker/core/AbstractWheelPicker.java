@@ -45,7 +45,7 @@ public abstract class AbstractWheelPicker<T extends WheelPickerAdapter> extends 
     public static final int SHADOW_LEFT = 0;
     public static final int SHADOW_MIDDLE = 1;
     public static final int SHADOW_RIGHT = 2;
-    protected static final int SHADOW_MAX = 100;
+    protected static final int SHADOW_MAX = 200;
 
     // 滚轮是偏右还是左
     protected int mShadowGravity = SHADOW_RIGHT;

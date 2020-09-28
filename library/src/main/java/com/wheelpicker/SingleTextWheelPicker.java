@@ -3,6 +3,7 @@ package com.wheelpicker;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.Interpolator;
 
 import com.wheelpicker.widget.IPickerView;
 import com.wheelpicker.widget.TextWheelPicker;
@@ -65,6 +66,22 @@ public class SingleTextWheelPicker extends TextWheelPicker implements IPickerVie
 
     public void setItemSize(int itemWidth, int itemHeight) {
         super.setItemSize(itemWidth, itemHeight);
+    }
+
+    @Override
+    public void setShadow(int gravity, float factor) {
+        super.setShadowGravity(gravity);
+        super.setShadowFactor(factor);
+    }
+
+    @Override
+    public void setScrollFactor(float factor) {
+
+    }
+
+    @Override
+    public void setRollbackAnimInterpolator(Interpolator interceptor) {
+
     }
 
     @Override

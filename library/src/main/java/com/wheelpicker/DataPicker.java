@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.wheelpicker.core.WheelPickerUtil;
 import com.wheelpicker.widget.IPickerView;
+import com.wheelpicker.widget.TextWheelPicker;
 import com.wheelpicker.widget.TextWheelPickerAdapter;
 
 import java.util.Calendar;
@@ -252,13 +253,17 @@ public class DataPicker {
      * @param option
      */
     private static void setPickViewStyle(IPickerView pickerView, PickOption option) {
-        ((View) pickerView).setBackgroundColor(option.getBackgroundColor());
-        ((View) pickerView).setPadding(0, option.getVerPadding(), 0, option.getVerPadding());
+        pickerView.asView().setBackgroundColor(option.getBackgroundColor());
+        pickerView.asView().setPadding(0, option.getVerPadding(), 0, option.getVerPadding());
 
+        //设置Item样式
         pickerView.setTextColor(option.getItemTextColor());
         pickerView.setVisibleItemCount(option.getVisibleItemCount());
         pickerView.setTextSize(option.getItemTextSize());
         pickerView.setItemSpace(option.getItemSpace());
+
+        pickerView.setShadow(option.getShadowGravity(), option.getShadowFactor());
+        pickerView.setScrollFactor(0.5f);
     }
 
     /**

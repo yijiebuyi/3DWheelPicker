@@ -1,6 +1,7 @@
 package com.wheelpicker.widget;
 
 import android.view.View;
+import android.view.animation.Interpolator;
 
 /**
  * Copyright (C) 2017
@@ -59,6 +60,25 @@ public interface IPickerView {
      * @param itemHeight
      */
     public void setItemSize(int itemWidth, int itemHeight);
+
+    /**
+     * 设置滚轮偏向，及其偏向因子
+     * @param gravity
+     * @param factor [0, 1]
+     */
+    public void setShadow(int gravity, float factor);
+
+    /**
+     * 设置滚动阻尼因子
+     * @param factor
+     */
+    public void setScrollFactor(float factor);
+
+    /**
+     * 设置回滚动画插值器
+     * @param interceptor
+     */
+    public void setRollbackAnimInterpolator(Interpolator interceptor);
 
     public View asView();
 }

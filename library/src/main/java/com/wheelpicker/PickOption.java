@@ -192,7 +192,7 @@ public class PickOption {
             aheadYears = 100;
             afterYears = 100;
 
-            visibleItemCount = 5;
+            visibleItemCount = 7;
             itemTextColor = 0XFF333333;
             itemLineColor = 0xBB000000;
             backgroundColor = 0xFFFFFFFF;
@@ -270,7 +270,7 @@ public class PickOption {
             return this;
         }
 
-        public Builder setShadowFactor(int shadowFactor) {
+        public Builder setShadowFactor(float shadowFactor) {
             this.shadowFactor = shadowFactor;
             return this;
         }
@@ -293,6 +293,7 @@ public class PickOption {
                 .setItemTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_36px))
                 .setVerPadding(context.getResources().getDimensionPixelSize(R.dimen.px20))
                 .setShadowGravity(AbstractViewWheelPicker.SHADOW_RIGHT)
+                .setShadowFactor(0.5f)
                 .setBackgroundColor(Color.WHITE);
 
         return builder;

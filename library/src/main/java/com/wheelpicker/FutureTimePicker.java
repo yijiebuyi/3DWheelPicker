@@ -3,6 +3,7 @@ package com.wheelpicker;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
 
 import com.wheelpicker.core.AbstractWheelPicker;
@@ -343,6 +344,27 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
         mDayWheelPicker.setItemSize(itemWidth, itemHeight);
         mHourWheelPicker.setItemSize(itemWidth, itemHeight);
         mMinuteWheelPicker.setItemSize(itemWidth, itemHeight);
+    }
+
+    @Override
+    public void setShadow(int gravity, float factor) {
+        mDayWheelPicker.setShadowGravity(gravity);
+        mHourWheelPicker.setShadowGravity(gravity);
+        mMinuteWheelPicker.setShadowGravity(gravity);
+
+        mDayWheelPicker.setShadowFactor(factor);
+        mHourWheelPicker.setShadowFactor(factor);
+        mMinuteWheelPicker.setShadowFactor(factor);
+    }
+
+    @Override
+    public void setScrollFactor(float factor) {
+
+    }
+
+    @Override
+    public void setRollbackAnimInterpolator(Interpolator interceptor) {
+
     }
 
     @Override
