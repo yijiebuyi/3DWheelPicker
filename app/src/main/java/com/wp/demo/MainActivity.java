@@ -3,6 +3,7 @@ package com.wp.demo;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TimeUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -54,6 +55,7 @@ public class MainActivity extends Activity {
             }
         });
 
+        //选择时间
         findViewById(R.id.picker_date).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,7 +64,9 @@ public class MainActivity extends Activity {
                             @Override
                             public void onDatePicked(long time, int year, int month, int day, int hour, int minute, int second) {
                                 mInitDate.setTime(time);
-                                Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day + " " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
+
+                                Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-"
+                                        + day + " " + hour + ":" + minute + ":" + second, Toast.LENGTH_SHORT).show();
                             }
                         });
 
@@ -70,6 +74,7 @@ public class MainActivity extends Activity {
             }
         });
 
+        //选择未来时间（年月日时分秒）
         findViewById(R.id.picker_future_date).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,6 +91,7 @@ public class MainActivity extends Activity {
             }
         });
 
+        //选择未来日期(天，小时，分钟组合)
         findViewById(R.id.picker_future).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,6 +105,7 @@ public class MainActivity extends Activity {
             }
         });
 
+        //选择单个文本
         findViewById(R.id.picker_txt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,6 +120,7 @@ public class MainActivity extends Activity {
             }
         });
 
+        //多文本选择
         findViewById(R.id.multi_picker_txt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,6 +142,7 @@ public class MainActivity extends Activity {
             }
         });
 
+        //城市选择（级联操作）设置OnCascadeWheelListener即可满足级联
         findViewById(R.id.city_picker).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,7 +151,7 @@ public class MainActivity extends Activity {
                 }
                 DataPicker.pickData(MainActivity.this, mCascadeInitIndex,
                         AdministrativeUtil.getPickData(mAdministrativeMap, mCascadeInitIndex), false,
-                        new OnMultiDataPickListener () {
+                        new OnMultiDataPickListener() {
                             @Override
                             public void onDataPicked(List indexArr, List val, List data) {
                                 String s = indexArr.toString() + ":" + val.toString();
@@ -152,7 +161,7 @@ public class MainActivity extends Activity {
                         }, new OnCascadeWheelListener<List<?>>() {
 
                             @Override
-                            public List<?> onCascade(int wheelIndex,  List<Integer> itemIndex) {
+                            public List<?> onCascade(int wheelIndex, List<Integer> itemIndex) {
                                 //级联数据
                                 if (wheelIndex == 0) {
                                     return mAdministrativeMap.provinces.get(itemIndex.get(0)).city;

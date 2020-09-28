@@ -234,7 +234,7 @@ public class DataPicker {
                 pickerView = new FutureTimePicker(context);
                 ((FutureTimePicker) pickerView).setFutureDuration(option.getDurationDays());
                 break;
-            default:
+            case PickMode.MODE_DATE:
                 pickerView = new DateWheelPicker(context);
                 ((DateWheelPicker) pickerView).setWheelPickerVisibility(option.getDateWitchVisible(), View.VISIBLE);
                 ((DateWheelPicker) pickerView).setDateRange(dy - option.getAheadYears(), dy + option.getAfterYears());

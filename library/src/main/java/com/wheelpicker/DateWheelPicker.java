@@ -499,7 +499,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
                         //current day
                         updateMinHour(mCurrHour);
                     } else {
-                        updateMaxHour(60);
+                        updateMaxHour(24);
                     }
 
                     int hourIndex = Math.max(0, mHours.indexOf(mSelectedHour + mHourStr));
@@ -510,7 +510,7 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
                         //current month
                         updateMaxHour(mCurrHour);
                     } else {
-                        updateMaxHour(60);
+                        updateMaxHour(24);
                     }
                 }
                 mHourPickerAdapter.setData(mHours);
