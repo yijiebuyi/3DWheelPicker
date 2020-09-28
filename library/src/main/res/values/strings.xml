@@ -2,7 +2,7 @@
     <string name="_year">年</string>
     <string name="_month">月</string>
     <string name="_day">日</string>
-    <string name="_hour">点</string>
+    <string name="_hour">时</string>
     <string name="_minute">分</string>
     <string name="_second">秒</string>
     <string name="_today">今天</string>

@@ -1,9 +1,8 @@
 package com.wp.demo;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.TimeUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -11,16 +10,24 @@ import com.wheelpicker.AdministrativeMap;
 import com.wheelpicker.AdministrativeUtil;
 import com.wheelpicker.DataPicker;
 import com.wheelpicker.DateWheelPicker;
+import com.wheelpicker.IDateTimePicker;
 import com.wheelpicker.OnCascadeWheelListener;
 import com.wheelpicker.OnDataPickListener;
 import com.wheelpicker.OnDatePickListener;
 import com.wheelpicker.OnMultiDataPickListener;
+import com.wheelpicker.PickOption;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends Activity {
+    public static final String TIME_YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
+    public static final String TIME_YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
+    public static final String TIME_YYYY_MM_DD = "yyyy-MM-dd";
+
     private Date mInitBirthday = new Date();
     private Date mInitDate = new Date();
     private Date mInitFutureDateTime = new Date();
@@ -31,24 +38,26 @@ public class MainActivity extends Activity {
     private List<Integer> mCascadeInitIndex = null;
 
     private AdministrativeMap mAdministrativeMap;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        mContext = this;
 
         //选择生日
         findViewById(R.id.picker_birthday).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                DataPicker.pickBirthday(MainActivity.this, mInitBirthday,
+                DataPicker.pickBirthday(mContext, mInitBirthday, getPickDefaultOptionBuilder(mContext).build(),
                         new OnDatePickListener() {
                             @Override
-                            public void onDatePicked(long time, int year, int month, int day, int hour, int minute, int second) {
-                                mInitBirthday.setTime(time);
-                                Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day, Toast.LENGTH_SHORT).show();
+                            public void onDatePicked(IDateTimePicker dateTimePicker) {
+                                mInitBirthday.setTime(dateTimePicker.getTime());
+                                Toast.makeText(mContext, formatDate(dateTimePicker.getTime(), TIME_YYYY_MM_DD), Toast.LENGTH_SHORT).show();
                             }
                         });
 
@@ -59,14 +68,16 @@ public class MainActivity extends Activity {
         findViewById(R.id.picker_date).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataPicker.pickDate(MainActivity.this, mInitDate,
-                        DateWheelPicker.TYPE_ALL, 100, 100, new OnDatePickListener() {
+                PickOption option = getPickDefaultOptionBuilder(mContext)
+                        .setDateWitchVisible(DateWheelPicker.TYPE_ALL)
+                        .setAheadYears(100)
+                        .setAfterYears(100)
+                        .build();
+                DataPicker.pickDate(mContext, mInitDate, option, new OnDatePickListener() {
                             @Override
-                            public void onDatePicked(long time, int year, int month, int day, int hour, int minute, int second) {
-                                mInitDate.setTime(time);
-
-                                Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-"
-                                        + day + " " + hour + ":" + minute + ":" + second, Toast.LENGTH_SHORT).show();
+                            public void onDatePicked(IDateTimePicker dateTimePicker) {
+                                mInitDate.setTime(dateTimePicker.getTime());
+                                Toast.makeText(mContext, formatDate(dateTimePicker.getTime(), TIME_YYYY_MM_DD_HH_MM_SS), Toast.LENGTH_SHORT).show();
                             }
                         });
 
@@ -78,12 +89,17 @@ public class MainActivity extends Activity {
         findViewById(R.id.picker_future_date).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataPicker.pickDate(MainActivity.this, mInitFutureDateTime,
-                        DateWheelPicker.TYPE_ALL, 0, 100, new OnDatePickListener() {
+                PickOption option = getPickDefaultOptionBuilder(mContext)
+                        .setDateWitchVisible(DateWheelPicker.TYPE_ALL)
+                        .setAheadYears(0)
+                        .setAfterYears(100)
+                        .build();
+                DataPicker.pickDate(mContext, mInitFutureDateTime, option, new OnDatePickListener() {
+
                             @Override
-                            public void onDatePicked(long time, int year, int month, int day, int hour, int minute, int second) {
-                                mInitFutureDateTime.setTime(time);
-                                Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day + " " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
+                            public void onDatePicked(IDateTimePicker picker) {
+                                mInitFutureDateTime.setTime(picker.getTime());
+                                Toast.makeText(mContext, formatDate(picker.getTime(), TIME_YYYY_MM_DD_HH_MM_SS), Toast.LENGTH_SHORT).show();
                             }
                         });
 
@@ -95,11 +111,14 @@ public class MainActivity extends Activity {
         findViewById(R.id.picker_future).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                PickOption option = getPickDefaultOptionBuilder(mContext)
+                        .setDurationDays(100)
+                        .build();
                 DataPicker.pickFutureDate(MainActivity.this, new Date(System.currentTimeMillis() + 30 * 60 * 1000),
-                        365, new OnDatePickListener() {
+                        option, new OnDatePickListener() {
                             @Override
-                            public void onDatePicked(long time, int year, int month, int day, int hour, int minute, int second) {
-                                Toast.makeText(MainActivity.this, year + "-" + (month + 1) + "-" + day + " " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
+                            public void onDatePicked(IDateTimePicker picker) {
+                                Toast.makeText(mContext, formatDate(picker.getTime(), TIME_YYYY_MM_DD_HH_MM), Toast.LENGTH_SHORT).show();
                             }
                         });
             }
@@ -109,8 +128,13 @@ public class MainActivity extends Activity {
         findViewById(R.id.picker_txt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                DataPicker.pickData(MainActivity.this, mInitData, getStudents(1), new OnDataPickListener<Student>() {
+                PickOption option = getPickDefaultOptionBuilder(mContext)
+                        .setItemTextColor(0XFFFF0000)
+                        .setItemLineColor(0xFF00FF00)
+                        .setItemTextSize(mContext.getResources().getDimensionPixelSize(com.wheelpicker.R.dimen.font_22px))
+                        .setItemSpace(mContext.getResources().getDimensionPixelSize(com.wheelpicker.R.dimen.px36))
+                        .build();
+                DataPicker.pickData(MainActivity.this, mInitData, getStudents(1), option, new OnDataPickListener<Student>() {
                     @Override
                     public void onDataPicked(int index, String val, Student data) {
                         mInitData = data;
@@ -130,13 +154,19 @@ public class MainActivity extends Activity {
                 stu.add(getStudents(1));
                 stu.add(getStudents(2));
 
-                DataPicker.pickData(MainActivity.this, mMultiInitIndex, stu, new OnMultiDataPickListener<Student>() {
+                PickOption option = getPickDefaultOptionBuilder(mContext)
+                        .setFlingAnimFactor(0.2f)
+                        .setVisibleItemCount(9)
+                        .setItemLineColor(0xFF0022FF)
+                        .build();
+
+                DataPicker.pickData(mContext, mMultiInitIndex, stu, option, new OnMultiDataPickListener<Student>() {
 
                     @Override
                     public void onDataPicked(List<Integer> indexArr, List<String> val, List<Student> data) {
                         mMultiInitIndex = indexArr;
                         String s = indexArr.toString() + ":" + val.toString();
-                        Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, s, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -149,8 +179,16 @@ public class MainActivity extends Activity {
                 if (mAdministrativeMap == null) {
                     mAdministrativeMap = AdministrativeUtil.loadCity(MainActivity.this);
                 }
-                DataPicker.pickData(MainActivity.this, mCascadeInitIndex,
-                        AdministrativeUtil.getPickData(mAdministrativeMap, mCascadeInitIndex), false,
+
+                PickOption option = PickOption.getPickDefaultOptionBuilder(mContext)
+                        .setFlingAnimFactor(0.3f)
+                        .setVisibleItemCount(7)
+                        .setItemTextSize(mContext.getResources().getDimensionPixelSize(com.wheelpicker.R.dimen.font_24px))
+                        .setItemLineColor(0xFF558800)
+                        .build();
+
+                DataPicker.pickData(mContext, mCascadeInitIndex,
+                        AdministrativeUtil.getPickData(mAdministrativeMap, mCascadeInitIndex), option, false,
                         new OnMultiDataPickListener() {
                             @Override
                             public void onDataPicked(List indexArr, List val, List data) {
@@ -228,5 +266,26 @@ public class MainActivity extends Activity {
         data.add(new Student("王姑娘" + c, 20));
 
         return data;
+    }
+
+    /**
+     * 格式化时间
+     *
+     * @param date   需要被处理的日期,距离1970的long
+     * @param format 最终返回的日期字符串的格式串
+     * @return
+     */
+    public static String formatDate(long date, String format) {
+        DateFormat sdf = new SimpleDateFormat(format);
+        try {
+            return sdf.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    private PickOption.Builder getPickDefaultOptionBuilder(Context context) {
+        return PickOption.getPickDefaultOptionBuilder(context);
     }
 }

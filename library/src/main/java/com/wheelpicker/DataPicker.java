@@ -37,11 +37,11 @@ public class DataPicker {
      * @param initDate
      * @param listener
      */
-    public static void pickBirthday(Context context, @Nullable Date initDate, final OnDatePickListener listener) {
+    public static void pickBirthday(Context context, @Nullable Date initDate, @Nullable PickOption option, final OnDatePickListener listener) {
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(initDate != null ? initDate : new Date());
 
-        PickOption option = PickOption.getPickDefaultOptionBuilder(context).build();
+        option = checkOption(context, option);
         final DateWheelPicker picker = (DateWheelPicker) buildDateWheelPicker(context, option, PickMode.MODE_BIRTHDAY);
         picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
         picker.notifyDataSetChanged();
@@ -52,9 +52,7 @@ public class DataPicker {
             @Override
             public void onClick(View v) {
                 if (listener != null) {
-                    calendar.set(picker.getSelectedYear(), picker.getSelectedMonth(), picker.getSelectedDay(), 0, 0, 0);
-                    listener.onDatePicked(calendar.getTimeInMillis(),
-                            picker.getSelectedYear(), picker.getSelectedMonth(), picker.getSelectedDay(), 0, 0, 0);
+                    listener.onDatePicked(picker);
                 }
             }
         });
@@ -66,21 +64,13 @@ public class DataPicker {
      *
      * @param context
      * @param initDate
-     * @param witchPickVisible
-     * @param aheadYears
-     * @param afterYears
      * @param listener
      */
-    public static void pickDate(Context context, @Nullable Date initDate, int witchPickVisible,
-                         int aheadYears, int afterYears, final OnDatePickListener listener) {
+    public static void pickDate(Context context, @Nullable Date initDate, @Nullable PickOption option, final OnDatePickListener listener) {
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(initDate != null ? initDate : new Date());
 
-        PickOption option = PickOption.getPickDefaultOptionBuilder(context)
-                .setDateWitchVisible(witchPickVisible)
-                .setAheadYears(aheadYears)
-                .setAfterYears(afterYears)
-                .build();
+        option = checkOption(context, option);
         final DateWheelPicker picker = (DateWheelPicker) buildDateWheelPicker(context, option, PickMode.MODE_DATE);
         picker.setCurrentTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
         picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
@@ -92,11 +82,7 @@ public class DataPicker {
             @Override
             public void onClick(View v) {
                 if (listener != null) {
-                    calendar.set(picker.getSelectedYear(), picker.getSelectedMonth(), picker.getSelectedDay(),
-                            picker.getSelectedHour(), picker.getSelectedMinute(), picker.getSelectedSecond());
-                    listener.onDatePicked(calendar.getTimeInMillis(),
-                            picker.getSelectedYear(), picker.getSelectedMonth(), picker.getSelectedDay(),
-                            picker.getSelectedHour(), picker.getSelectedMinute(), picker.getSelectedSecond());
+                    listener.onDatePicked(picker);
                 }
             }
         });
@@ -107,16 +93,13 @@ public class DataPicker {
      *
      * @param context
      * @param initDate
-     * @param durationDays
      * @param listener
      */
-    public static void pickFutureDate(Context context, @Nullable Date initDate, int durationDays, final OnDatePickListener listener) {
+    public static void pickFutureDate(Context context, @Nullable Date initDate, @Nullable PickOption option, final OnDatePickListener listener) {
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(initDate != null ? initDate : new Date());
 
-        PickOption option = PickOption.getPickDefaultOptionBuilder(context)
-                .setDurationDays(durationDays)
-                .build();
+        option = checkOption(context, option);
         final FutureTimePicker picker = (FutureTimePicker) buildDateWheelPicker(context, option, PickMode.MODE_FUTURE_DATE);
         picker.setPickedTime(calendar.getTimeInMillis());
         //picker.notifyDataSetChanged();
@@ -127,11 +110,7 @@ public class DataPicker {
             @Override
             public void onClick(View v) {
                 if (listener != null) {
-                    calendar.set(picker.getSelectedYear(), picker.getSelectedMonth(), picker.getSelectedDay(),
-                            picker.getSelectedHour(), picker.getSelectedMinute(), picker.getSelectedSecond());
-                    listener.onDatePicked(calendar.getTimeInMillis(),
-                            picker.getSelectedYear(), picker.getSelectedMonth(), picker.getSelectedDay(),
-                            picker.getSelectedHour(), picker.getSelectedMinute(), picker.getSelectedSecond());
+                    listener.onDatePicked(picker);
                 }
             }
         });
@@ -145,13 +124,8 @@ public class DataPicker {
      * @param listener
      * @param <T>
      */
-    public static <T> void pickData(Context context, @Nullable T initData, @NonNull final List<T> srcData, final OnDataPickListener listener) {
-        PickOption option = PickOption.getPickDefaultOptionBuilder(context)
-                .setItemTextColor(0XFFFF0000)
-                .setItemLineColor(0xFF00FF00)
-                .setItemTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_22px))
-                .setItemSpace(context.getResources().getDimensionPixelSize(R.dimen.px36))
-                .build();
+    public static <T> void pickData(Context context, @Nullable T initData, @NonNull final List<T> srcData, @Nullable PickOption option, final OnDataPickListener listener) {
+        option = checkOption(context, option);
         final SingleTextWheelPicker picker = new SingleTextWheelPicker(context);
         setPickViewStyle(picker, option);
 
@@ -177,8 +151,8 @@ public class DataPicker {
      * 多行数据选择
      */
     public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData,
-                                    final OnMultiDataPickListener listener) {
-        pickData(context, initIndex, srcData, false, listener, null);
+                                    @Nullable PickOption option, final OnMultiDataPickListener listener) {
+        pickData(context, initIndex, srcData, option, false, listener, null);
     }
 
     /**
@@ -189,14 +163,10 @@ public class DataPicker {
      * @param listener
      * @param <T>
      */
-    public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData, boolean wrapper,
+    public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData,
+                                    @Nullable PickOption option, boolean wrapper,
                                     final OnMultiDataPickListener listener, final OnCascadeWheelListener cascadeListener) {
-        PickOption option = PickOption.getPickDefaultOptionBuilder(context)
-                .setFlingAnimFactor(0.2f)
-                .setVisibleItemCount(9)
-                .setItemLineColor(0xFF0022FF)
-                .build();
-
+        option = checkOption(context, option);
         //List<WheelPickerData> pickerData = WheelPickerData.wrapper(initData, srcData);
         //WheelPickerData.disScrollable(0, pickerData);
         //WheelPickerData.placeHold(1, pickerData);
@@ -288,5 +258,13 @@ public class DataPicker {
         BottomSheet bottomSheet = new BottomSheet(context);
         bottomSheet.setContent(pickerView.asView());
         return bottomSheet;
+    }
+
+    private static PickOption checkOption(Context context, @Nullable PickOption option) {
+        if (option != null) {
+            return option;
+        }
+
+        return PickOption.getPickDefaultOptionBuilder(context).build();
     }
 }

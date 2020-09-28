@@ -4,12 +4,11 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
 
 import com.wheelpicker.core.AbstractWheelPicker;
-import com.wheelpicker.widget.IPickerView;
 import com.wheelpicker.core.OnWheelPickedListener;
+import com.wheelpicker.widget.IPickerView;
 import com.wheelpicker.widget.TextWheelPicker;
 import com.wheelpicker.widget.TextWheelPickerAdapter;
 
@@ -32,7 +31,8 @@ import java.util.List;
  * 修改描述：
  * 修改日期
  */
-public class DateWheelPicker extends LinearLayout implements OnWheelPickedListener<String>, IPickerView {
+public class DateWheelPicker extends LinearLayout implements
+        OnWheelPickedListener<String>, IPickerView, IDateTimePicker {
     public final static int TYPE_YEAR = 1 << 1;
     public final static int TYPE_MONTH = 1 << 2;
     public final static int TYPE_DAY = 1 << 3;
@@ -777,6 +777,13 @@ public class DateWheelPicker extends LinearLayout implements OnWheelPickedListen
         }
 
         return false;
+    }
+
+    @Override
+    public long getTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(mSelectedYear, mSelectedMonth, mSelectedDay, mSelectedHour, mSelectedMinute, mSelectedSecond);
+        return calendar.getTimeInMillis();
     }
 
     public int getSelectedYear() {

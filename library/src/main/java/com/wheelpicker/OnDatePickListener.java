@@ -16,14 +16,7 @@ package com.wheelpicker;
 
 public interface OnDatePickListener {
     /**
-     * @param time   返回选择时间距离 1970的时间戳
-     * @param year   返回选择日期的是哪一年
-     * @param month  返回选择日期的是哪一月
-     * @param day    返回选择日期的是哪一天
-     * @param hour   返回选择日期某一天的哪一个小时
-     * @param minute 返回选择日期某一天的哪一分钟
-     * @param second 返回选择日期某一天的哪一秒钟
+     * @param dateTimePicker
      */
-    public void onDatePicked(long time, int year, int month,
-                             int day, int hour, int minute, int second);
+    public void onDatePicked(IDateTimePicker dateTimePicker);
 }

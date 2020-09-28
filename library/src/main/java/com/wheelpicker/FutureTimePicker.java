@@ -33,7 +33,8 @@ import java.util.Map;
  * 修改描述：
  * 修改日期
  */
-public class FutureTimePicker extends LinearLayout implements OnWheelPickedListener<String>, IPickerView {
+public class FutureTimePicker extends LinearLayout implements
+        OnWheelPickedListener<String>, IPickerView, IDateTimePicker {
     public final static int TYPE_DAY = 1 << 1;
     public final static int TYPE_HOUR = 1 << 2;
     public final static int TYPE_MINUTE = 1 << 3;
@@ -448,6 +449,13 @@ public class FutureTimePicker extends LinearLayout implements OnWheelPickedListe
         int suffixLeg = suffix == null ? 0 : suffix.length();
         String temp = data;
         return Integer.parseInt(temp.substring(0, temp.length() - suffixLeg));
+    }
+
+    @Override
+    public long getTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(mSelectedYear, mSelectedMonth, mSelectedDay, mSelectedHour, mSelectedMinute, mSelectedSecond);
+        return calendar.getTimeInMillis();
     }
 
     public int getSelectedYear() {
