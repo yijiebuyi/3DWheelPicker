@@ -127,7 +127,7 @@ dependencies {
                 .setItemTextColor(0XFFFF0000)
                 .setItemLineColor(0xFF00FF00)
                 .setItemTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_22px))
-                .setItemS
+                .setItemSpace(context.getResources().getDimensionPixelSize(R.dimen.px36))
    setPickViewStyle(picker, option);
         
     /**
