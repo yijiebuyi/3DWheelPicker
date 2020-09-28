@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 
 import com.wheelpicker.core.WheelPickerUtil;
 import com.wheelpicker.widget.IPickerView;
-import com.wheelpicker.widget.TextWheelPicker;
 import com.wheelpicker.widget.TextWheelPickerAdapter;
 
 import java.util.Calendar;
@@ -263,8 +262,10 @@ public class DataPicker {
         pickerView.setItemSpace(option.getItemSpace());
 
         pickerView.setShadow(option.getShadowGravity(), option.getShadowFactor());
-        pickerView.setMoveFactor(option.getFingerMoveFactor());
+        pickerView.setScrollMoveFactor(option.getFingerMoveFactor());
         pickerView.setScrollAnimFactor(option.getFlingAnimFactor());
+        pickerView.setScrollOverOffset(option.getOverScrollOffset());
+
     }
 
     /**

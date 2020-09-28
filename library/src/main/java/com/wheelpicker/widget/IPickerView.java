@@ -78,7 +78,13 @@ public interface IPickerView {
      * 设置回手指滑动因子
      * @param factor
      */
-    public void setMoveFactor(float factor);
+    public void setScrollMoveFactor(float factor);
+
+    /**
+     * 设置回滚偏移量
+     * @param offset
+     */
+    public void setScrollOverOffset(int offset);
 
     public View asView();
 }

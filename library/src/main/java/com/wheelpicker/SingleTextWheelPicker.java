@@ -80,8 +80,13 @@ public class SingleTextWheelPicker extends TextWheelPicker implements IPickerVie
     }
 
     @Override
-    public void setMoveFactor(float factor) {
+    public void setScrollMoveFactor(float factor) {
         super.setFingerMoveFactor(factor);
+    }
+
+    @Override
+    public void setScrollOverOffset(int offset) {
+        super.setOverScrollOffset(offset);
     }
 
     @Override

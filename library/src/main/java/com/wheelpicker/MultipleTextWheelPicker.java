@@ -320,9 +320,16 @@ public class MultipleTextWheelPicker<D, T> extends LinearLayout
     }
 
     @Override
-    public void setMoveFactor(float factor) {
+    public void setScrollMoveFactor(float factor) {
         for (TextWheelPicker picker : mWheelPickers) {
             picker.setFingerMoveFactor(factor);
+        }
+    }
+
+    @Override
+    public void setScrollOverOffset(int offset) {
+        for (TextWheelPicker picker : mWheelPickers) {
+            picker.setOverScrollOffset(offset);
         }
     }
 

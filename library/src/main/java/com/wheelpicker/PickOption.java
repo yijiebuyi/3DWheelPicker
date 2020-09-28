@@ -309,20 +309,20 @@ public class PickOption {
             return this;
         }
 
-        public void setFingerMoveFactor(float fingerMoveFactor) {
+        public Builder setFingerMoveFactor(float fingerMoveFactor) {
             this.fingerMoveFactor = fingerMoveFactor;
+            return this;
         }
 
-        public void setFlingAnimFactor(float flingAnimFactor) {
+        public Builder setFlingAnimFactor(float flingAnimFactor) {
             this.flingAnimFactor = flingAnimFactor;
+            return this;
         }
 
-        public int getOverScrollOffset() {
-            return overScrollOffset;
-        }
-
-        public void setOverScrollOffset(int overScrollOffset) {
+        public Builder setOverScrollOffset(int overScrollOffset) {
             this.overScrollOffset = overScrollOffset;
+
+            return this;
         }
 
         public PickOption build() {
@@ -344,6 +344,9 @@ public class PickOption {
                 .setVerPadding(context.getResources().getDimensionPixelSize(R.dimen.px20))
                 .setShadowGravity(AbstractViewWheelPicker.SHADOW_RIGHT)
                 .setShadowFactor(0.5f)
+                .setFingerMoveFactor(0.8f)
+                .setFlingAnimFactor(0.7f)
+                .setOverScrollOffset(context.getResources().getDimensionPixelSize(R.dimen.px36))
                 .setBackgroundColor(Color.WHITE);
 
         return builder;
