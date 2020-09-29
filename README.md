@@ -34,35 +34,15 @@ dependencies {
 #### 使用 DataPicker (可参照demo的用法)
 - 时间选择
 ```java
-   /**
-   * 选择生日
-   *
-   * @param initDate 初始化选中的日期
-   */
-   pickBirthday(Context context, @Nullable Date initDate, final OnDatePickListener listener)
-   
-   /**
+  /**
      * 获取时间
      *
      * @param context
-     * @param initDate 初始化选中的日期
-     * @param witchPickVisible 需要显示的pick，@see com.wheelpicker.DateWheelPicker
-     * @param aheadYears 距离当前时间，往前显示多少年
-     * @param afterYears 距离当前时间，往后显示多少年
+     * @param initDate
+     * @param listener
      */
-    public static void pickDate(Context context, @Nullable Date initDate, int witchPickVisible,
-                         int aheadYears, int afterYears, final OnDatePickListener listener)
+    public static void pickDate(Context context, @Nullable Date initDate, @Nullable PickOption option, final OnDatePickListener listener)
                          
-    /**
-     * 获取未来日期
-     *
-     * @param context
-     * @param initDate 初始化选中的日期
-     * @param durationDays 距离当前时间往后显示的天数
-     */
-     public static void pickFutureDate(Context context, @Nullable Date initDate, int durationDays, 
-                          final OnDatePickListener listener)
-  
  ```    
   - 数据选择: 
   为了保证picker控件显示的数据是期望的字符串，需要对数组中的类（String数组除外）实现PickString，或者重写toString
@@ -91,45 +71,73 @@ dependencies {
         }
     }
 
-    /**
+   /**
      * 获取单行数据
      * @param context
-     * @param initData 初始化选中的数据
-     * @param srcData 数据源
+     * @param initData
+     * @param srcData
+     * @param listener
+     * @param <T>
      */
     public static <T> void pickData(Context context, @Nullable T initData, @NonNull final List<T> srcData, 
-                             final OnDataPickListener listener)
+                                    @Nullable PickOption option, final OnDataPickListener listener
     
-    /**
-     * 多行数据选择
+   /**
+     * 多行数据选择（非级联数据）
      */
     public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData,
-                                    final OnMultiDataPickListener listener)
+                                    @Nullable PickOption option, final OnMultiDataPickListener listener)
                                     
-     /**
-     * 多行数据选择
+   /**
+     * 多行数据选择（级联数据）
      * @param context
      * @param initIndex
      * @param srcData
      * @param listener
      * @param <T>
      */
-    public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData, boolean wrapper,
+    public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData,
+                                    @Nullable PickOption option, boolean wrapper,
                                     final OnMultiDataPickListener listener, final OnCascadeWheelListener cascadeListener)
     
 
 ```
 
-#### 设置滚轮样式
-```java
-   final SingleTextWheelPicker picker = new SingleTextWheelPicker(context);
-   PickOption option = PickOption.getPickDefaultOptionBuilder(context)
-                .setItemTextColor(0XFFFF0000)
-                .setItemLineColor(0xFF00FF00)
-                .setItemTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_22px))
-                .setItemSpace(context.getResources().getDimensionPixelSize(R.dimen.px36))
-   setPickViewStyle(picker, option);
-        
+
+#### 获取单行数据具体使用
+
+PickOption option = new PickOption.Builder()
+                .setVisibleItemCount(9) //设置pickerView有多少个可见的item，必须是单数（1，3，5，7....）
+                .setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px20)) //设置item的间距
+                .setItemTextColor(context.getResources().getColor(R.color.font_black)) //设置item的文本颜色
+                .setItemTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_36px)) //设置item的字体大小
+                .setVerPadding(context.getResources().getDimensionPixelSize(R.dimen.px20)) //设置item的顶部，底部的padding
+                .setShadowGravity(AbstractViewWheelPicker.SHADOW_RIGHT) //设置滚动的偏向
+                .setShadowFactor(0.5f) //设置滚轮的偏向因子
+                .setFingerMoveFactor(0.8f) //设置手指滑动的阻尼因子
+                .setFlingAnimFactor(0.7f) //设置手指快速放开后，滚动动画的阻尼因子
+                .setOverScrollOffset(context.getResources().getDimensionPixelSize(R.dimen.px36)) //设置滚轮滑动到底端顶端回滚动画的最大偏移
+                .setBackgroundColor(Color.WHITE) //设置滚轮的背景颜色
+                .setLeftTitleColor(0xFF1233DD) //设置底部弹出框左边文本的颜色
+                .setRightTitleColor(0xFF1233DD) //设置底部弹出框右边文本的颜色
+                .setMiddleTitleColor(0xFF333333) //设置底部弹出框中间文本的颜色
+                .setTitleBackground(0XFFDDDDDD) //设置底部弹框title栏的背景颜色
+                .setLeftTitleText("取消") //设置底部弹出框左边文本
+                .setRightTitleText("确定") //设置底部弹出框右边文本
+                .setMiddleTitleText("请选择数据") //设置底部弹出框中间
+                .setTitleHeight(context.getResources().getDimensionPixelOffset(R.dimen.px80)) //设置底部弹框title高度
+                .build();
+ DataPicker.pickData(MainActivity.this, mInitData, getStudents(1), option, new OnDataPickListener<Student>() {
+     @Override
+     public void onDataPicked(int index, String val, Student data) {
+         mInitData = data;
+         Toast.makeText(MainActivity.this, val, Toast.LENGTH_SHORT).show();
+     }
+ });
+
+#### 设置滚轮样式(见DataPicker中的使用方法)
+pickerview的样式详情见PickOption里面的属性，包括弹出框的顶部title样式，pickerview的的wheel样式，item样式
+```java     
     /**
      * 设置滚轮样式
      * @param pickerView
@@ -155,6 +163,33 @@ dependencies {
         pickerView.setScrollOverOffset(option.getOverScrollOffset()); //设置滚轮滑动到顶端或底端的最大回弹的偏移量
     }
 ```
+
+```java
+/**
+     * 获取底部弹出框
+     * @param context
+     * @param pickerView
+     * @return
+     */
+    private static BottomSheet buildBottomSheet(Context context, @Nullable PickOption option, IPickerView pickerView) {
+        BottomSheet bottomSheet = new BottomSheet(context);
+        if (option != null) {
+            bottomSheet.setLeftBtnText(option.getLeftTitleText());
+            bottomSheet.setRightBtnText(option.getRightTitleText());
+            bottomSheet.setMiddleText(option.getMiddleTitleText());
+            bottomSheet.setLeftBtnTextColor(option.getLeftTitleColor());
+            bottomSheet.setRightBtnTextColor(option.getRightTitleColor());
+            bottomSheet.setMiddleTextColor(option.getMiddleTitleColor());
+            bottomSheet.setTitleBackground(option.getTitleBackground());
+
+            bottomSheet.setTitleHeight(option.getTitleHeight());
+        }
+        bottomSheet.setContent(pickerView.asView());
+        return bottomSheet;
+    }
+```
+
+
 
 #### 也可以使用Textwheelpicker
 
