@@ -25,7 +25,7 @@ allprojects {
 ```gradle
 
 dependencies {
-  implementation 'com.github.yijiebuyi:3DWheelPicker:v1.0.5'
+  implementation 'com.github.yijiebuyi:3DWheelPicker:v1.1.0'
 }
 
 ```
