@@ -139,7 +139,7 @@ PickOption option = new PickOption.Builder()
 ```
 
 #### 设置滚轮样式(见DataPicker中的使用方法)
-pickerview的样式详情见PickOption里面的属性，包括弹出框的顶部title样式，pickerview的的wheel样式，item样式
+样式详情设置见PickOption里面的属性，包括弹出框的顶部title样式，pickerview的的滚轮样式，item样式
 ```java     
     /**
      * 设置滚轮样式
