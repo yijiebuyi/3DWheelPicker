@@ -20,6 +20,17 @@ import com.wheelpicker.widget.AbstractViewWheelPicker;
  */
 
 public class PickOption {
+    //===============bottomSheet style=============
+    private int leftTitleColor;
+    private int rightTitleColor;
+    private int middleTitleColor;
+    private String leftTitleText;
+    private String rightTitleText;
+    private String middleTitleText;
+    private int titleHeight;
+    private int titleBackground;
+
+    //===============date pick attr=================
     /**
      * 年月日，时分秒，哪些需要显示的
      * @see com.wheelpicker.DateWheelPicker
@@ -168,7 +179,48 @@ public class PickOption {
         return overScrollOffset;
     }
 
+    public int getLeftTitleColor() {
+        return leftTitleColor;
+    }
+
+    public int getRightTitleColor() {
+        return rightTitleColor;
+    }
+
+    public int getMiddleTitleColor() {
+        return middleTitleColor;
+    }
+
+    public String getLeftTitleText() {
+        return leftTitleText;
+    }
+
+    public String getRightTitleText() {
+        return rightTitleText;
+    }
+
+    public String getMiddleTitleText() {
+        return middleTitleText;
+    }
+
+    public int getTitleHeight() {
+        return titleHeight;
+    }
+
+    public int getTitleBackground() {
+        return titleBackground;
+    }
+
     private PickOption(Builder builder) {
+        leftTitleText = builder.leftTitleText;
+        leftTitleColor = builder.leftTitleColor;
+        rightTitleText = builder.rightTitleText;
+        rightTitleColor = builder.rightTitleColor;
+        middleTitleText = builder.middleTitleText;
+        middleTitleColor = builder.middleTitleColor;
+        titleHeight = builder.titleHeight;
+        titleBackground = builder.titleBackground;
+
         dateWitchVisible = builder.dateWitchVisible;
         durationDays = builder.durationDays;
         aheadYears = builder.aheadYears;
@@ -195,6 +247,17 @@ public class PickOption {
      * Builder
      */
     public static final class Builder {
+        //===============bottomSheet style=============
+        private int leftTitleColor;
+        private int rightTitleColor;
+        private int middleTitleColor;
+        private String leftTitleText;
+        private String rightTitleText;
+        private String middleTitleText;
+        private int titleHeight;
+        private int titleBackground;
+
+        //===============date pick attr=================
         private int dateWitchVisible;
         private int durationDays;
         private int aheadYears;
@@ -232,6 +295,46 @@ public class PickOption {
 
             fingerMoveFactor = 1.0f;
             flingAnimFactor = 0.7f;
+        }
+
+        public Builder setLeftTitleColor(int leftTitleColor) {
+            this.leftTitleColor = leftTitleColor;
+            return this;
+        }
+
+        public Builder setRightTitleColor(int rightTitleColor) {
+            this.rightTitleColor = rightTitleColor;
+            return this;
+        }
+
+        public Builder setMiddleTitleColor(int middleTitleColor) {
+            this.middleTitleColor = middleTitleColor;
+            return this;
+        }
+
+        public Builder setLeftTitleText(String leftTitleText) {
+            this.leftTitleText = leftTitleText;
+            return this;
+        }
+
+        public Builder setRightTitleText(String rightTitleText) {
+            this.rightTitleText = rightTitleText;
+            return this;
+        }
+
+        public Builder setMiddleTitleText(String middleTitleText) {
+            this.middleTitleText = middleTitleText;
+            return this;
+        }
+
+        public Builder setTitleHeight(int titleHeight) {
+            this.titleHeight = titleHeight;
+            return this;
+        }
+
+        public Builder setTitleBackground(int titleBackground) {
+            this.titleBackground = titleBackground;
+            return this;
         }
 
         public Builder setDateWitchVisible(int dateWitchVisible) {

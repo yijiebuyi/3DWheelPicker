@@ -3,14 +3,18 @@ package com.wheelpicker;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 
 /**
@@ -71,8 +75,8 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
         dialogWindow.setGravity(Gravity.BOTTOM);
 
         mTitleLayout = dialogWindow.findViewById(R.id.title);
-        mRightBtn = (Button) dialogWindow.findViewById(R.id.left_btn);
-        mLeftBtn = (Button) dialogWindow.findViewById(R.id.right_btn);
+        mLeftBtn = (Button) dialogWindow.findViewById(R.id.left_btn);
+        mRightBtn = (Button) dialogWindow.findViewById(R.id.right_btn);
 
         mLeftBtn.setOnClickListener(this);
         mRightBtn.setOnClickListener(this);
@@ -104,14 +108,32 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
         }
     }
 
-    public void setTitleBackground(@ColorRes int color) {
+    public void setTitleBackground(@ColorInt int color) {
         if (mTitleLayout != null) {
-            mTitleLayout.setBackgroundColor(getContext().getResources().getColor(color));
+            mTitleLayout.setBackgroundColor(color);
+        }
+    }
+
+    public void setTitleHeight(int height) {
+        if (height <= 0) {
+            //throw new IllegalArgumentException("height must > 0");
+            return;
+        }
+
+        if (mTitleLayout != null) {
+            ViewGroup.LayoutParams params = mTitleLayout.getLayoutParams();
+
+            LinearLayout.LayoutParams titleParams = (LinearLayout.LayoutParams) params;
+            titleParams.height = height;
         }
     }
 
     public void setMiddleText(String text) {
         ((TextView) getWindow().findViewById(R.id.middle_txt)).setText(text);
+    }
+
+    public void setMiddleTextColor(@ColorInt int color) {
+        ((TextView) getWindow().findViewById(R.id.middle_txt)).setTextColor(color);
     }
 
     public void setLeftBtnVisibility(int visibility) {
@@ -127,15 +149,19 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
     }
 
     public void setRightBtnText(String text) {
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+
         mRightBtn.setText(text);
     }
 
-    public void setLeftBtnTextColor(@ColorRes int color) {
-        mLeftBtn.setTextColor(getContext().getResources().getColor(color));
+    public void setLeftBtnTextColor(@ColorInt int color) {
+        mLeftBtn.setTextColor(color);
     }
 
-    public void setRightBtnTextColor(@ColorRes int color) {
-        mRightBtn.setTextColor(getContext().getResources().getColor(color));
+    public void setRightBtnTextColor(@ColorInt int color) {
+        mRightBtn.setTextColor(color);
     }
 
     @Override

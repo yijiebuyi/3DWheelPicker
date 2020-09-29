@@ -51,8 +51,10 @@ public class MainActivity extends Activity {
         findViewById(R.id.picker_birthday).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                DataPicker.pickBirthday(mContext, mInitBirthday, getPickDefaultOptionBuilder(mContext).build(),
+                PickOption option = getPickDefaultOptionBuilder(mContext)
+                        .setMiddleTitleText("请选择生日日期")
+                        .build();
+                DataPicker.pickBirthday(mContext, mInitBirthday, option,
                         new OnDatePickListener() {
                             @Override
                             public void onDatePicked(IDateTimePicker dateTimePicker) {
@@ -69,6 +71,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 PickOption option = getPickDefaultOptionBuilder(mContext)
+                        .setMiddleTitleText("请选择时间")
                         .setDateWitchVisible(DateWheelPicker.TYPE_ALL)
                         .setAheadYears(100)
                         .setAfterYears(100)
@@ -90,6 +93,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 PickOption option = getPickDefaultOptionBuilder(mContext)
+                        .setMiddleTitleText("请选择时间")
                         .setDateWitchVisible(DateWheelPicker.TYPE_ALL)
                         .setAheadYears(0)
                         .setAfterYears(100)
@@ -112,6 +116,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 PickOption option = getPickDefaultOptionBuilder(mContext)
+                        .setMiddleTitleText("请选择日期")
                         .setDurationDays(100)
                         .build();
                 DataPicker.pickFutureDate(MainActivity.this, new Date(System.currentTimeMillis() + 30 * 60 * 1000),
@@ -129,6 +134,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 PickOption option = getPickDefaultOptionBuilder(mContext)
+                        .setMiddleTitleText("请选择")
                         .setItemTextColor(0XFFFF0000)
                         .setItemLineColor(0xFF00FF00)
                         .setItemTextSize(mContext.getResources().getDimensionPixelSize(com.wheelpicker.R.dimen.font_22px))
@@ -155,6 +161,7 @@ public class MainActivity extends Activity {
                 stu.add(getStudents(2));
 
                 PickOption option = getPickDefaultOptionBuilder(mContext)
+                        .setMiddleTitleText("请选择")
                         .setFlingAnimFactor(0.2f)
                         .setVisibleItemCount(9)
                         .setItemLineColor(0xFF0022FF)
@@ -180,7 +187,8 @@ public class MainActivity extends Activity {
                     mAdministrativeMap = AdministrativeUtil.loadCity(MainActivity.this);
                 }
 
-                PickOption option = PickOption.getPickDefaultOptionBuilder(mContext)
+                PickOption option = getPickDefaultOptionBuilder(mContext)
+                        .setMiddleTitleText("请选择城市")
                         .setFlingAnimFactor(0.3f)
                         .setVisibleItemCount(7)
                         .setItemTextSize(mContext.getResources().getDimensionPixelSize(com.wheelpicker.R.dimen.font_24px))
@@ -286,6 +294,12 @@ public class MainActivity extends Activity {
     }
 
     private PickOption.Builder getPickDefaultOptionBuilder(Context context) {
-        return PickOption.getPickDefaultOptionBuilder(context);
+        return PickOption.getPickDefaultOptionBuilder(context)
+                .setLeftTitleColor(0xFF1233DD)
+                .setRightTitleColor(0xFF1233DD)
+                .setMiddleTitleColor(0xFF333333)
+                .setTitleBackground(0XFFDDDDDD)
+                .setLeftTitleText("取消")
+                .setRightTitleText("确定");
     }
 }

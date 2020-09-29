@@ -46,7 +46,7 @@ public class DataPicker {
         picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
         picker.notifyDataSetChanged();
 
-        BottomSheet bottomSheet = buildBottomSheet(context, picker);
+        BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
         bottomSheet.show();
         bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +76,7 @@ public class DataPicker {
         picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
         picker.notifyDataSetChanged();
 
-        BottomSheet bottomSheet = buildBottomSheet(context, picker);
+        BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
         bottomSheet.show();
         bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +104,7 @@ public class DataPicker {
         picker.setPickedTime(calendar.getTimeInMillis());
         //picker.notifyDataSetChanged();
 
-        BottomSheet bottomSheet = buildBottomSheet(context, picker);
+        BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
         bottomSheet.show();
         bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +134,7 @@ public class DataPicker {
         int index = WheelPickerUtil.indexOf(initData, srcData);
         picker.setCurrentItem(index < 0 ? 0 : index);
 
-        BottomSheet bottomSheet = buildBottomSheet(context, picker);
+        BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
         bottomSheet.show();
         bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
             @Override
@@ -176,7 +176,7 @@ public class DataPicker {
         picker.setOnCascadeWheelListener(cascadeListener);
         setPickViewStyle(picker, option);
 
-        BottomSheet bottomSheet = buildBottomSheet(context, picker);
+        BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
         bottomSheet.show();
         bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
             @Override
@@ -254,8 +254,19 @@ public class DataPicker {
      * @param pickerView
      * @return
      */
-    private static BottomSheet buildBottomSheet(Context context, IPickerView pickerView) {
+    private static BottomSheet buildBottomSheet(Context context, @Nullable PickOption option, IPickerView pickerView) {
         BottomSheet bottomSheet = new BottomSheet(context);
+        if (option != null) {
+            bottomSheet.setLeftBtnText(option.getLeftTitleText());
+            bottomSheet.setRightBtnText(option.getRightTitleText());
+            bottomSheet.setMiddleText(option.getMiddleTitleText());
+            bottomSheet.setLeftBtnTextColor(option.getLeftTitleColor());
+            bottomSheet.setRightBtnTextColor(option.getRightTitleColor());
+            bottomSheet.setMiddleTextColor(option.getMiddleTitleColor());
+            bottomSheet.setTitleBackground(option.getTitleBackground());
+
+            bottomSheet.setTitleHeight(option.getTitleHeight());
+        }
         bottomSheet.setContent(pickerView.asView());
         return bottomSheet;
     }
