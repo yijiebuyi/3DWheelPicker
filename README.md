@@ -32,6 +32,41 @@ dependencies {
 
 ### 基本用法：
 #### 使用 DataPicker (可参照demo的用法)
+
+
+#### 获取单行数据具体使用
+- 使用示例
+```java
+PickOption option = new PickOption.Builder()
+                .setVisibleItemCount(9) //设置pickerView有多少个可见的item，必须是单数（1，3，5，7....）
+                .setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px20)) //设置item的间距
+                .setItemTextColor(context.getResources().getColor(R.color.font_black)) //设置item的文本颜色
+                .setItemTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_36px)) //设置item的字体大小
+                .setVerPadding(context.getResources().getDimensionPixelSize(R.dimen.px20)) //设置item的顶部，底部的padding
+                .setShadowGravity(AbstractViewWheelPicker.SHADOW_RIGHT) //设置滚动的偏向
+                .setShadowFactor(0.5f) //设置滚轮的偏向因子
+                .setFingerMoveFactor(0.8f) //设置手指滑动的阻尼因子
+                .setFlingAnimFactor(0.7f) //设置手指快速放开后，滚动动画的阻尼因子
+                .setOverScrollOffset(context.getResources().getDimensionPixelSize(R.dimen.px36)) //设置滚轮滑动到底端顶端回滚动画的最大偏移
+                .setBackgroundColor(Color.WHITE) //设置滚轮的背景颜色
+                .setLeftTitleColor(0xFF1233DD) //设置底部弹出框左边文本的颜色
+                .setRightTitleColor(0xFF1233DD) //设置底部弹出框右边文本的颜色
+                .setMiddleTitleColor(0xFF333333) //设置底部弹出框中间文本的颜色
+                .setTitleBackground(0XFFDDDDDD) //设置底部弹框title栏的背景颜色
+                .setLeftTitleText("取消") //设置底部弹出框左边文本
+                .setRightTitleText("确定") //设置底部弹出框右边文本
+                .setMiddleTitleText("请选择数据") //设置底部弹出框中间
+                .setTitleHeight(context.getResources().getDimensionPixelOffset(R.dimen.px80)) //设置底部弹框title高度
+                .build();
+ DataPicker.pickData(MainActivity.this, mInitData, getStudents(1), option, new OnDataPickListener<Student>() {
+     @Override
+     public void onDataPicked(int index, String val, Student data) {
+         mInitData = data;
+         Toast.makeText(MainActivity.this, val, Toast.LENGTH_SHORT).show();
+     }
+ });
+```
+
 - 时间选择
 ```java
   /**
@@ -102,38 +137,6 @@ dependencies {
     
 
 ```
-
-
-#### 获取单行数据具体使用
-
-PickOption option = new PickOption.Builder()
-                .setVisibleItemCount(9) //设置pickerView有多少个可见的item，必须是单数（1，3，5，7....）
-                .setItemSpace(context.getResources().getDimensionPixelOffset(R.dimen.px20)) //设置item的间距
-                .setItemTextColor(context.getResources().getColor(R.color.font_black)) //设置item的文本颜色
-                .setItemTextSize(context.getResources().getDimensionPixelSize(R.dimen.font_36px)) //设置item的字体大小
-                .setVerPadding(context.getResources().getDimensionPixelSize(R.dimen.px20)) //设置item的顶部，底部的padding
-                .setShadowGravity(AbstractViewWheelPicker.SHADOW_RIGHT) //设置滚动的偏向
-                .setShadowFactor(0.5f) //设置滚轮的偏向因子
-                .setFingerMoveFactor(0.8f) //设置手指滑动的阻尼因子
-                .setFlingAnimFactor(0.7f) //设置手指快速放开后，滚动动画的阻尼因子
-                .setOverScrollOffset(context.getResources().getDimensionPixelSize(R.dimen.px36)) //设置滚轮滑动到底端顶端回滚动画的最大偏移
-                .setBackgroundColor(Color.WHITE) //设置滚轮的背景颜色
-                .setLeftTitleColor(0xFF1233DD) //设置底部弹出框左边文本的颜色
-                .setRightTitleColor(0xFF1233DD) //设置底部弹出框右边文本的颜色
-                .setMiddleTitleColor(0xFF333333) //设置底部弹出框中间文本的颜色
-                .setTitleBackground(0XFFDDDDDD) //设置底部弹框title栏的背景颜色
-                .setLeftTitleText("取消") //设置底部弹出框左边文本
-                .setRightTitleText("确定") //设置底部弹出框右边文本
-                .setMiddleTitleText("请选择数据") //设置底部弹出框中间
-                .setTitleHeight(context.getResources().getDimensionPixelOffset(R.dimen.px80)) //设置底部弹框title高度
-                .build();
- DataPicker.pickData(MainActivity.this, mInitData, getStudents(1), option, new OnDataPickListener<Student>() {
-     @Override
-     public void onDataPicked(int index, String val, Student data) {
-         mInitData = data;
-         Toast.makeText(MainActivity.this, val, Toast.LENGTH_SHORT).show();
-     }
- });
 
 #### 设置滚轮样式(见DataPicker中的使用方法)
 pickerview的样式详情见PickOption里面的属性，包括弹出框的顶部title样式，pickerview的的wheel样式，item样式
