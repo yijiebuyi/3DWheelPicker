@@ -9,6 +9,7 @@ http://d.firim.pro/3dwheelpicker
  - 单数组的数据选择
  - 多数组的数据选择（支持多级联）
  - 省市区级联城市选择（城市数据可能不完整）
+ - 可动态设置样式
 
 ## 使用
  - 在project的build.gradle添加如下代码
