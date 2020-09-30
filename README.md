@@ -68,7 +68,7 @@ PickOption option = new PickOption.Builder()
  });
 ```
 
-- 也可以使用默认的Builder，然后自己设置关注的属性
+- 也可以使用默认的Builder，然后设置自己关注的属性
 ```java
     PickOption option = PickOption.getPickDefaultOptionBuilder(mContext)
     .setShadowFactor(0.5f) //设置滚轮的偏向因子
