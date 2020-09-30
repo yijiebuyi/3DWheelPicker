@@ -68,6 +68,15 @@ PickOption option = new PickOption.Builder()
  });
 ```
 
+- 也可以使用默认的Builder，然后自己设置关注的属性
+```java
+    PickOption option = PickOption.getPickDefaultOptionBuilder(mContext)
+    .setShadowFactor(0.5f) //设置滚轮的偏向因子
+    .setFingerMoveFactor(0.8f) //设置手指滑动的阻尼因子
+    .setFlingAnimFactor(0.7f) //设置手指快速放开后，滚动动画的阻尼因子
+    .build();
+ ```
+
 - 时间选择
 ```java
   /**
