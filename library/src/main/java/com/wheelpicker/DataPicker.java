@@ -157,6 +157,15 @@ public class DataPicker {
 
     /**
      * 多行数据选择
+     */
+    public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData,
+                                    @Nullable PickOption option, final OnMultiDataPickListener listener,
+                                    final OnCascadeWheelListener cascadeListener) {
+        pickData(context, initIndex, srcData, option, false, listener, cascadeListener);
+    }
+
+    /**
+     * 多行数据选择
      * @param context
      * @param initIndex
      * @param srcData

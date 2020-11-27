@@ -28,6 +28,15 @@ import java.util.List;
  */
 
 public class AdministrativeUtil {
+    /*
+     * 显示省市区
+     */
+    public final static int PROVINCE_CITY_AREA = 0;
+    /*
+     * 显示省市
+     */
+    public final static int PROVINCE_CITY= 1;
+
     public static AdministrativeMap loadCity(Context context) {
         AdministrativeMap map = null;
         try {
@@ -61,7 +70,7 @@ public class AdministrativeUtil {
         return pickDataList;
     }
 
-    public static List<List<?>> getPickData(AdministrativeMap map, List<Integer> indexArr) {
+    public static List<List<?>> getPickData(AdministrativeMap map, List<Integer> indexArr, int mode) {
         if (map == null) {
             return null;
         }
@@ -80,10 +89,16 @@ public class AdministrativeUtil {
         pickDataList.add(province == null || province.isEmpty() ? new ArrayList<>() :
                 map.provinces.get(cityIndex).city);
         List<AdministrativeMap.City> cities = map.provinces.get(cityIndex).city;
-        pickDataList.add(cities == null || cities.isEmpty() ? new ArrayList<>() :
-                cities.get(areaIndex).areas);
+        if (mode == PROVINCE_CITY_AREA) {
+            pickDataList.add(cities == null || cities.isEmpty() ? new ArrayList<>() :
+                    cities.get(areaIndex).areas);
+        }
 
         return pickDataList;
+    }
+
+    public static List<List<?>> getPickData(AdministrativeMap map, List<Integer> indexArr) {
+        return getPickData(map, indexArr, PROVINCE_CITY_AREA);
     }
 
     /**

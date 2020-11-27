@@ -35,7 +35,8 @@ public class MainActivity extends Activity {
 
     private Student mInitData = null;
     private List<Integer> mMultiInitIndex = null;
-    private List<Integer> mCascadeInitIndex = null;
+    private List<Integer> mCascadeInitIndex = new ArrayList<Integer>();
+    private List<Integer> mCascadeInitIndexNoArea = new ArrayList<Integer>();
 
     private AdministrativeMap mAdministrativeMap;
     private Context mContext;
@@ -183,43 +184,56 @@ public class MainActivity extends Activity {
         findViewById(R.id.city_picker).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mAdministrativeMap == null) {
-                    mAdministrativeMap = AdministrativeUtil.loadCity(MainActivity.this);
-                }
-
-                PickOption option = getPickDefaultOptionBuilder(mContext)
-                        .setMiddleTitleText("请选择城市")
-                        .setFlingAnimFactor(0.3f)
-                        .setVisibleItemCount(7)
-                        .setItemTextSize(mContext.getResources().getDimensionPixelSize(com.wheelpicker.R.dimen.font_24px))
-                        .setItemLineColor(0xFF558800)
-                        .build();
-
-                DataPicker.pickData(mContext, mCascadeInitIndex,
-                        AdministrativeUtil.getPickData(mAdministrativeMap, mCascadeInitIndex), option, false,
-                        new OnMultiDataPickListener() {
-                            @Override
-                            public void onDataPicked(List indexArr, List val, List data) {
-                                String s = indexArr.toString() + ":" + val.toString();
-                                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
-                                mCascadeInitIndex = indexArr;
-                            }
-                        }, new OnCascadeWheelListener<List<?>>() {
-
-                            @Override
-                            public List<?> onCascade(int wheelIndex, List<Integer> itemIndex) {
-                                //级联数据
-                                if (wheelIndex == 0) {
-                                    return mAdministrativeMap.provinces.get(itemIndex.get(0)).city;
-                                } else if (wheelIndex == 1) {
-                                    return mAdministrativeMap.provinces.get(itemIndex.get(0)).city.get(itemIndex.get(1)).areas;
-                                }
-
-                                return null;
-                            }
-                        });
+                pickCity(AdministrativeUtil.PROVINCE_CITY_AREA, mCascadeInitIndex);
             }
         });
+
+        findViewById(R.id.city_picker_no_area).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickCity(AdministrativeUtil.PROVINCE_CITY, mCascadeInitIndexNoArea);
+            }
+        });
+    }
+
+
+    private void pickCity(int mode, final List<Integer> initIndex) {
+        if (mAdministrativeMap == null) {
+            mAdministrativeMap = AdministrativeUtil.loadCity(MainActivity.this);
+        }
+
+        PickOption option = getPickDefaultOptionBuilder(mContext)
+                .setMiddleTitleText("请选择城市")
+                .setFlingAnimFactor(0.4f)
+                .setVisibleItemCount(7)
+                .setItemTextSize(mContext.getResources().getDimensionPixelSize(com.wheelpicker.R.dimen.font_24px))
+                .setItemLineColor(0xFF558800)
+                .build();
+
+        DataPicker.pickData(mContext, initIndex,
+                AdministrativeUtil.getPickData(mAdministrativeMap, initIndex, mode), option,
+                new OnMultiDataPickListener() {
+                    @Override
+                    public void onDataPicked(List indexArr, List val, List data) {
+                        String s = indexArr.toString() + ":" + val.toString();
+                        Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+                        initIndex.clear();
+                        initIndex.addAll(indexArr);
+                    }
+                }, new OnCascadeWheelListener<List<?>>() {
+
+                    @Override
+                    public List<?> onCascade(int wheelIndex, List<Integer> itemIndex) {
+                        //级联数据
+                        if (wheelIndex == 0) {
+                            return mAdministrativeMap.provinces.get(itemIndex.get(0)).city;
+                        } else if (wheelIndex == 1) {
+                            return mAdministrativeMap.provinces.get(itemIndex.get(0)).city.get(itemIndex.get(1)).areas;
+                        }
+
+                        return null;
+                    }
+                });
     }
 
     private List<String> getTextList() {

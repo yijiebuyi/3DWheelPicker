@@ -69,6 +69,12 @@ public class WheelPickerData<T> {
     }
 
 
+    /**
+     * 默认都是可以支持滚动和不占位
+     * @param initIndex
+     * @param srcData
+     * @return
+     */
     public static List<WheelPickerData> wrapper(@Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData) {
         List<WheelPickerData> wrappers = new ArrayList<WheelPickerData>();
         int size = initIndex != null ? initIndex.size() : 0;
@@ -77,6 +83,7 @@ public class WheelPickerData<T> {
             WheelPickerData wp = new WheelPickerData();
             wp.data = d;
             wp.currentIndex = i < size ? initIndex.get(i) : 0;
+            wp.currentText = d.get(wp.currentIndex);
             wrappers.add(wp);
         }
 
