@@ -142,7 +142,7 @@ PickOption option = new PickOption.Builder()
      * @param <T>
      */
     public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData,
-                                    @Nullable PickOption option, boolean wrapper,
+                                    @Nullable PickOption option,
                                     final OnMultiDataPickListener listener, final OnCascadeWheelListener cascadeListener)
     
 
