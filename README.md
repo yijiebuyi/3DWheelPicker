@@ -203,6 +203,57 @@ PickOption option = new PickOption.Builder()
 ```
 
 
+### 级联数据使用案例 （城市选择）
+```java
+   
+        //城市选择（级联操作）设置OnCascadeWheelListener即可满足级联
+        findViewById(R.id.city_picker).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickCity(AdministrativeUtil.PROVINCE_CITY_AREA, mCascadeInitIndex);
+            }
+        });
+
+    private void pickCity(int mode, final List<Integer> initIndex) {
+        if (mAdministrativeMap == null) {
+            mAdministrativeMap = AdministrativeUtil.loadCity(MainActivity.this);
+        }
+
+        PickOption option = getPickDefaultOptionBuilder(mContext)
+                .setMiddleTitleText("请选择城市")
+                .setFlingAnimFactor(0.4f)
+                .setVisibleItemCount(7)
+                .setItemTextSize(mContext.getResources().getDimensionPixelSize(com.wheelpicker.R.dimen.font_24px))
+                .setItemLineColor(0xFF558800)
+                .build();
+
+        DataPicker.pickData(mContext, initIndex,
+                AdministrativeUtil.getPickData(mAdministrativeMap, initIndex, mode), option,
+                new OnMultiDataPickListener() {
+                    @Override
+                    public void onDataPicked(List indexArr, List val, List data) {
+                        String s = indexArr.toString() + ":" + val.toString();
+                        Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+                        initIndex.clear();
+                        initIndex.addAll(indexArr);
+                    }
+                }, new OnCascadeWheelListener<List<?>>() {
+
+                    @Override
+                    public List<?> onCascade(int wheelIndex, List<Integer> itemIndex) {
+                        //级联数据
+                        if (wheelIndex == 0) {
+                            return mAdministrativeMap.provinces.get(itemIndex.get(0)).city;
+                        } else if (wheelIndex == 1) {
+                            return mAdministrativeMap.provinces.get(itemIndex.get(0)).city.get(itemIndex.get(1)).areas;
+                        }
+
+                        return null;
+                    }
+                });
+    }
+   
+```
 
 #### 也可以使用Textwheelpicker
 
