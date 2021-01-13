@@ -211,7 +211,7 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
         if (offsetX == 0 && offsetY == 0) {
             return;
         }
-        
+
         mOffsetItemIndex = (int) (offsetY / mUnitDegree);
         mOffsetItemDelta = offsetY % mUnitDegree;
         if (mOffsetItemIndex != mOldOffsetItemIndex) {
