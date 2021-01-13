@@ -68,8 +68,8 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
 
     protected WheelPickerImpl mWheelPickerImpl;
 
-    private CorrectAnimRunnable mCorrectRunnable;
-    private TransLateAnim mAnimController;
+    private CorrectAnimRunnable mCorrectAnimRunnable;
+    private CorrectTransLateAnim mCorrectAnimController;
 
     private FlingRunnable mFlingRunnable;
 
@@ -120,9 +120,9 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
     }
 
     private void init() {
-        mAnimController = new TransLateAnim();
+        mCorrectAnimController = new CorrectTransLateAnim();
         mFlingRunnable = new FlingRunnable(getContext());
-        mCorrectRunnable = new CorrectAnimRunnable();
+        mCorrectAnimRunnable = new CorrectAnimRunnable();
 
         mOverScrollOffset = getResources().getDimensionPixelOffset(R.dimen.px24);
     }
@@ -146,7 +146,7 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
     @Override
     protected void onTouchDown(MotionEvent event) {
         mFlingRunnable.stop();
-        mCorrectRunnable.stop();
+        mCorrectAnimRunnable.stop();
         mScrollState = SCROLL_STATE_DOWN;
     }
 
@@ -262,10 +262,10 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
      * @param transLateY
      */
     protected void startCorrectAnimation(float transLateX, float transLateY) {
-        if (mAnimController == null) {
-            mAnimController = new TransLateAnim();
+        if (mCorrectAnimController == null) {
+            mCorrectAnimController = new CorrectTransLateAnim();
         } else {
-            mAnimController.forceStop();
+            mCorrectAnimController.forceStop();
         }
         if (mOrientation == HORIZENTAL) {
             if (transLateX == 0) {
@@ -279,17 +279,17 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
             }
         }
 
-        mAnimController.setTransLate(transLateX, transLateY);
+        mCorrectAnimController.setTransLate(transLateX, transLateY);
 
-        ViewCompat.postOnAnimation(ScrollWheelPicker.this, mCorrectRunnable);
-        mAnimController.start();
+        ViewCompat.postOnAnimation(ScrollWheelPicker.this, mCorrectAnimRunnable);
+        mCorrectAnimController.start();
     }
 
     /**
      * stop correction animation
      */
     protected void stopCorrectAnimation() {
-        mCorrectRunnable.stop();
+        mCorrectAnimRunnable.stop();
     }
 
     /**
@@ -298,13 +298,13 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
     private class CorrectAnimRunnable implements Runnable {
 
         public void run() {
-            boolean running = mAnimController.calculate(SystemClock.uptimeMillis());
+            boolean running = mCorrectAnimController.calculate(SystemClock.uptimeMillis());
             if (running) {
                 onScrolling(mCurrentX, mCurrentY, false);
                 ViewCompat.postOnAnimation(ScrollWheelPicker.this, this);
             } else {
-                mCurrentX = mAnimController.getFinalX();
-                mCurrentY = mAnimController.getFinalY();
+                mCurrentX = mCorrectAnimController.getFinalX();
+                mCurrentY = mCorrectAnimController.getFinalY();
                 onScrolling(mCurrentX, mCurrentY, true);
 
                 mScrollState = SCROLL_STATE_IDLE;
@@ -312,20 +312,20 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
         }
 
         public void stop() {
-            mAnimController.forceStop();
+            mCorrectAnimController.forceStop();
         }
     }
 
     /**
      * Translate animation
      */
-    private class TransLateAnim extends Animation {
+    private class CorrectTransLateAnim extends Animation {
         private float mStartX;
         private float mStartY;
         private float mTransLateX;
         private float mTransLateY;
 
-        public TransLateAnim() {
+        public CorrectTransLateAnim() {
             setDuration(CORRECT_ANIMATION_DURATION);
             setInterpolator(new DecelerateInterpolator());
         }
