@@ -404,10 +404,14 @@ public class FutureTimePicker extends LinearLayout implements
                     updateMinMinute(mCurrMinute);
                     mOldSelectionIsToday = true;
                 } else {
-                    hourIndex = mOldSelectionIsToday ? 0 : mHourWheelPicker.getCurrentItem();
-                    minuteIndex = mOldSelectionIsToday ? 0 : mMinuteWheelPicker.getCurrentItem();
+                    //hourIndex = mOldSelectionIsToday ? 0 : mHourWheelPicker.getCurrentItem();
+                    //minuteIndex = mOldSelectionIsToday ? 0 : mMinuteWheelPicker.getCurrentItem();
+                    String hour = mHours.get(mHourWheelPicker.getCurrentItem());
+                    String minute = mMinutes.get(mMinuteWheelPicker.getCurrentItem());
                     updateMinHour(0);
                     updateMinMinute(0);
+                    hourIndex = getHourIndex(hour);
+                    minuteIndex = getMinuteIndex(minute);
                     mOldSelectionIsToday = false;
                 }
 
@@ -422,12 +426,15 @@ public class FutureTimePicker extends LinearLayout implements
                 break;
             case TYPE_HOUR:
                 mSelectedHour = getCurrentDate(data, mHourStr);
-                if (mSelectedHour == mCurrHour) {
+                if (mSelectedYear == mCurrYear && mSelectedMonth == mCurrMonth &&
+                        mSelectedDay == mCurrDay && mSelectedHour == mCurrHour) {
                     minuteIndex = 0;
                     updateMinMinute(mCurrMinute);
                 } else {
-                    minuteIndex = mMinuteWheelPicker.getCurrentItem();
+                    //minuteIndex = mMinuteWheelPicker.getCurrentItem();
+                    String minute = mMinutes.get(mMinuteWheelPicker.getCurrentItem());
                     updateMinMinute(0);
+                    minuteIndex = getMinuteIndex(minute);
                 }
 
                 mSelectedMinute = getCurrentDate(mMinutePickerAdapter.getItemText(minuteIndex), mMinuteStr);
@@ -438,6 +445,22 @@ public class FutureTimePicker extends LinearLayout implements
                 mSelectedMinute = getCurrentDate(data, mMinuteStr);
                 break;
         }
+    }
+
+    private int getHourIndex(String hour){
+        if (hour == null) {
+            return 0;
+        }
+
+        return mHours.indexOf(hour);
+    }
+
+    private int getMinuteIndex(String minute){
+        if (minute == null) {
+            return 0;
+        }
+
+        return mMinutes.indexOf(minute);
     }
 
     public void notifyDataSetChanged() {

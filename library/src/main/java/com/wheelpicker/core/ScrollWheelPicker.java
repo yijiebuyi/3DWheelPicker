@@ -202,7 +202,9 @@ public abstract class ScrollWheelPicker<T extends WheelPickerAdapter> extends Ab
                 mCurrentY = mScroller.getFinalY();
             }
 
-            onScrolling(mScroller.getCurrX(), mScroller.getCurrY(),
+            mCurrentX = mScroller.getCurrX();
+            mCurrentY = mScroller.getCurrY();
+            onScrolling(mCurrentX, mCurrentY,
                     mScrollState == SCROLL_STATE_SCROLLING && mScroller.isFinished());
         }
 
