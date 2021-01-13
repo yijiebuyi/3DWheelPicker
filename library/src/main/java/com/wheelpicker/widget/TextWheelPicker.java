@@ -207,7 +207,11 @@ public class TextWheelPicker extends AbstractTextWheelPicker {
     }
 
     @Override
-    public void onScrolling(float offsetX, float offsetY, boolean isFinshed) {
+    public void onScrogetActionMaskedlling(float offsetX, float offsetY, boolean isFinshed) {
+        if (offsetX == 0 && offsetY == 0) {
+            return;
+        }
+
         mOffsetItemIndex = (int) (offsetY / mUnitDegree);
         mOffsetItemDelta = offsetY % mUnitDegree;
         if (mOffsetItemIndex != mOldOffsetItemIndex) {
