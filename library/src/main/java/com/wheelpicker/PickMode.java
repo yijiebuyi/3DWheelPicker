@@ -26,11 +26,11 @@ public class PickMode {
      */
     public static final int MODE_BIRTHDAY = 1;
     /**
-     * 普通日期选择，在一个时间范围内选择
+     * 普通日期选择，在一个时间范围内选择，默认当前日期前后100年
      */
     public static final int MODE_DATE = 2;
     /**
-     * 未来日期选择
+     * 未来日期选择, 当前时间往后推100年
      */
     public static final int MODE_FUTURE_DATE = 3;
 
