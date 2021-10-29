@@ -37,6 +37,7 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
     private String mTitleText;
     private Button mLeftBtn;
     private Button mRightBtn;
+    private TextView mTitleTv;
     private View.OnClickListener mLeftBtnClickListener;
     private View.OnClickListener mRightBtnClickListener;
 
@@ -77,6 +78,7 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
         mTitleLayout = dialogWindow.findViewById(R.id.title);
         mLeftBtn = (Button) dialogWindow.findViewById(R.id.left_btn);
         mRightBtn = (Button) dialogWindow.findViewById(R.id.right_btn);
+        mTitleTv = (TextView) dialogWindow.findViewById(R.id.middle_txt);
 
         mLeftBtn.setOnClickListener(this);
         mRightBtn.setOnClickListener(this);
@@ -129,11 +131,11 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
     }
 
     public void setMiddleText(String text) {
-        ((TextView) getWindow().findViewById(R.id.middle_txt)).setText(text);
+        mTitleTv.setText(text);
     }
 
     public void setMiddleTextColor(@ColorInt int color) {
-        ((TextView) getWindow().findViewById(R.id.middle_txt)).setTextColor(color);
+        mTitleTv.setTextColor(color);
     }
 
     public void setLeftBtnVisibility(int visibility) {
@@ -154,6 +156,20 @@ public class BottomSheet extends Dialog implements DialogInterface.OnCancelListe
         }
 
         mRightBtn.setText(text);
+    }
+
+    public void setTitleTextSize(int leftTextSize, int middleTextSize, int rightTextSize) {
+        if (leftTextSize > 0) {
+            mLeftBtn.setTextScaleX(leftTextSize);
+        }
+
+        if (middleTextSize > 0) {
+            mTitleTv.setTextSize(middleTextSize);
+        }
+
+        if (rightTextSize > 0) {
+            mRightBtn.setTextSize(rightTextSize);
+        }
     }
 
     public void setLeftBtnTextColor(@ColorInt int color) {
