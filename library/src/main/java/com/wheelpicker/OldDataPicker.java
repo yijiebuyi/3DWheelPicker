@@ -19,6 +19,7 @@ import java.util.List;
  * 版权所有
  * <p>
  * 功能描述：数据选择器（包括日期，时间，未来时间，数据等）
+ * {@link DataPicker}
  * <p>
  * 作者：yijiebuyi
  * 创建时间：2020/8/17
@@ -27,7 +28,8 @@ import java.util.List;
  * 修改描述：
  * 修改日期
  */
-public class DataPicker {
+@Deprecated
+public class OldDataPicker {
 
     /**
      * 获取生日日期
@@ -41,7 +43,7 @@ public class DataPicker {
         calendar.setTime(initDate != null ? initDate : new Date());
 
         option = checkOption(context, option);
-        final AbsDatePicker picker = (AbsDatePicker) buildDateTimeWheelPicker(context, option, PickMode.MODE_BIRTHDAY);
+        final DateWheelPicker picker = (DateWheelPicker) buildDateWheelPicker(context, option, PickMode.MODE_BIRTHDAY);
         picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
         picker.notifyDataSetChanged();
 
@@ -70,9 +72,9 @@ public class DataPicker {
         calendar.setTime(initDate != null ? initDate : new Date());
 
         option = checkOption(context, option);
-        final AbsDatePicker picker = (AbsDatePicker) buildDateTimeWheelPicker(context, option, PickMode.MODE_DATE);
-        picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
+        final DateWheelPicker picker = (DateWheelPicker) buildDateWheelPicker(context, option, PickMode.MODE_DATE);
         picker.setCurrentTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
+        picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
         picker.notifyDataSetChanged();
 
         BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
@@ -99,9 +101,7 @@ public class DataPicker {
         calendar.setTime(initDate != null ? initDate : new Date());
 
         option = checkOption(context, option);
-        final FutureTimePicker picker = new FutureTimePicker(context);
-        picker.setFutureDuration(option.getDurationDays());
-        setPickViewStyle(picker, option);
+        final FutureTimePicker picker = (FutureTimePicker) buildDateWheelPicker(context, option, PickMode.MODE_FUTURE_DATE);
         picker.setPickedTime(calendar.getTimeInMillis());
         //picker.notifyDataSetChanged();
 
@@ -116,101 +116,6 @@ public class DataPicker {
             }
         });
     }
-
-    /**
-     * 获取年月日时分秒
-     *
-     * @param context
-     * @param initDate
-     * @param listener
-     */
-    public static void pickFutureDateTime(Context context, @Nullable Date initDate, @Nullable PickOption option, final OnDatePickListener listener) {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(initDate != null ? initDate : new Date());
-
-        option = checkOption(context, option);
-        final AbsDatePicker picker = (AbsDatePicker)buildDateTimeWheelPicker(context, option, PickMode.MODE_FUTURE_DATE);
-        picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
-        picker.setCurrentTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
-        picker.notifyDataSetChanged();
-
-        BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
-        bottomSheet.show();
-        bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onDatePicked(picker);
-                }
-            }
-        });
-    }
-
-    /**
-     * 获取年月日时分秒
-     *
-     * @param context
-     * @param initDate
-     * @param listener
-     */
-    public static void pickDateTimePeriod(Context context, @Nullable Date initDate, @Nullable PickOption option, final OnDatePickListener listener) {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(initDate != null ? initDate : new Date());
-
-        option = checkOption(context, option);
-        final AbsDatePicker picker = (AbsDatePicker)buildDateTimeWheelPicker(context, option, PickMode.MODE_PERIOD_DATE);
-        picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
-        picker.setCurrentTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
-        picker.notifyDataSetChanged();
-
-        BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
-        bottomSheet.show();
-        bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onDatePicked(picker);
-                }
-            }
-        });
-    }
-
-
-
-
-    /**
-     * @param context
-     * @param option
-     * @param mode
-     * @return
-     */
-    private static IPickerView buildDateTimeWheelPicker(Context context, PickOption option, @PickMode.Mode int mode) {
-        AbsDatePicker pickerView = null;
-        switch (mode) {
-            case PickMode.MODE_BIRTHDAY:
-                pickerView = new DateTimePicker(context, AbsDatePicker.MODE_BIRTHDAY);
-                pickerView.setWheelPickerVisibility(DateWheelPicker.TYPE_HH_MM_SS, View.GONE);
-                break;
-            case PickMode.MODE_FUTURE_DATE:
-                pickerView = new DateTimePicker(context, AbsDatePicker.MODE_PENDING);
-                //pickerView.setWheelPickerVisibility(option.getDateWitchVisible(), View.GONE);
-                break;
-            case PickMode.MODE_DATE:
-                pickerView = new DateTimePicker(context);
-                break;
-            case PickMode.MODE_PERIOD_DATE:
-                long current = System.currentTimeMillis();
-                long from = current - 50 * 24 * 60 * 60 * 100;
-                long to = current + 10 * 24 * 60 * 60 * 100;
-                pickerView = new DateTimePicker(context, from, to, AbsDatePicker.MODE_PERIOD);
-                break;
-        }
-
-        setPickViewStyle(pickerView, option);
-
-        return pickerView;
-    }
-
 
     /**
      * 获取单行数据
@@ -242,6 +147,35 @@ public class DataPicker {
                 }
             }
         });
+    }
+
+    /**
+     * 获取年月日时分秒
+     *
+     * @param context
+     * @param initDate
+     * @param listener
+     */
+    public static void pickDateTime(Context context, @Nullable Date initDate, @Nullable PickOption option, final OnDatePickListener listener) {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(initDate != null ? initDate : new Date());
+
+        option = checkOption(context, option);
+        final AbsDatePicker picker = (AbsDatePicker)buildDateTimeWheelPicker(context, option, PickMode.MODE_PERIOD_DATE);
+        picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
+        picker.notifyDataSetChanged();
+
+        BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
+        bottomSheet.show();
+        bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onDatePicked(picker);
+                }
+            }
+        });
+
     }
 
     /**
@@ -296,6 +230,73 @@ public class DataPicker {
                 }
             }
         });
+    }
+
+    /**
+     * @param context
+     * @param option
+     * @param mode
+     * @return
+     */
+    private static IPickerView buildDateWheelPicker(Context context, PickOption option, @PickMode.Mode int mode) {
+        IPickerView pickerView = null;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        int dy = calendar.get(Calendar.YEAR);
+
+        switch (mode) {
+            case PickMode.MODE_BIRTHDAY:
+                pickerView = new DateWheelPicker(context);
+                ((DateWheelPicker) pickerView).setWheelPickerVisibility(DateWheelPicker.TYPE_HH_MM_SS, View.GONE);
+                ((DateWheelPicker) pickerView).setDateRange(dy - 100, dy);
+                break;
+            case PickMode.MODE_FUTURE_DATE:
+                pickerView = new FutureTimePicker(context);
+                ((FutureTimePicker) pickerView).setFutureDuration(option.getDurationDays());
+                break;
+            case PickMode.MODE_DATE:
+                pickerView = new DateWheelPicker(context);
+                ((DateWheelPicker) pickerView).setWheelPickerVisibility(option.getDateWitchVisible(), View.VISIBLE);
+                ((DateWheelPicker) pickerView).setDateRange(dy - option.getAheadYears(), dy + option.getAfterYears());
+                break;
+        }
+
+        setPickViewStyle(pickerView, option);
+
+        return pickerView;
+    }
+
+    /**
+     * @param context
+     * @param option
+     * @param mode
+     * @return
+     */
+    private static IPickerView buildDateTimeWheelPicker(Context context, PickOption option, @PickMode.Mode int mode) {
+        AbsDatePicker pickerView = null;
+        switch (mode) {
+            case PickMode.MODE_BIRTHDAY:
+                pickerView = new DateTimePicker(context, AbsDatePicker.MODE_BIRTHDAY);
+                pickerView.setWheelPickerVisibility(DateWheelPicker.TYPE_HH_MM_SS, View.GONE);
+                break;
+            case PickMode.MODE_FUTURE_DATE:
+                pickerView = new DateTimePicker(context, AbsDatePicker.MODE_PENDING);
+                //pickerView.setWheelPickerVisibility(option.getDateWitchVisible(), View.GONE);
+                break;
+            case PickMode.MODE_DATE:
+                pickerView = new DateTimePicker(context);
+                break;
+            case PickMode.MODE_PERIOD_DATE:
+                long current = System.currentTimeMillis();
+                long from = current - 50 * 24 * 60 * 60 * 100;
+                long to = current + 10 * 24 * 60 * 60 * 100;
+                pickerView = new DateTimePicker(context, from, to, AbsDatePicker.MODE_PERIOD);
+                break;
+        }
+
+        setPickViewStyle(pickerView, option);
+
+        return pickerView;
     }
 
     /**

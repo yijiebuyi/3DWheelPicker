@@ -31,6 +31,7 @@ import java.util.List;
  * 修改描述：
  * 修改日期
  */
+@Deprecated
 public class DateWheelPicker extends LinearLayout implements
         OnWheelPickedListener<String>, IPickerView, IDateTimePicker {
     public final static int TYPE_YEAR = 1 << 1;

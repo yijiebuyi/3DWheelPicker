@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/px50"
+    android:paddingTop="@dimen/px50">
+
+    <Button
+        android:id="@+id/picker_birthday"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:text="选择生日日期" />
+
+    <Button
+        android:id="@+id/picker_date"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:text="选择时间" />
+
+    <Button
+        android:id="@+id/picker_future_date"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:text="选择未来日期" />
+
+    <Button
+        android:id="@+id/picker_future"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:text="选择未来时间" />
+
+    <Button
+        android:id="@+id/picker_txt"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:text="选择文本" />
+
+    <Button
+        android:id="@+id/multi_picker_txt"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:text="多行数据选择" />
+
+    <Button
+        android:id="@+id/city_picker"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:text="选择城市(省市区)" />
+
+    <Button
+        android:id="@+id/city_picker_no_area"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:text="选择城市(省市)" />
+
+</LinearLayout>

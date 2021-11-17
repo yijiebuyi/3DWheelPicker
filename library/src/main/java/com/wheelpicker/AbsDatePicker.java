@@ -143,9 +143,21 @@ public abstract class AbsDatePicker extends LinearLayout implements
     }
 
     private void init(int mode) {
+        if (mode == MODE_PERIOD) {
+            throw new IllegalArgumentException("from & to must be setting!!!");
+        }
+
         long curr = System.currentTimeMillis();
-        long from = curr - ONE_YEAR_TIME_LENGTH * 100;
-        long to = curr + ONE_YEAR_TIME_LENGTH * 100;
+        long from = curr - ONE_YEAR_TIME_LENGTH * 100 - 25 * ONE_DAY_TIME_LENGTH;
+        long to = curr + ONE_YEAR_TIME_LENGTH * 100 + 25 * ONE_DAY_TIME_LENGTH;
+        switch (mode) {
+            case MODE_PENDING:
+                from = curr;
+                break;
+            case MODE_BIRTHDAY:
+                to = curr;
+                break;
+        }
         init(from, to, mode);
     }
 
@@ -267,6 +279,54 @@ public abstract class AbsDatePicker extends LinearLayout implements
             int visible = (wheelType & item.getType()) != 0 ? visibility : antiVisibility;
             picker.setVisibility(visible);
         }
+    }
+
+
+    public void setCurrentDate(int year, int month, int day) {
+        List<String> years = mData.get(TYPE_YEAR);
+        List<String> months = mData.get(TYPE_MONTH);
+        List<String> days = mData.get(TYPE_DAY);
+
+        if (years == null || months == null || days == null ||
+                years.isEmpty() || months.isEmpty() || days.isEmpty()) {
+            return;
+        }
+
+        mSelectedYear = year;
+        mSelectedMonth = month;
+        mSelectedDay = day;
+
+        int yearIndex = Math.max(0, years.indexOf(year + mYearStr));
+        int monthIndex = Math.max(0, years.indexOf((month + 1) + mMonthStr));
+        int dayIndex = Math.max(0, years.indexOf(year + mDayStr));
+
+        setDateItemIndex(yearIndex, monthIndex, dayIndex);
+    }
+
+    public void setCurrentTime(int hour, int minute, int second) {
+        List<String> hours = mData.get(TYPE_HOUR);
+        List<String> minutes = mData.get(TYPE_MINUTE);
+        List<String> seconds = mData.get(TYPE_SECOND);
+
+        if (hours == null || minutes == null || seconds == null ||
+                hours.isEmpty() || minutes.isEmpty() || seconds.isEmpty()) {
+            return;
+        }
+
+        mSelectedHour = hour;
+        mSelectedMinute = minute;
+        mSelectedSecond = second;
+
+        int hourIndex = Math.max(0, hours.indexOf(hour + mYearStr));
+        int minuteIndex = Math.max(0, minutes.indexOf(minute + mMonthStr));
+        int secondIndex = Math.max(0, seconds.indexOf(second + mDayStr));
+
+        setTimeItemIndex(hourIndex, minuteIndex, secondIndex);
+    }
+
+    private void updateAdapter(int index, int type) {
+        TextWheelPicker picker = getPicker(type);
+        picker.setCurrentItemWithoutReLayout(index);
     }
 
     public void notifyDataSetChanged() {
@@ -521,7 +581,7 @@ public abstract class AbsDatePicker extends LinearLayout implements
     /**
      * 校正当前选择月份的天数
      */
-    private void correctMaxDays() {
+    protected void correctMaxDays() {
         correctDays(mSelectedMonth + 1, 1);
     }
 
@@ -531,7 +591,7 @@ public abstract class AbsDatePicker extends LinearLayout implements
      * @param month    校正的哪一个月
      * @param startDay 当前最小开始天数
      */
-    private void correctDays(int month, int startDay) {
+    protected void correctDays(int month, int startDay) {
         switch (month) {
             case 2:
                 if (isLeapYear(mSelectedYear)) {
@@ -598,6 +658,16 @@ public abstract class AbsDatePicker extends LinearLayout implements
             default:
                 return day == 30;
         }
+    }
+
+    protected TextWheelPicker getPicker(int type) {
+        for (DateTimeItem item : mDateTimeItems) {
+            if (item.getType() == type) {
+                return item.getWheelPicker();
+            }
+        }
+
+        return mDateTimeItems.get(0).getWheelPicker();
     }
 
     @Override

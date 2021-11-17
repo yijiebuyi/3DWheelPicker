@@ -33,17 +33,22 @@ public class PickMode {
      * 未来日期选择, 当前时间往后推100年
      */
     public static final int MODE_FUTURE_DATE = 3;
+    /**
+     * 时间段
+     */
+    public static final int MODE_PERIOD_DATE = 4;
 
     /**
      * 普通数据选择（单列表数据）
      */
-    public static final int MODE_DATA = 4;
+    public static final int MODE_DATA = 5;
     /**
      * 多行数据数据选择
      */
-    public static final int MODE_MULTI_DATA =5;
+    public static final int MODE_MULTI_DATA = 6;
 
-    private PickMode() {}
+    private PickMode() {
+    }
 
     @IntDef({MODE_BIRTHDAY, MODE_DATE, MODE_FUTURE_DATE, MODE_DATA, MODE_MULTI_DATA})
     @Retention(RetentionPolicy.SOURCE)

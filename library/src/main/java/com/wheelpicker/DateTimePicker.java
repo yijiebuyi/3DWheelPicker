@@ -89,7 +89,7 @@ public class DateTimePicker extends AbsDatePicker {
         mFromYear = calendar.get(Calendar.YEAR);
         mFromMonth = calendar.get(Calendar.MONTH);
         mFromDay = calendar.get(Calendar.DAY_OF_MONTH);
-        mFromHour = calendar.get(Calendar.HOUR);
+        mFromHour = calendar.get(Calendar.HOUR_OF_DAY);
         mFromMinute = calendar.get(Calendar.MINUTE);
         mFromSecond = calendar.get(Calendar.SECOND);
 
@@ -97,7 +97,7 @@ public class DateTimePicker extends AbsDatePicker {
         mToYear = calendar.get(Calendar.YEAR);
         mToMonth = calendar.get(Calendar.MONTH);
         mToDay = calendar.get(Calendar.DAY_OF_MONTH);
-        mToHour = calendar.get(Calendar.HOUR);
+        mToHour = calendar.get(Calendar.HOUR_OF_DAY);
         mToMinute = calendar.get(Calendar.MINUTE);
         mToSecond = calendar.get(Calendar.SECOND);
 
@@ -134,13 +134,32 @@ public class DateTimePicker extends AbsDatePicker {
         switch (type) {
             case TYPE_YEAR:
                 int year = getCurrentDate(data, mYearStr);
-                if (year > 0) {
-                    mSelectedYear = year;
-                }
-
-                notifyMonthChange();
+                mSelectedYear = year > 0 ? year : mCurrYear;
+                notifyMonthChange(mSelectedMonth);
                 break;
             case TYPE_MONTH:
+                int month = getCurrentMonth(data, mMonthStr);
+                mSelectedMonth = month >= 0 ? month : 0;
+                notifyDayChange(mSelectedDay);
+                break;
+            case TYPE_DAY:
+                int day = getCurrentDate(data, mDayStr);
+                mSelectedDay = day > 0 ? day : mCurrDay;
+                notifyHourChange(mSelectedHour);
+                break;
+            case TYPE_HOUR:
+                int hour = getCurrentDate(data, mHourStr);
+                mSelectedHour = hour >= 0 ? hour : mCurrHour;
+                notifyMinuteChange(mSelectedMinute);
+                break;
+            case TYPE_MINUTE:
+                int minute = getCurrentDate(data, mMinuteStr);
+                mSelectedMinute = minute >= 0 ? minute : mCurrMinute;
+                notifySecondChange();
+                break;
+            case TYPE_SECOND:
+                int second = getCurrentDate(data, mSecondStr);
+                mSelectedSecond = second >=0 ? second : mCurrSecond;
                 break;
         }
     }
@@ -148,68 +167,126 @@ public class DateTimePicker extends AbsDatePicker {
     /**
      * 通知更新月份数据
      */
-    private void notifyMonthChange() {
+    private void notifyMonthChange(int selectedMonth) {
         boolean changed = false;
         List<String> months = mData.get(TYPE_MONTH);
-
-        switch (mMode) {
-            case MODE_PENDING:
-                if (mSelectedYear == mCurrYear) {
-                    //current year
-                    updateMonth(mCurrMonth, 11);
-                } else {
-                    changed = months.size() != 12;
-                    if (changed) {
-                        updateMonth(0, 11);
-                    }
-                }
-                break;
-            case MODE_BIRTHDAY:
-                if (mSelectedYear == mCurrYear) {
-                    updateMonth(0, mCurrMonth);
-                } else {
-                    changed = months.size() != 12;
-                    if (changed) {
-                        updateMonth(0, 11);
-                    }
-                }
-                break;
-            case MODE_PERIOD:
-                if (mSelectedYear == mFromYear) {
-                    updateMonth(mFromMonth, 11);
-                } else if (mSelectedYear == mToYear) {
-                    updateMonth(0, mToMonth);
-                } else {
-                    changed = months.size() != 12;
-                    if (changed) {
-                        updateMonth(0, 11);
-                    }
-                }
-                break;
-            default:
-                changed = months.size() != 12;
-                if (changed) {
-                    updateMonth(0, 11);
-                }
-                break;
+        if (mSelectedYear == mFromYear) {
+            updateMonth(mFromMonth, 11);
+        } else if (mSelectedYear == mToYear) {
+            updateMonth(0, mToMonth);
+        } else {
+            changed = months.size() != 12;
+            if (changed) {
+                updateMonth(0, 11);
+            }
         }
 
         //update month index
-        int monthIndex = Math.max(0, months.indexOf((mSelectedMonth + 1) + mMonthStr));
+        int monthIndex = Math.max(0, months.indexOf((selectedMonth + 1) + mMonthStr));
         TextWheelPicker picker = getPicker(TYPE_MONTH);
-        TextWheelPickerAdapter adapter = (TextWheelPickerAdapter)picker.getAdapter();
+        TextWheelPickerAdapter adapter = (TextWheelPickerAdapter) picker.getAdapter();
         picker.setCurrentItemWithoutReLayout(monthIndex);
         //update month
         adapter.setData(months);
     }
 
-    private TextWheelPicker getPicker(int type) {
-        for (DateTimeItem item : mDateTimeItems) {
-            if (item.getType() == type) {
-                return item.getWheelPicker();
-            }
+    private void notifyDayChange(int selectedDay) {
+        TextWheelPicker picker = getPicker(TYPE_DAY);
+        if (picker.getVisibility() != VISIBLE) {
+            return;
         }
 
-        return mDateTimeItems.get(0).getWheelPicker();
+        List<String> days = mData.get(TYPE_DAY);
+        if (mSelectedYear == mFromYear && mSelectedMonth == mFromMonth) {
+            correctDays(mSelectedMonth + 1, mFromDay);
+        } else if (mSelectedYear == mToYear && mSelectedMonth == mToMonth) {
+            updateDay(1, mToDay);
+        } else {
+            correctMaxDays();
+        }
+
+        //update day index
+        int dayIndex = Math.max(0, days.indexOf(selectedDay + mDayStr));
+        TextWheelPickerAdapter adapter = (TextWheelPickerAdapter) picker.getAdapter();
+        picker.setCurrentItemWithoutReLayout(dayIndex);
+        //update day
+        adapter.setData(days);
     }
+
+    private void notifyHourChange(int selectedHour) {
+        TextWheelPicker picker = getPicker(TYPE_HOUR);
+        if (picker.getVisibility() != VISIBLE) {
+            return;
+        }
+
+        List<String> hours = mData.get(TYPE_HOUR);
+        if (mSelectedYear == mFromYear && mSelectedMonth == mFromMonth && mSelectedDay == mFromDay) {
+            updateHour(mFromHour, 23);
+        } else if (mSelectedYear == mToYear && mSelectedMonth == mToMonth && mSelectedDay == mToDay) {
+            updateHour(0, mToHour);
+        } else {
+            updateHour(0, 23);
+        }
+
+        //update hour index
+        int hourIndex = Math.max(0, hours.indexOf(selectedHour + mHourStr));
+        TextWheelPickerAdapter adapter = (TextWheelPickerAdapter) picker.getAdapter();
+        picker.setCurrentItemWithoutReLayout(hourIndex);
+        //update hours
+        adapter.setData(hours);
+    }
+
+    private void notifyMinuteChange(int selectedMinute) {
+        TextWheelPicker picker = getPicker(TYPE_MINUTE);
+        if (picker.getVisibility() != VISIBLE) {
+            return;
+        }
+        List<String> minutes = mData.get(TYPE_MINUTE);
+
+        if (mSelectedYear == mFromYear && mSelectedMonth == mFromMonth &&
+                mSelectedDay == mFromDay && mSelectedHour == mFromHour) {
+            updateMinute(mFromMinute, 59);
+        } else if (mSelectedYear == mToYear && mSelectedMonth == mToMonth &&
+                mSelectedDay == mToDay && mSelectedHour == mToHour) {
+            updateMinute(0, mToMinute);
+        } else {
+            updateMinute(0, 59);
+        }
+
+        //update minute index
+        int minuteIndex = Math.max(0, minutes.indexOf(selectedMinute + mMinuteStr));
+        TextWheelPickerAdapter adapter = (TextWheelPickerAdapter) picker.getAdapter();
+        picker.setCurrentItemWithoutReLayout(minuteIndex);
+        //update minute
+        adapter.setData(minutes);
+    }
+
+    private void notifySecondChange() {
+        TextWheelPicker picker = getPicker(TYPE_SECOND);
+        if (picker.getVisibility() != VISIBLE) {
+            return;
+        }
+
+        List<String> seconds = mData.get(TYPE_SECOND);
+
+        if (mSelectedYear == mFromYear && mSelectedMonth == mFromMonth &&
+                mSelectedDay == mFromDay && mSelectedHour == mFromHour &&
+                mSelectedMinute == mFromMinute) {
+            updateSecond(mFromSecond, 59);
+        } else if (mSelectedYear == mToYear && mSelectedMonth == mToMonth &&
+                mSelectedDay == mToDay && mSelectedHour == mToHour &&
+                mSelectedMinute == mToMinute) {
+            updateSecond(0, mToSecond);
+        } else {
+            updateSecond(0, 59);
+        }
+
+        TextWheelPickerAdapter adapter = (TextWheelPickerAdapter) picker.getAdapter();
+        picker.setCurrentItemWithoutReLayout(0);
+        //update minute
+        adapter.setData(seconds);
+    }
+
+
+
 }
