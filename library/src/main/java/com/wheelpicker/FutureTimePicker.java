@@ -474,6 +474,46 @@ public class FutureTimePicker extends LinearLayout implements
         return Integer.parseInt(temp.substring(0, temp.length() - suffixLeg));
     }
 
+    /**
+     * 设置默认选择日期：年月日
+     *
+     * @param year  年
+     * @param month 月
+     * @param day   日
+     */
+    @Override
+    public void setDefaultSelectedDate(int year, int month, int day) {
+
+    }
+
+    /**
+     * 设置默认选中的时间：时分秒
+     *
+     * @param hour   时
+     * @param minute 分
+     * @param second 秒
+     */
+    @Override
+    public void setDefaultSelectedTime(int hour, int minute, int second) {
+
+    }
+
+    /**
+     * 设置那些picker 显示或隐藏
+     * 1.若当前设置visibility 设置为VISIBLE,
+     * wheelType匹配的picker显示，没匹配的就隐藏
+     * <p>
+     * 2.若当前设置visibility 设置为GONE
+     * wheelType匹配的picker隐藏，没匹配的就显示
+     *
+     * @param wheelType  哪些picker
+     * @param visibility 显示或隐藏, 不能取值为INVISIBLE
+     */
+    @Override
+    public void setWheelPickerVisibility(int wheelType, int visibility) {
+
+    }
+
     @Override
     public long getTime() {
         Calendar calendar = Calendar.getInstance();

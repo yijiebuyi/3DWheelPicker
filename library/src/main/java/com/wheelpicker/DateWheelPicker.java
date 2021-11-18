@@ -208,6 +208,78 @@ public class DateWheelPicker extends LinearLayout implements
 
     }
 
+    /**
+     * 设置默认选择日期：年月日
+     *
+     * @param year  年
+     * @param month 月
+     * @param day   日
+     */
+    @Override
+    public void setDefaultSelectedDate(int year, int month, int day) {
+        if (mYears.isEmpty() || mMonths.isEmpty() || mDays.isEmpty()) {
+            return;
+        }
+
+        mSelectedYear = year;
+        mSelectedMonth = month;
+        mSelectedDay = day;
+
+        //更新月份和天数
+        if (mCurrYear == mSelectedYear) {
+            if (mMode == MODE_BIRTHDAY) {
+                updateMaxMonths(mCurrMonth);
+                correctMaxDays();
+            } else if (mMode == MODE_PENDING) {
+                updateMinMonths(mCurrMonth);
+                correctMinDays(mCurrDay);
+            } else {
+                updateMaxMonths(11);
+                correctMaxDays();
+            }
+        } else {
+            updateMaxMonths(11);
+        }
+
+        int yearIndex = Math.max(0, mYears.indexOf(year + mYearStr));
+        int monthIndex = Math.max(0, mMonths.indexOf((month + 1) + mMonthStr));
+        int dayIndex = Math.max(0, mDays.indexOf(day + mDayStr));
+
+        setDateItemIndexWithoutReLayout(yearIndex, monthIndex, dayIndex);
+    }
+
+    /**
+     * 设置默认选中的时间：时分秒
+     *
+     * @param hour   时
+     * @param minute 分
+     * @param second 秒
+     */
+    @Override
+    public void setDefaultSelectedTime(int hour, int minute, int second) {
+        if (mHours.isEmpty() || mMinutes.isEmpty() || mSeconds.isEmpty()) {
+            return;
+        }
+
+        mSelectedHour = hour;
+        mSelectedMinute = minute;
+        mSelectedSecond = second;
+
+        if (mMode == MODE_PENDING) {
+            updateMinHour(mCurrHour);
+            updateMinMinute(mCurrMinute);
+            updateMinSecond(mCurrSecond);
+        } else {
+            updateMaxHour(mCurrHour);
+            updateMaxMinute(mCurrMinute);
+            updateMaxSecond(mCurrSecond);
+        }
+        int hourIndex = Math.max(0, mHours.indexOf(hour + mHourStr));
+        int minuteIndex = Math.max(0, mMinutes.indexOf(minute + mMinuteStr));
+        int secondIndex = Math.max(0, mSeconds.indexOf(second + mSecondStr));
+        setTimeItemIndexWithoutReLayout(hourIndex, minuteIndex, secondIndex);
+    }
+
     public void setWheelPickerVisibility(int wheelType, int visibility) {
         int antiVisibility = VISIBLE;
         if (visibility == VISIBLE) {
@@ -266,64 +338,6 @@ public class DateWheelPicker extends LinearLayout implements
 
         updateYears(from, to);
         mYearPickerAdapter.setData(mYears);
-    }
-
-    public void setCurrentDate(int year, int month, int day) {
-        if (mYears.isEmpty() || mMonths.isEmpty() || mDays.isEmpty()) {
-            return;
-        }
-
-        mSelectedYear = year;
-        mSelectedMonth = month;
-        mSelectedDay = day;
-
-        //更新月份和天数
-        if (mCurrYear == mSelectedYear) {
-            if (mMode == MODE_BIRTHDAY) {
-                updateMaxMonths(mCurrMonth);
-                correctMaxDays();
-            } else if (mMode == MODE_PENDING) {
-                updateMinMonths(mCurrMonth);
-                correctMinDays(mCurrDay);
-            } else {
-                updateMaxMonths(11);
-                correctMaxDays();
-            }
-        } else {
-            updateMaxMonths(11);
-        }
-
-        int yearIndex = Math.max(0, mYears.indexOf(year + mYearStr));
-        int monthIndex = Math.max(0, mMonths.indexOf((month + 1) + mMonthStr));
-        int dayIndex = Math.max(0, mDays.indexOf(day + mDayStr));
-
-        setDateItemIndexWithoutReLayout(yearIndex, monthIndex, dayIndex);
-    }
-
-    public void setCurrentTime(int hour, int minute, int second) {
-        if (mHours.isEmpty() || mMinutes.isEmpty() || mSeconds.isEmpty()) {
-            return;
-        }
-
-        mSelectedHour = hour;
-        mSelectedMinute = minute;
-        mSelectedSecond = second;
-
-        if (mMode == MODE_PENDING) {
-            updateMinHour(mCurrHour);
-            updateMinMinute(mCurrMinute);
-            //TODO
-            //updateMinSecond(mCurrSecond);
-            updateMaxSecond(mCurrSecond);
-        } else {
-            updateMaxHour(mCurrHour);
-            updateMaxMinute(mCurrMinute);
-            updateMaxSecond(mCurrSecond);
-        }
-        int hourIndex = Math.max(0, mHours.indexOf(hour + mHourStr));
-        int minuteIndex = Math.max(0, mMinutes.indexOf(minute + mMinuteStr));
-        int secondIndex = Math.max(0, mSeconds.indexOf(second + mSecondStr));
-        setTimeItemIndexWithoutReLayout(hourIndex, minuteIndex, secondIndex);
     }
 
     public void notifyDataSetChanged() {

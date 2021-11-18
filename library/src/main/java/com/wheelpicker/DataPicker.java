@@ -41,8 +41,8 @@ public class DataPicker {
         calendar.setTime(initDate != null ? initDate : new Date());
 
         option = checkOption(context, option);
-        final AbsDatePicker picker = (AbsDatePicker) buildDateTimeWheelPicker(context, option, PickMode.MODE_BIRTHDAY);
-        picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
+        final DateTimePicker picker = (DateTimePicker) buildDateTimeWheelPicker(context, option, PickMode.MODE_BIRTHDAY);
+        picker.setDefaultSelectedDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
         picker.notifyDataSetChanged();
 
         BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
@@ -70,9 +70,9 @@ public class DataPicker {
         calendar.setTime(initDate != null ? initDate : new Date());
 
         option = checkOption(context, option);
-        final AbsDatePicker picker = (AbsDatePicker) buildDateTimeWheelPicker(context, option, PickMode.MODE_DATE);
-        picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
-        picker.setCurrentTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
+        final DateTimePicker picker = (DateTimePicker) buildDateTimeWheelPicker(context, option, PickMode.MODE_DATE);
+        picker.setDefaultSelectedDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
+        picker.setDefaultSelectedTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
         picker.notifyDataSetChanged();
 
         BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
@@ -129,9 +129,9 @@ public class DataPicker {
         calendar.setTime(initDate != null ? initDate : new Date());
 
         option = checkOption(context, option);
-        final AbsDatePicker picker = (AbsDatePicker)buildDateTimeWheelPicker(context, option, PickMode.MODE_FUTURE_DATE);
-        picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
-        picker.setCurrentTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
+        final DateTimePicker picker = (DateTimePicker)buildDateTimeWheelPicker(context, option, PickMode.MODE_FUTURE_DATE);
+        picker.setDefaultSelectedDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
+        picker.setDefaultSelectedTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
         picker.notifyDataSetChanged();
 
         BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
@@ -158,9 +158,9 @@ public class DataPicker {
         calendar.setTime(initDate != null ? initDate : new Date());
 
         option = checkOption(context, option);
-        final AbsDatePicker picker = (AbsDatePicker)buildDateTimeWheelPicker(context, option, PickMode.MODE_PERIOD_DATE);
-        picker.setCurrentDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
-        picker.setCurrentTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
+        final DateTimePicker picker = (DateTimePicker)buildDateTimeWheelPicker(context, option, PickMode.MODE_PERIOD_DATE);
+        picker.setDefaultSelectedDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
+        picker.setDefaultSelectedTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
         picker.notifyDataSetChanged();
 
         BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
@@ -185,14 +185,14 @@ public class DataPicker {
      * @return
      */
     private static IPickerView buildDateTimeWheelPicker(Context context, PickOption option, @PickMode.Mode int mode) {
-        AbsDatePicker pickerView = null;
+        DateTimePicker pickerView = null;
         switch (mode) {
             case PickMode.MODE_BIRTHDAY:
-                pickerView = new DateTimePicker(context, AbsDatePicker.MODE_BIRTHDAY);
+                pickerView = new DateTimePicker(context, DateTimePicker.MODE_BIRTHDAY);
                 pickerView.setWheelPickerVisibility(DateWheelPicker.TYPE_HH_MM_SS, View.GONE);
                 break;
             case PickMode.MODE_FUTURE_DATE:
-                pickerView = new DateTimePicker(context, AbsDatePicker.MODE_PENDING);
+                pickerView = new DateTimePicker(context, DateTimePicker.MODE_PENDING);
                 //pickerView.setWheelPickerVisibility(option.getDateWitchVisible(), View.GONE);
                 break;
             case PickMode.MODE_DATE:
@@ -202,7 +202,7 @@ public class DataPicker {
                 long current = System.currentTimeMillis();
                 long from = current - 50 * 24 * 60 * 60 * 100;
                 long to = current + 10 * 24 * 60 * 60 * 100;
-                pickerView = new DateTimePicker(context, from, to, AbsDatePicker.MODE_PERIOD);
+                pickerView = new DateTimePicker(context, from, to, DateTimePicker.MODE_PERIOD);
                 break;
         }
 
