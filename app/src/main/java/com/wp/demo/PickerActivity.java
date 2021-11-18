@@ -3,12 +3,14 @@ package com.wp.demo;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.wheelpicker.AdministrativeMap;
 import com.wheelpicker.AdministrativeUtil;
 import com.wheelpicker.DataPicker;
+import com.wheelpicker.DateTimePicker;
 import com.wheelpicker.DateWheelPicker;
 import com.wheelpicker.IDateTimePicker;
 import com.wheelpicker.OnCascadeWheelListener;
@@ -73,17 +75,15 @@ public class PickerActivity extends Activity {
             public void onClick(View view) {
                 PickOption option = getPickDefaultOptionBuilder(mContext)
                         .setMiddleTitleText("请选择时间")
-                        .setDateWitchVisible(DateWheelPicker.TYPE_ALL)
-                        .setAheadYears(100)
-                        .setAfterYears(100)
+                        .setDateWitchVisible(DateTimePicker.TYPE_ALL)
                         .build();
                 DataPicker.pickDate(mContext, mInitDate, option, new OnDatePickListener() {
-                            @Override
-                            public void onDatePicked(IDateTimePicker dateTimePicker) {
-                                mInitDate.setTime(dateTimePicker.getTime());
-                                Toast.makeText(mContext, formatDate(dateTimePicker.getTime(), TIME_YYYY_MM_DD_HH_MM_SS), Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                    @Override
+                    public void onDatePicked(IDateTimePicker dateTimePicker) {
+                        mInitDate.setTime(dateTimePicker.getTime());
+                        Toast.makeText(mContext, formatDate(dateTimePicker.getTime(), TIME_YYYY_MM_DD_HH_MM_SS), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
 
             }
@@ -95,16 +95,16 @@ public class PickerActivity extends Activity {
             public void onClick(View view) {
                 PickOption option = getPickDefaultOptionBuilder(mContext)
                         .setMiddleTitleText("请选择时间")
-                        .setDateWitchVisible(DateWheelPicker.TYPE_ALL)
-                        .setAheadYears(0)
-                        .setAfterYears(100)
+                        .setDateWitchVisible(DateTimePicker.TYPE_ALL)
                         .build();
-                DataPicker.pickFutureDateTime(mContext, mInitFutureDateTime, option, new OnDatePickListener() {
+                DataPicker.pickFutureDateTime(mContext, mInitFutureDateTime,
+                        option, new OnDatePickListener() {
 
                             @Override
                             public void onDatePicked(IDateTimePicker picker) {
                                 mInitFutureDateTime.setTime(picker.getTime());
-                                Toast.makeText(mContext, formatDate(picker.getTime(), TIME_YYYY_MM_DD_HH_MM_SS), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, formatDate(picker.getTime(), TIME_YYYY_MM_DD_HH_MM_SS),
+                                        Toast.LENGTH_SHORT).show();
                             }
                         });
 
@@ -136,9 +136,18 @@ public class PickerActivity extends Activity {
             public void onClick(View view) {
                 PickOption option = getPickDefaultOptionBuilder(mContext)
                         .setMiddleTitleText("请选择日期")
-                        .setDurationDays(100)
                         .build();
-                DataPicker.pickDateTimePeriod(PickerActivity.this, new Date(System.currentTimeMillis() + 30 * 60 * 1000),
+                long curr = System.currentTimeMillis();
+                //小心溢出，如果直接long a = 100 * 24 * 60 * 60 * 1000会导致溢出
+                //所以1000L必须是long数据计算
+                long ah = 100 * 24 * 60 * 60 * 1000L;
+                long af = 120 * 24 * 60 * 60 * 1000L;
+                long f = curr - ah;
+                long t = curr + af;
+
+                DataPicker.pickDateTimePeriod(PickerActivity.this,
+                        new Date(curr),
+                        f, t,
                         option, new OnDatePickListener() {
                             @Override
                             public void onDatePicked(IDateTimePicker picker) {

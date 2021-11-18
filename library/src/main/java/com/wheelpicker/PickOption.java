@@ -260,7 +260,9 @@ public class PickOption {
         //===============date pick attr=================
         private int dateWitchVisible;
         private int durationDays;
+        @Deprecated
         private int aheadYears;
+        @Deprecated
         private int afterYears;
 
         //=================pick style=====================
@@ -347,11 +349,13 @@ public class PickOption {
             return this;
         }
 
+        @Deprecated
         public Builder setAheadYears(int aheadYears) {
             this.aheadYears = aheadYears;
             return this;
         }
 
+        @Deprecated
         public Builder setAfterYears(int afterYears) {
             this.afterYears = afterYears;
             return this;

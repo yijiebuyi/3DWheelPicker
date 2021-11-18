@@ -2,6 +2,7 @@ package com.wheelpicker;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -55,11 +56,11 @@ public class DateTimePicker extends LinearLayout implements
     /**
      * 一天时长的毫秒数
      */
-    private final static long ONE_DAY_TIME_LENGTH = 24 * 60 * 60 * 1000;
+    public final static long ONE_DAY_TIME_LENGTH = 24 * 60 * 60 * 1000L;
     /**
      * 一年时长的毫秒数（默认按365天算，不考虑闰年）
      */
-    private final static long ONE_YEAR_TIME_LENGTH = 365 * ONE_DAY_TIME_LENGTH;
+    public final static long ONE_YEAR_TIME_LENGTH = 365 * ONE_DAY_TIME_LENGTH;
     /**
      * 未来模式，时间下限为当前时间, 默认是100年后
      */
@@ -648,6 +649,40 @@ public class DateTimePicker extends LinearLayout implements
         }
     }
 
+    /**
+     * 校正某月的天数，
+     *
+     * @param month    校正的哪一个月
+     * @param startDay 当前月最小开始天数
+	 * @param endDay  当前月最大结束天数
+     */
+    private void correctDays(int month, int startDay, int endDay) {
+        switch (month) {
+            case 2:
+                if (DateTimePickerUtils.isLeapYear(mSelectedYear)) {
+                    updateDay(startDay, Math.min(29, endDay));
+                } else {
+                    updateDay(startDay, Math.min(28, endDay));
+                }
+                break;
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+            case 12:
+                updateDay(startDay, Math.min(31, endDay));
+                break;
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                updateDay(startDay, Math.min(30, endDay));
+                break;
+        }
+    }
+
     private TextWheelPicker getPicker(int type) {
         for (DateTimeItem item : mDateTimeItems) {
             if (item.getType() == type) {
@@ -796,7 +831,7 @@ public class DateTimePicker extends LinearLayout implements
         boolean changed = false;
         List<String> months = mData.get(TYPE_MONTH);
         if (mSelectedYear == mFromYear) {
-            updateMonth(mFromMonth, 11);
+            updateMonth(mFromMonth, mFromYear == mToYear ? mToMonth : 11);
         } else if (mSelectedYear == mToYear) {
             updateMonth(0, mToMonth);
         } else {
@@ -823,7 +858,11 @@ public class DateTimePicker extends LinearLayout implements
 
         List<String> days = mData.get(TYPE_DAY);
         if (mSelectedYear == mFromYear && mSelectedMonth == mFromMonth) {
-            correctDays(mSelectedMonth + 1, mFromDay);
+            if (mFromYear == mToYear && mFromMonth == mToMonth) {
+                correctDays(mSelectedMonth + 1, mFromDay, mToDay);
+            } else {
+                correctDays(mSelectedMonth + 1, mFromDay);
+            }
         } else if (mSelectedYear == mToYear && mSelectedMonth == mToMonth) {
             updateDay(1, mToDay);
         } else {
@@ -846,7 +885,11 @@ public class DateTimePicker extends LinearLayout implements
 
         List<String> hours = mData.get(TYPE_HOUR);
         if (mSelectedYear == mFromYear && mSelectedMonth == mFromMonth && mSelectedDay == mFromDay) {
-            updateHour(mFromHour, 23);
+            if (mFromYear == mToYear && mFromMonth == mToMonth && mFromDay == mToDay) {
+                updateHour(mFromHour, Math.min(mToHour, 23));
+            } else {
+                updateHour(mFromHour, 23);
+            }
         } else if (mSelectedYear == mToYear && mSelectedMonth == mToMonth && mSelectedDay == mToDay) {
             updateHour(0, mToHour);
         } else {
@@ -870,7 +913,12 @@ public class DateTimePicker extends LinearLayout implements
 
         if (mSelectedYear == mFromYear && mSelectedMonth == mFromMonth &&
                 mSelectedDay == mFromDay && mSelectedHour == mFromHour) {
-            updateMinute(mFromMinute, 59);
+            if (mFromYear == mToYear && mFromMonth == mToMonth && mFromDay == mToDay &&
+                    mFromHour == mToHour) {
+                updateMinute(mFromMinute, Math.min(mToMinute, 59));
+            } else {
+                updateMinute(mFromMinute, 59);
+            }
         } else if (mSelectedYear == mToYear && mSelectedMonth == mToMonth &&
                 mSelectedDay == mToDay && mSelectedHour == mToHour) {
             updateMinute(0, mToMinute);
