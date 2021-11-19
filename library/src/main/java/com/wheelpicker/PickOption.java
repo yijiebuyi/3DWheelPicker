@@ -33,7 +33,7 @@ public class PickOption {
     //===============date pick attr=================
     /**
      * 年月日，时分秒，哪些需要显示的
-     * @see com.wheelpicker.DateWheelPicker
+     * @see com.wheelpicker.DateTimePicker
      */
     private int dateWitchVisible;
     /**
@@ -283,7 +283,7 @@ public class PickOption {
 
         //默认配置
         public Builder() {
-            dateWitchVisible = DateWheelPicker.TYPE_ALL;
+            dateWitchVisible = DateTimePicker.TYPE_ALL;
             durationDays = 365;
             aheadYears = 100;
             afterYears = 100;

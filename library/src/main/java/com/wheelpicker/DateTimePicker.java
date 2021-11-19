@@ -2,7 +2,6 @@ package com.wheelpicker;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -354,6 +353,7 @@ public class DateTimePicker extends LinearLayout implements
         int dayIndex = Math.max(0, years.indexOf(year + mDayStr));
 
         setDateItemIndex(yearIndex, monthIndex, dayIndex);
+        notifyDataSetChanged();
     }
 
     /**
@@ -383,6 +383,7 @@ public class DateTimePicker extends LinearLayout implements
         int secondIndex = Math.max(0, seconds.indexOf(second + mDayStr));
 
         setTimeItemIndex(hourIndex, minuteIndex, secondIndex);
+        notifyDataSetChanged();
     }
 
     private void setDateItemIndex(int yearIndex, int monthIndex, int dayIndex) {
@@ -625,7 +626,7 @@ public class DateTimePicker extends LinearLayout implements
     private void correctDays(int month, int startDay) {
         switch (month) {
             case 2:
-                if (DateTimePickerUtils.isLeapYear(mSelectedYear)) {
+                if (DataPickerUtils.isLeapYear(mSelectedYear)) {
                     updateDay(startDay, 29);
                 } else {
                     updateDay(startDay, 28);
@@ -659,7 +660,7 @@ public class DateTimePicker extends LinearLayout implements
     private void correctDays(int month, int startDay, int endDay) {
         switch (month) {
             case 2:
-                if (DateTimePickerUtils.isLeapYear(mSelectedYear)) {
+                if (DataPickerUtils.isLeapYear(mSelectedYear)) {
                     updateDay(startDay, Math.min(29, endDay));
                 } else {
                     updateDay(startDay, Math.min(28, endDay));
@@ -793,32 +794,32 @@ public class DateTimePicker extends LinearLayout implements
         int type = wheelPicker.getId();
         switch (type) {
             case TYPE_YEAR:
-                int year = DateTimePickerUtils.getCurrentDate(data, mYearStr);
+                int year = getCurrentDate(data, mYearStr);
                 mSelectedYear = year > 0 ? year : mCurrYear;
                 notifyMonthChange(mSelectedMonth);
                 break;
             case TYPE_MONTH:
-                int month = DateTimePickerUtils.getCurrentMonth(data, mMonthStr);
+                int month = getCurrentMonth(data, mMonthStr);
                 mSelectedMonth = month >= 0 ? month : 0;
                 notifyDayChange(mSelectedDay);
                 break;
             case TYPE_DAY:
-                int day = DateTimePickerUtils.getCurrentDate(data, mDayStr);
+                int day = getCurrentDate(data, mDayStr);
                 mSelectedDay = day > 0 ? day : mCurrDay;
                 notifyHourChange(mSelectedHour);
                 break;
             case TYPE_HOUR:
-                int hour = DateTimePickerUtils.getCurrentDate(data, mHourStr);
+                int hour = getCurrentDate(data, mHourStr);
                 mSelectedHour = hour >= 0 ? hour : mCurrHour;
                 notifyMinuteChange(mSelectedMinute);
                 break;
             case TYPE_MINUTE:
-                int minute = DateTimePickerUtils.getCurrentDate(data, mMinuteStr);
+                int minute = getCurrentDate(data, mMinuteStr);
                 mSelectedMinute = minute >= 0 ? minute : mCurrMinute;
                 notifySecondChange();
                 break;
             case TYPE_SECOND:
-                int second = DateTimePickerUtils.getCurrentDate(data, mSecondStr);
+                int second = getCurrentDate(data, mSecondStr);
                 mSelectedSecond = second >= 0 ? second : mCurrSecond;
                 break;
         }
@@ -969,6 +970,30 @@ public class DateTimePicker extends LinearLayout implements
                 break;
             }
         }
+    }
+
+
+    /**
+     * 获取具体的日期数字部分 如'2021年' 返回 2021
+     * @param data  显示的数据 xxxx年  xx月  xx日 xx时 xx分 xx秒
+     * @param suffix 年 月 日 时 分 秒
+     * @return 具体的年月日时分秒的数字
+     */
+    private static int getCurrentDate(String data, String suffix) {
+        int suffixLeg = suffix == null ? 0 : suffix.length();
+        String temp = data;
+        return Integer.parseInt(temp.substring(0, temp.length() - suffixLeg));
+
+    }
+
+    /**
+     * 获取具体的月份数字部分 如'10月' 返回 10
+     * @param data 显示的数据 xx月
+     * @param suffix 月
+     * @return 具体月的数字
+     */
+    private static int getCurrentMonth(String data, String suffix) {
+        return getCurrentDate(data, suffix) - 1;
     }
 
 }

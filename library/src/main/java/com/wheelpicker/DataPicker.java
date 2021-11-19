@@ -20,6 +20,8 @@ import java.util.List;
  * <p>
  * 功能描述：数据选择器（包括日期，时间，未来时间，数据等）
  * <p>
+ * 1. 日期时间选择：生日日期，未来日期，过去日期，时间段日期
+ * 2. 数据选择：单行数据，多行数据，多行级联数据
  * 作者：yijiebuyi
  * 创建时间：2020/8/17
  * <p>
@@ -29,200 +31,121 @@ import java.util.List;
  */
 public class DataPicker {
 
+    //==============================================================================================
+    //==============================================================================================
+    //=========================================date picker==========================================
+    //==============================================================================================
+    //==============================================================================================
+
     /**
-     * 获取生日日期
+     * 获取日期
      *
      * @param context
-     * @param initDate
+     * @param initDate 初始化时选择的日期
+     * @param mode     获取哪一种数据
+     * @param option
      * @param listener
      */
-    public static void pickBirthday(Context context, @Nullable Date initDate, @Nullable PickOption option,
-                                    final OnDatePickListener listener) {
+    public static void pickDate(Context context, @Nullable Date initDate, int mode,
+                                @Nullable PickOption option,
+                                final OnDatePickListener listener) {
+        option = DataPickerUtils.checkOption(context, option);
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(initDate != null ? initDate : new Date());
 
-        option = checkOption(context, option);
-        final DateTimePicker picker = (DateTimePicker) buildDateTimeWheelPicker(context, option,
-                PickMode.MODE_BIRTHDAY);
+        final DateTimePicker picker = DataPickerUtils.buildDateTimeWheelPicker(context, option, mode);
         picker.setDefaultSelectedDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DATE));
-        picker.notifyDataSetChanged();
+        if (mode != PickMode.MODE_BIRTHDAY) {
+            picker.setDefaultSelectedTime(calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
+        }
 
-        BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
-        bottomSheet.show();
-        bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onDatePicked(picker);
-                }
-            }
-        });
+        showPicker(context, option, picker, listener);
     }
 
     /**
-     * 获取时间
+     * 获取日期
      *
      * @param context
      * @param initDate
+     * @param mode
+     * @param from     开始日期
+     * @param to       结束日期
+     * @param option
      * @param listener
      */
-    public static void pickDate(Context context, @Nullable Date initDate, @Nullable PickOption option,
+    public static void pickDate(Context context, @Nullable Date initDate, int mode,
+                                long from, long to,
+                                @Nullable PickOption option,
                                 final OnDatePickListener listener) {
+        option = DataPickerUtils.checkOption(context, option);
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(initDate != null ? initDate : new Date());
 
-        option = checkOption(context, option);
-        final DateTimePicker picker = (DateTimePicker) buildDateTimeWheelPicker(context, option,
-                PickMode.MODE_DATE);
+        final DateTimePicker picker = DataPickerUtils.buildDateTimeWheelPicker(context, option,
+                from, to, mode);
         picker.setDefaultSelectedDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DATE));
         picker.setDefaultSelectedTime(calendar.get(Calendar.HOUR_OF_DAY),
                 calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
-        picker.notifyDataSetChanged();
 
-        BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
-        bottomSheet.show();
-        bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onDatePicked(picker);
-                }
-            }
-        });
+        showPicker(context, option, picker, listener);
     }
 
     /**
-     * 获取未来日期
+     * 获取未来日期：显示（天、小时、分钟）的组合
      *
      * @param context
      * @param initDate
      * @param listener
      */
-    public static void pickFutureDate(Context context, @Nullable Date initDate, @Nullable PickOption option,
+    public static void pickFutureDate(Context context, @Nullable Date initDate,
+                                      @Nullable PickOption option,
                                       final OnDatePickListener listener) {
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(initDate != null ? initDate : new Date());
 
-        option = checkOption(context, option);
+        option = DataPickerUtils.checkOption(context, option);
         final FutureTimePicker picker = new FutureTimePicker(context);
+        //必须设置Duration Days
         picker.setFutureDuration(option.getDurationDays());
-        setPickViewStyle(picker, option);
+        DataPickerUtils.setPickViewStyle(picker, option);
         picker.setPickedTime(calendar.getTimeInMillis());
-        //picker.notifyDataSetChanged();
 
-        BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
-        bottomSheet.show();
-        bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onDatePicked(picker);
-                }
-            }
-        });
+        showPicker(context, option, picker, listener);
     }
 
+
     /**
-     * 获取年月日时分秒
+     * 显示 Time Picker
      *
-     * @param context
-     * @param initDate
-     * @param listener
-     */
-    public static void pickFutureDateTime(Context context, @Nullable Date initDate,
-                                          @Nullable PickOption option,
-                                          final OnDatePickListener listener) {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(initDate != null ? initDate : new Date());
-
-        option = checkOption(context, option);
-        final DateTimePicker picker = (DateTimePicker) buildDateTimeWheelPicker(context, option,
-                PickMode.MODE_FUTURE_DATE);
-        picker.setDefaultSelectedDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DATE));
-        picker.setDefaultSelectedTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),
-                calendar.get(Calendar.SECOND));
-
-        picker.notifyDataSetChanged();
-
-        BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
-        bottomSheet.show();
-        bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onDatePicked(picker);
-                }
-            }
-        });
-    }
-
-    /**
-     * 获取年月日时分秒
-     *
-     * @param context
-     * @param initDate
-     * @param listener
-     */
-    public static void pickDateTimePeriod(Context context, @Nullable Date initDate,
-                                          long fromDate, long toDate,
-                                          @Nullable PickOption option,
-                                          final OnDatePickListener listener) {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTime(initDate != null ? initDate : new Date());
-
-        option = checkOption(context, option);
-        final DateTimePicker picker = new DateTimePicker(context, fromDate, toDate, DateTimePicker.MODE_PERIOD);
-        setPickViewStyle(picker, option);
-        picker.setDefaultSelectedDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DATE));
-        picker.setDefaultSelectedTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),
-                calendar.get(Calendar.SECOND));
-        picker.notifyDataSetChanged();
-
-        BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
-        bottomSheet.show();
-        bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onDatePicked(picker);
-                }
-            }
-        });
-    }
-
-    /**
      * @param context
      * @param option
-     * @param mode
-     * @return
+     * @param picker
+     * @param listener
      */
-    private static IPickerView buildDateTimeWheelPicker(Context context, PickOption option,
-                                                        @PickMode.Mode int mode) {
-        DateTimePicker pickerView = null;
-        switch (mode) {
-            case PickMode.MODE_BIRTHDAY:
-                pickerView = new DateTimePicker(context, DateTimePicker.MODE_BIRTHDAY);
-                pickerView.setWheelPickerVisibility(DateTimePicker.TYPE_HH_MM_SS, View.GONE);
-                break;
-            case PickMode.MODE_FUTURE_DATE:
-                pickerView = new DateTimePicker(context, DateTimePicker.MODE_PENDING);
-                break;
-            case PickMode.MODE_DATE:
-                pickerView = new DateTimePicker(context);
-                break;
-            case PickMode.MODE_PERIOD_DATE:
-                break;
-        }
-
-        setPickViewStyle(pickerView, option);
-
-        return pickerView;
+    private static void showPicker(Context context, @NonNull PickOption option,
+                                   final IPickerView picker,
+                                   final OnDatePickListener listener) {
+        BottomSheet bottomSheet = DataPickerUtils.buildBottomSheet(context, option, picker);
+        bottomSheet.show();
+        bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onDatePicked((IDateTimePicker) picker);
+                }
+            }
+        });
     }
 
+
+    //==============================================================================================
+    //==============================================================================================
+    //=========================================data picker==========================================
+    //==============================================================================================
+    //==============================================================================================
 
     /**
      * 获取单行数据
@@ -235,16 +158,16 @@ public class DataPicker {
      */
     public static <T> void pickData(Context context, @Nullable T initData, @NonNull final List<T> srcData,
                                     @Nullable PickOption option, final OnDataPickListener listener) {
-        option = checkOption(context, option);
+        option = DataPickerUtils.checkOption(context, option);
         final SingleTextWheelPicker picker = new SingleTextWheelPicker(context);
-        setPickViewStyle(picker, option);
+        DataPickerUtils.setPickViewStyle(picker, option);
 
         TextWheelPickerAdapter adapter = new TextWheelPickerAdapter(srcData);
         picker.setAdapter(adapter);
         int index = WheelPickerUtil.indexOf(initData, srcData);
         picker.setCurrentItem(index < 0 ? 0 : index);
 
-        BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
+        BottomSheet bottomSheet = DataPickerUtils.buildBottomSheet(context, option, picker);
         bottomSheet.show();
         bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
             @Override
@@ -289,7 +212,7 @@ public class DataPicker {
                                     @NonNull List<List<?>> srcData, @Nullable PickOption option,
                                     boolean wrapper, final OnMultiDataPickListener listener,
                                     final OnCascadeWheelListener cascadeListener) {
-        option = checkOption(context, option);
+        option = DataPickerUtils.checkOption(context, option);
         //List<WheelPickerData> pickerData = WheelPickerData.wrapper(initData, srcData);
         //WheelPickerData.disScrollable(0, pickerData);
         //WheelPickerData.placeHold(1, pickerData);
@@ -298,9 +221,9 @@ public class DataPicker {
                 new MultipleTextWheelPicker(context, initIndex, srcData);
 
         picker.setOnCascadeWheelListener(cascadeListener);
-        setPickViewStyle(picker, option);
+        DataPickerUtils.setPickViewStyle(picker, option);
 
-        BottomSheet bottomSheet = buildBottomSheet(context, option, picker);
+        BottomSheet bottomSheet = DataPickerUtils.buildBottomSheet(context, option, picker);
         bottomSheet.show();
         bottomSheet.setRightBtnClickListener(new View.OnClickListener() {
             @Override
@@ -313,62 +236,5 @@ public class DataPicker {
                 }
             }
         });
-    }
-
-    /**
-     * 设置滚轮样式
-     *
-     * @param pickerView
-     * @param option
-     */
-    private static void setPickViewStyle(IPickerView pickerView, PickOption option) {
-        pickerView.asView().setBackgroundColor(option.getBackgroundColor());
-        pickerView.asView().setPadding(0, option.getVerPadding(), 0, option.getVerPadding());
-
-        //设置Item样式
-        pickerView.setTextColor(option.getItemTextColor());
-        pickerView.setVisibleItemCount(option.getVisibleItemCount());
-        pickerView.setTextSize(option.getItemTextSize());
-        pickerView.setItemSpace(option.getItemSpace());
-        pickerView.setLineColor(option.getItemLineColor());
-        pickerView.setLineWidth(option.getItemLineWidth());
-
-        pickerView.setShadow(option.getShadowGravity(), option.getShadowFactor());
-        pickerView.setScrollMoveFactor(option.getFingerMoveFactor());
-        pickerView.setScrollAnimFactor(option.getFlingAnimFactor());
-        pickerView.setScrollOverOffset(option.getOverScrollOffset());
-    }
-
-    /**
-     * 获取底部弹出框
-     *
-     * @param context
-     * @param pickerView
-     * @return
-     */
-    private static BottomSheet buildBottomSheet(Context context, @Nullable PickOption option,
-                                                IPickerView pickerView) {
-        BottomSheet bottomSheet = new BottomSheet(context);
-        if (option != null) {
-            bottomSheet.setLeftBtnText(option.getLeftTitleText());
-            bottomSheet.setRightBtnText(option.getRightTitleText());
-            bottomSheet.setMiddleText(option.getMiddleTitleText());
-            bottomSheet.setLeftBtnTextColor(option.getLeftTitleColor());
-            bottomSheet.setRightBtnTextColor(option.getRightTitleColor());
-            bottomSheet.setMiddleTextColor(option.getMiddleTitleColor());
-            bottomSheet.setTitleBackground(option.getTitleBackground());
-
-            bottomSheet.setTitleHeight(option.getTitleHeight());
-        }
-        bottomSheet.setContent(pickerView.asView());
-        return bottomSheet;
-    }
-
-    private static PickOption checkOption(Context context, @Nullable PickOption option) {
-        if (option != null) {
-            return option;
-        }
-
-        return PickOption.getPickDefaultOptionBuilder(context).build();
     }
 }

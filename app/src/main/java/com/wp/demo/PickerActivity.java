@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.wheelpicker.AdministrativeMap;
@@ -17,6 +18,7 @@ import com.wheelpicker.OnCascadeWheelListener;
 import com.wheelpicker.OnDataPickListener;
 import com.wheelpicker.OnDatePickListener;
 import com.wheelpicker.OnMultiDataPickListener;
+import com.wheelpicker.PickMode;
 import com.wheelpicker.PickOption;
 
 import java.text.DateFormat;
@@ -57,15 +59,16 @@ public class PickerActivity extends Activity {
                 PickOption option = getPickDefaultOptionBuilder(mContext)
                         .setMiddleTitleText("请选择生日日期")
                         .build();
-                DataPicker.pickBirthday(mContext, mInitBirthday, option,
+
+                DataPicker.pickDate(mContext, mInitBirthday, PickMode.MODE_BIRTHDAY, option,
                         new OnDatePickListener() {
                             @Override
                             public void onDatePicked(IDateTimePicker dateTimePicker) {
                                 mInitBirthday.setTime(dateTimePicker.getTime());
-                                Toast.makeText(mContext, formatDate(dateTimePicker.getTime(), TIME_YYYY_MM_DD), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, formatDate(dateTimePicker.getTime(), TIME_YYYY_MM_DD),
+                                        Toast.LENGTH_SHORT).show();
                             }
                         });
-
             }
         });
 
@@ -77,13 +80,16 @@ public class PickerActivity extends Activity {
                         .setMiddleTitleText("请选择时间")
                         .setDateWitchVisible(DateTimePicker.TYPE_ALL)
                         .build();
-                DataPicker.pickDate(mContext, mInitDate, option, new OnDatePickListener() {
-                    @Override
-                    public void onDatePicked(IDateTimePicker dateTimePicker) {
-                        mInitDate.setTime(dateTimePicker.getTime());
-                        Toast.makeText(mContext, formatDate(dateTimePicker.getTime(), TIME_YYYY_MM_DD_HH_MM_SS), Toast.LENGTH_SHORT).show();
-                    }
-                });
+
+                DataPicker.pickDate(mContext, mInitDate, PickMode.MODE_DATE, option,
+                        new OnDatePickListener() {
+                            @Override
+                            public void onDatePicked(IDateTimePicker dateTimePicker) {
+                                mInitDate.setTime(dateTimePicker.getTime());
+                                Toast.makeText(mContext, formatDate(dateTimePicker.getTime(), TIME_YYYY_MM_DD_HH_MM_SS),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
 
             }
@@ -94,20 +100,19 @@ public class PickerActivity extends Activity {
             @Override
             public void onClick(View view) {
                 PickOption option = getPickDefaultOptionBuilder(mContext)
-                        .setMiddleTitleText("请选择时间")
+                        .setMiddleTitleText("请选择未来日期时间")
                         .setDateWitchVisible(DateTimePicker.TYPE_ALL)
                         .build();
-                DataPicker.pickFutureDateTime(mContext, mInitFutureDateTime,
-                        option, new OnDatePickListener() {
 
+                DataPicker.pickDate(mContext, mInitFutureDateTime, PickMode.MODE_FUTURE_DATE, option,
+                        new OnDatePickListener() {
                             @Override
-                            public void onDatePicked(IDateTimePicker picker) {
-                                mInitFutureDateTime.setTime(picker.getTime());
-                                Toast.makeText(mContext, formatDate(picker.getTime(), TIME_YYYY_MM_DD_HH_MM_SS),
+                            public void onDatePicked(IDateTimePicker dateTimePicker) {
+                                mInitFutureDateTime.setTime(dateTimePicker.getTime());
+                                Toast.makeText(mContext, formatDate(dateTimePicker.getTime(), TIME_YYYY_MM_DD_HH_MM_SS),
                                         Toast.LENGTH_SHORT).show();
                             }
                         });
-
 
             }
         });
@@ -117,7 +122,7 @@ public class PickerActivity extends Activity {
             @Override
             public void onClick(View view) {
                 PickOption option = getPickDefaultOptionBuilder(mContext)
-                        .setMiddleTitleText("请选择日期")
+                        .setMiddleTitleText("请选择未来日期(天时分)")
                         .setDurationDays(100)
                         .build();
                 DataPicker.pickFutureDate(PickerActivity.this, new Date(System.currentTimeMillis() + 30 * 60 * 1000),
@@ -135,7 +140,7 @@ public class PickerActivity extends Activity {
             @Override
             public void onClick(View view) {
                 PickOption option = getPickDefaultOptionBuilder(mContext)
-                        .setMiddleTitleText("请选择日期")
+                        .setMiddleTitleText("请选择时间段日期")
                         .build();
                 long curr = System.currentTimeMillis();
                 //小心溢出，如果直接long a = 100 * 24 * 60 * 60 * 1000会导致溢出
@@ -145,13 +150,14 @@ public class PickerActivity extends Activity {
                 long f = curr - ah;
                 long t = curr + af;
 
-                DataPicker.pickDateTimePeriod(PickerActivity.this,
-                        new Date(curr),
-                        f, t,
-                        option, new OnDatePickListener() {
+
+                DataPicker.pickDate(mContext, new Date(curr), PickMode.MODE_PERIOD_DATE,
+                        f, t, option,
+                        new OnDatePickListener() {
                             @Override
-                            public void onDatePicked(IDateTimePicker picker) {
-                                Toast.makeText(mContext, formatDate(picker.getTime(), TIME_YYYY_MM_DD_HH_MM), Toast.LENGTH_SHORT).show();
+                            public void onDatePicked(IDateTimePicker dateTimePicker) {
+                                Toast.makeText(mContext, formatDate(dateTimePicker.getTime(), TIME_YYYY_MM_DD_HH_MM_SS),
+                                        Toast.LENGTH_SHORT).show();
                             }
                         });
             }
