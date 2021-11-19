@@ -82,9 +82,11 @@ public class DataPickerUtils {
                 break;
             case PickMode.MODE_FUTURE_DATE:
                 pickerView = new DateTimePicker(context, DateTimePicker.MODE_PENDING);
+                pickerView.setWheelPickerVisibility(option.getDateWitchVisible(), View.VISIBLE);
                 break;
             case PickMode.MODE_DATE:
                 pickerView = new DateTimePicker(context);
+                pickerView.setWheelPickerVisibility(option.getDateWitchVisible(), View.VISIBLE);
                 break;
         }
 
@@ -118,6 +120,7 @@ public class DataPickerUtils {
         }
 
         DateTimePicker pickerView = new DateTimePicker(context, from, to, mode);
+        pickerView.setWheelPickerVisibility(option.getDateWitchVisible(), View.VISIBLE);
         DataPickerUtils.setPickViewStyle(pickerView, option);
         return pickerView;
     }
