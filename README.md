@@ -1,11 +1,16 @@
 # 3DWheelPicker
-3D效果 数据选择控件，赶紧点击下面链接下载体验
+3D效果 数据选择控件，源码地址：https://github.com/yijiebuyi/3DWheelPicker
+类似效果的开源库也有几个，公司项目也用到类似于时间选择功能，但还达不到产品所要求的，效果并没有那么丝滑。所以自己才实现，下载Demo即可体验。
 
 # Demo下载
-http://d.firim.pro/3dwheelpicker
+APK下载链接1：http://d.firim.pro/3dwheelpicker
+
+#效果图
+![3d数据选择效果](https://upload-images.jianshu.io/upload_images/16133165-f3694a3bc5d8cf94.gif?imageMogr2/auto-orient/strip)
+
 
 ### 功能
- - 时间选择
+ - 时间选择（生日模式，时间段模式，未来时间模式）
  - 单数组的数据选择
  - 多数组的数据选择（支持多级联）
  - 省市区级联城市选择（城市数据可能不完整）
@@ -26,7 +31,7 @@ allprojects {
 ```gradle
 
 dependencies {
-  implementation 'com.github.yijiebuyi:3DWheelPicker:v1.1.1'
+  implementation 'com.github.yijiebuyi:3DWheelPicker:v1.2.0'
 }
 
 ```
@@ -67,7 +72,6 @@ PickOption option = new PickOption.Builder()
      }
  });
 ```
-
 - 也可以使用默认的Builder，然后设置自己关注的属性
 ```java
     PickOption option = PickOption.getPickDefaultOptionBuilder(mContext)
@@ -79,14 +83,34 @@ PickOption option = new PickOption.Builder()
 
 - 时间选择
 ```java
-  /**
-     * 获取时间
+      /**
+     * 获取日期
+     *
+     * @param context
+     * @param initDate 初始化时选择的日期
+     * @param mode     获取哪一种数据
+     * @param option
+     * @param listener
+     */
+    public static void pickDate(Context context, @Nullable Date initDate, int mode,
+                                @Nullable PickOption option,
+                                final OnDatePickListener listener) 
+
+    /**
+     * 获取日期 （某个时间段范围）
      *
      * @param context
      * @param initDate
+     * @param mode
+     * @param from     开始日期
+     * @param to       结束日期
+     * @param option
      * @param listener
      */
-    public static void pickDate(Context context, @Nullable Date initDate, @Nullable PickOption option, final OnDatePickListener listener)
+    public static void pickDate(Context context, @Nullable Date initDate, int mode,
+                                long from, long to,
+                                @Nullable PickOption option,
+                                final OnDatePickListener listener) {
                          
  ```    
   - 数据选择: 
@@ -142,14 +166,14 @@ PickOption option = new PickOption.Builder()
      * @param <T>
      */
     public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData,
-                                    @Nullable PickOption option,
+                                    @Nullable PickOption option, boolean wrapper,
                                     final OnMultiDataPickListener listener, final OnCascadeWheelListener cascadeListener)
     
 
 ```
 
 #### 设置滚轮样式(见DataPicker中的使用方法)
-样式详情设置见PickOption里面的属性，包括弹出框的顶部title样式，pickerview的的滚轮样式，item样式
+pickerview的样式详情见PickOption里面的属性，包括弹出框的顶部title样式，pickerview的的wheel样式，item样式
 ```java     
     /**
      * 设置滚轮样式
@@ -261,3 +285,60 @@ PickOption option = new PickOption.Builder()
    参照 DateWheelPicker，SingleTextWheelPicker
    
 ```
+
+#实现方式
+继承View，重写 onDraw(Canvas canvas) 方法实现绘制逻辑
+
+核心类：TextWheelPicker，使用它就可以实现你滚轮的效果，其drawItems(Canvas canvas)就是绘制滚轮效果的核心逻辑，使用系统的Camera类，Matrix矩阵变化，实现3d滚轮效果。
+
+###绘制核心代码
+```java
+    .... 
+
+    float space = computeSpace(rotateDegree, mRadius);
+    float relDegree = Math.abs(rotateDegree) / 90;
+    canvas.save();
+    mCamera.save();
+    mRotateMatrix.reset();
+
+    //旋转矩阵变换
+    if (mShadowGravity == SHADOW_RIGHT) {
+        mCamera.translate(-mShadowOffset, 0, 0);
+    } else if (mShadowGravity == SHADOW_LEFT) {
+        mCamera.translate(mShadowOffset, 0, 0);
+    }
+    //旋转
+    mWheelPickerImpl.rotateCamera(mCamera, rotateDegree);
+    mCamera.getMatrix(mRotateMatrix);
+    mCamera.restore();
+    mWheelPickerImpl.matrixToCenter(mRotateMatrix, space, mWheelCenterX, mWheelCenterY);
+    if (mShadowGravity == SHADOW_RIGHT) {
+        mRotateMatrix.postTranslate(mShadowOffset, 0);
+    } else if (mShadowGravity == SHADOW_LEFT) {
+        mRotateMatrix.postTranslate(-mShadowOffset, 0);
+    }
+    //偏移矩阵变换
+    float depth = computeDepth(rotateDegree, mRelRadius);
+    mCamera.save();
+    mDepthMatrix.reset();
+    mCamera.translate(0, 0, depth);
+    mCamera.getMatrix(mDepthMatrix);
+    mCamera.restore();
+    mWheelPickerImpl.matrixToCenter(mDepthMatrix, space, mWheelCenterX, mWheelCenterY);
+
+    mRotateMatrix.postConcat(mDepthMatrix);
+    canvas.concat(mRotateMatrix);
+
+    //绘制文本
+    .......
+```
+
+相关关联类：ScrollWheelPicker ；AbstractWheelPicker
+
+#原理
+![滚轮计算原理图（图片来源网络，见文末参考引用连接）](https://upload-images.jianshu.io/upload_images/16133165-76b61bcccc57bfb3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+
+####参考文献
+滚轮计算原理图：[https://blog.csdn.net/qq_22393017/article/details/59488906](https://blog.csdn.net/qq_22393017/article/details/59488906)
