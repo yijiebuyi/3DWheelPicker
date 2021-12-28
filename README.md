@@ -143,16 +143,21 @@ PickOption option = new PickOption.Builder()
    /**
      * 获取单行数据
      * @param context
-     * @param initData
-     * @param srcData
-     * @param listener
+     * @param initData 初始化时，显示的数据
+     * @param srcData 数据集合
+     * @param listener dataPicker数据被选中监听器
      * @param <T>
      */
     public static <T> void pickData(Context context, @Nullable T initData, @NonNull final List<T> srcData, 
                                     @Nullable PickOption option, final OnDataPickListener listener
     
    /**
-     * 多行数据选择（非级联数据）
+     * 多行数据选择（级联数据）
+     * @param context
+     * @param initIndex 初始化话数据索引: 每个Wheelpicker是初始化时，对应显示的数据index
+     * @param srcData 源数据，是一个二位数组，外层List代表是WheelPicker的集合，内层List代表具体的Wheelpicker对应的数据源
+     * @param listener dataPicker数据被选中监听器
+     * @param <T>
      */
     public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData,
                                     @Nullable PickOption option, final OnMultiDataPickListener listener)
@@ -160,9 +165,10 @@ PickOption option = new PickOption.Builder()
    /**
      * 多行数据选择（级联数据）
      * @param context
-     * @param initIndex
-     * @param srcData
-     * @param listener
+     * @param initIndex 初始化话数据索引: 每个Wheelpicker是初始化时，对应显示的数据index
+     * @param srcData 源数据，是一个二位数组，外层List代表是WheelPicker的集合，内层List代表具体的Wheelpicker对应的数据源
+     * @param listener dataPicker数据被选中监听器
+     * @param cascadeListener 级联监听器，这里需要自己去实现级联的数据源，可参考demo中城市数据的使用方式
      * @param <T>
      */
     public static <T> void pickData(Context context, @Nullable List<Integer> initIndex, @NonNull List<List<?>> srcData,
