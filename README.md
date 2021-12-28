@@ -154,7 +154,7 @@ PickOption option = new PickOption.Builder()
    /**
      * 多行数据选择（级联数据）
      * @param context
-     * @param initIndex 初始化话数据索引: 每个Wheelpicker是初始化时，对应显示的数据index
+     * @param initIndex 每个Wheelpicker是初始化时，对应显示的数据index，如果没有特殊需求，传null
      * @param srcData 源数据，是一个二位数组，外层List代表是WheelPicker的集合，内层List代表具体的Wheelpicker对应的数据源
      * @param listener dataPicker数据被选中监听器
      * @param <T>
@@ -165,7 +165,7 @@ PickOption option = new PickOption.Builder()
    /**
      * 多行数据选择（级联数据）
      * @param context
-     * @param initIndex 初始化话数据索引: 每个Wheelpicker是初始化时，对应显示的数据index
+     * @param initIndex 每个Wheelpicker是初始化时，对应显示的数据index，如果没有特殊需求，传null
      * @param srcData 源数据，是一个二位数组，外层List代表是WheelPicker的集合，内层List代表具体的Wheelpicker对应的数据源
      * @param listener dataPicker数据被选中监听器
      * @param cascadeListener 级联监听器，这里需要自己去实现级联的数据源，可参考demo中城市数据的使用方式
